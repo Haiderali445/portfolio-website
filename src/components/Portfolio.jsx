@@ -9,17 +9,16 @@ const projects = [
     description: 'A full-featured Point of Sale system built with the MERN stack, offering inventory, billing, and reporting functionalities.',
     link: '', // No live link provided for POS
     github: 'https://github.com/Haiderali445/mern-pos',
-    image: 'https://cdn.pixabay.com/photo/2017/05/10/17/45/pos-2308044_1280.jpg',
+    image: 'https://cdn.pixabay.com/photo/2017/05/10/17/45/pos-2308044_1280.jpg', // Image for POS project
   },
   {
     title: 'My Blog',
     description: 'A personal blogging website showcasing my articles, powered by Vite and React.',
     link: 'https://haideraliblog.netlify.app/',
     github: 'https://github.com/Haiderali445/portfolio-website',
-    image: 'https://cdn.pixabay.com/photo/2015/01/08/18/29/startup-593341_1280.jpg',
+    image: 'https://cdn.pixabay.com/photo/2015/01/08/18/29/startup-593341_1280.jpg', // Image for Blog project
   },
-];
-
+]
 
 function Portfolio() {
   return (
@@ -39,18 +38,17 @@ function Portfolio() {
           >
             <div className="flip-card w-full h-full bg-white rounded-lg shadow-lg overflow-hidden">
               <div className="flip-card-inner h-full">
-                <div className="flip-card-front bg-cover bg-center text-white p-6" style={{ backgroundImage: `url(${project.image})` }}>
-                  <h3 className="text-xl font-semibold bg-black bg-opacity-50 p-2 rounded">{project.title}</h3>
+                <div className="flip-card-front bg-gradient-to-r from-teal-400 to-blue-500 text-white p-6">
+                  <h3 className="text-xl font-semibold mb-4">{project.title}</h3>
+                  <p>{project.description}</p>
                 </div>
                 <div className="flip-card-back bg-gray-800 text-white p-6 flex flex-col justify-between">
                   <h3 className="text-xl font-semibold mb-4">Details</h3>
-                  <p>{project.description}</p>
+                  <p>Learn more about the project and its technologies.</p>
                   <div className="flex gap-4 mt-4">
-                    {project.link && (
-                      <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-yellow-400 hover:text-yellow-500">
-                        <FaLink size={24} />
-                      </a>
-                    )}
+                    <a href={project.link} target="_blank" rel="noopener noreferrer" className="text-yellow-400 hover:text-yellow-500">
+                      <FaLink size={24} />
+                    </a>
                     <a href={project.github} target="_blank" rel="noopener noreferrer" className="text-yellow-400 hover:text-yellow-500">
                       <FaGithub size={24} />
                     </a>
