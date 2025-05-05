@@ -75,7 +75,7 @@ function Contact() {
       // Hide notification after 2 seconds
       setTimeout(() => {
         setNotification({ show: false, type: 'success', message: '' });
-      }, 15000) 
+      }, 1000) 
     }
   };
 
