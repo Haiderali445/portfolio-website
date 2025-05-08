@@ -92,11 +92,11 @@ function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, duration: 0.8 }}
-            className="flex justify-center md:justify-start gap-4"
+            className="flex flex-wrap justify-center md:justify-start gap-4"
           >
             <a
               href="#contact"
-              className="inline-block px-8 py-3 bg-yellow-400 text-black font-bold rounded-lg shadow-xl hover:bg-yellow-300 transition transform hover:scale-105"
+              className="inline-block w-full md:w-auto px-8 py-3 bg-yellow-400 text-black font-bold rounded-lg shadow-xl hover:bg-yellow-300 transition transform hover:scale-105 mb-2 md:mb-0"
             >
               Get in Touch
             </a>
@@ -104,7 +104,7 @@ function Hero() {
               href="https://github.com/haiderali445"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block px-8 py-3 bg-gray-800 text-white font-bold rounded-lg shadow-xl hover:bg-gray-700 transition transform hover:scale-105"
+              className="inline-block w-full md:w-auto px-8 py-3 bg-gray-800 text-white font-bold rounded-lg shadow-xl hover:bg-gray-700 transition transform hover:scale-105 mb-2 md:mb-0"
             >
               GitHub
             </a>
@@ -112,7 +112,7 @@ function Hero() {
               href="https://linkedin.com/in/hayder-ali-8a025b290"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block px-8 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-xl hover:bg-blue-500 transition transform hover:scale-105"
+              className="inline-block w-full md:w-auto px-8 py-3 bg-blue-600 text-white font-bold rounded-lg shadow-xl hover:bg-blue-500 transition transform hover:scale-105 mb-2 md:mb-0"
             >
               LinkedIn
             </a>
