@@ -8,6 +8,9 @@ module.exports = {
       animation: {
         'spin-slow': 'spin 8s linear infinite',
       },
+      scale: {
+        115: '1.15',
+      },
       colors: {
         'primary': '#6B5B95',
         'secondary': '#FFD700',
