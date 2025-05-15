@@ -12,7 +12,7 @@ function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [notification, setNotification] = useState({
     show: false,
-    type: 'success',  // 'success' or 'error'
+    type: 'success', 
     message: 'Your message has been sent!',
   });
 
