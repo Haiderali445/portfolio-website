@@ -12,7 +12,7 @@ function Hero() {
     <section
       className={`relative flex items-center justify-center min-h-screen px-4 ${
         darkMode
-          ? 'bg-gradient-to-tr from-gray-900 via-gray-800 to-gray-700'
+          ? 'bg-gradient-to-tr from-black-900 via-gray-800 to-black-700'
           : 'bg-gradient-to-tr from-purple-600 via-blue-500 to-teal-400'
       } transition-colors duration-500`}
     >
