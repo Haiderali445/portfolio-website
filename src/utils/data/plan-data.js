@@ -1,0 +1,32 @@
+export const planData = [
+    {
+        id: 1,
+        name: "Beginner",
+        price: "$99.9",
+        pages: 5,
+        aws: false,
+        database: false,
+        auth: false,
+        databaseSize: "N/A",
+    },
+    {
+        id: 2,
+        name: "Intermediate",
+        price: "$149.9",
+        pages: 10,
+        aws: true,
+        database: true,
+        auth: true,
+        databaseSize: "10GB",
+    },
+    {
+        id: 3,
+        name: "Pro",
+        price: "$249.9",
+        pages: "Unlimited",
+        aws: true,
+        database: true,
+        auth: true,
+        databaseSize: "100GB",
+    },
+];

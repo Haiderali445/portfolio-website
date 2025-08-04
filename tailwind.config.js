@@ -11,10 +11,7 @@ module.exports = {
       scale: {
         115: '1.15',
       },
-      colors: {
-        'primary': '#6B5B95',
-        'secondary': '#FFD700',
-      },
+      
     },
   },
   plugins: [

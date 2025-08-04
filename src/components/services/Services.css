@@ -1,0 +1,179 @@
+/* src/components/services/Services.css */
+
+.services {
+    padding: 5rem 0;
+    background: var(--color-bg);
+    color: var(--color-white);
+    text-align: center;
+}
+
+.services__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.services h2 {
+    color: var(--color-primary);
+    margin-bottom: 3rem;
+    font-weight: 700;
+    font-size: 2.2rem;
+}
+
+/* === Service Categories === */
+.service__categories {
+    display: flex;
+    justify-content: center;
+    gap: 3rem; /* increased gap */
+    flex-wrap: wrap;
+    margin-bottom: 5rem;
+}
+
+.service__category {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.2rem;
+    padding: 2.5rem;
+    width: 300px; /* fixed width */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+.service__category:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+.service__icon {
+    color: var(--color-primary);
+    margin-bottom: 1.2rem;
+}
+
+.service__category h3 {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+}
+
+.service__category p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-light);
+}
+
+/* === Service Plans === */
+.plan__container {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+}
+
+.plan__item {
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.2rem;
+    padding: 2.5rem;
+    width: 320px;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    text-align: left;
+    position: relative;
+}
+
+.plan__item:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+}
+
+.plan__item h3 {
+    font-size: 1.6rem;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.plan__item .plan__price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--color-light);
+    margin-bottom: 1.5rem;
+}
+
+.plan__features {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 2rem;
+}
+
+.plan__features li {
+    font-size: 0.9rem;
+    color: var(--color);
+    line-height: 2;
+    display: flex;
+    align-items: center;
+}
+
+.plan__features li svg {
+    margin-right: 0.75rem;
+    color: var(--color-primary);
+}
+
+.plan__item .btn {
+    width: 100%;
+    padding: 0.8rem 1.2rem;
+    font-size: 1.1rem;
+}
+
+/* === "Pro" Plan Styling: Make it Stand Out === */
+.plan__item--featured {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .service__categories,
+    .plan__container {
+        gap: 2.5rem;
+    }
+
+    .service__category,
+    .plan__item {
+        width: 280px;
+        padding: 2rem;
+    }
+
+    .plan__features li {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .service__categories,
+    .plan__container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .service__category,
+    .plan__item {
+        width: 90%;
+        max-width: 400px;
+    }
+}
+
+@media (max-width: 480px) {
+    .service__category h3,
+    .plan__item h3 {
+        font-size: 1.2rem;
+    }
+
+    .service__category p,
+    .plan__item .plan__price,
+    .plan__features li {
+        font-size: 0.8rem;
+    }
+}

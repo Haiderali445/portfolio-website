@@ -1,28 +1,32 @@
 import React from 'react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Portfolio from './components/Portfolio';
-import Contact from './components/Contact';
-import Footer from './components/Footer';
+import Header from './components/header/Header';
+import Nav from './components/nav/Nav';
+import Skilss from './components/skills/Skilss';  
+import Testem from './components/testimonials/Testem';
+import Services from './components/services/Services';
+import Projects from './components/projects/Projects';
+import Footer from './components/footer/Footer'; 
+import HiderHeader from './components/hiderheader/HiderHeader';
+import About from './components/about/About';
+import Contact from './components/contact/Contact';
+import ThemeToggle from './components/ThemeToggle/ThemeToggle';
 
-function App() {
+function App() {    
   return (
-    <div className="bg-white dark:bg-gray-900 text-black dark:text-white min-h-screen transition-colors">
-      <Navbar />
-      <main>
-        <section id="home">
-          <Hero />
-        </section>
-        <section id="portfolio">
-          <Portfolio />
-        </section>
-        <section id="contact">
-          <Contact />
-        </section>
-      </main>
-      <Footer />
-    </div>
-  );
+    <>
+    <ThemeToggle />
+    <HiderHeader />
+    <Header /> 
+    <Nav />
+    <About />
+    <Skilss />
+    <Projects />
+   <Services />     
+    <Testem />
+    <Contact />
+    <Footer />        
+    </>     
+  )
 }
 
 export default App;

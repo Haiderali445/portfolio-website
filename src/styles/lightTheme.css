@@ -1,0 +1,265 @@
+/* src/styles/lightTheme.css */
+:root.light {
+  --color-bg: #fdfdfe;
+  --color-primary: #7c4dff; /* neon violet */
+  --color-accent: #bbaaff; /* milk violet */
+  --color-text: #0a0a0a;
+  --color-glass-bg: rgba(255, 255, 255, 0.7);
+  --color-tile-bg: rgba(255, 255, 255, 0.95);
+  --color-shadow: rgba(124, 77, 255, 0.2); /* Purple Shadow */
+  --btn-glow: rgba(124, 77, 255, 0.5);
+  --btn-hover: #d4c4ff;
+
+  /* Additional Theme Colors */
+  --color-bg-variant: #f0f0ff;
+  --color-light: #ffffff;
+  --color-icon: #333333;
+  --glass-border-light: rgba(187, 170, 255, 0.3);
+  --glass-shadow-light: 0 0 20px rgba(124, 77, 255, 0.15);
+  --glass-shadow-strong: 0 0 30px rgba(124, 77, 255, 0.2);
+}
+
+/* 🧊 Main About Panels: Stronger Gradient + Shadow */
+.light .about-left,
+.light .about-right {
+  background: var(--color-glass-bg);
+  border: 1px solid var(--glass-border-light);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--glass-shadow-light);
+  color: var(--color-text);
+}
+
+.light .about-left {
+    border-right: none; /* Remove border for visual distinction */
+}
+
+.light .about-right {
+    border-left: none; /* Remove border for visual distinction */
+}
+
+/* ✨ Description Section: Vibrant Glow + Better Layer */
+.light .about-description {
+  color: var(--color-text);
+}
+
+/* 💻 Code Box: Better Opacity Balance */
+.light .code-box {
+  background: var(--color-tile-bg);
+  border: 1px solid var(--glass-border-light);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--glass-shadow-light);
+}
+
+/* 🖥️ Code Header: Glow Highlight */
+.light .code-header {
+  background: var(--color-accent);
+  color: var(--color-text);
+}
+
+/* 🎨 Code Content: Sharper Accent Colors */
+.light .code-content {
+  color: var(--color-text);
+}
+
+.light .code-content .key {
+  color: var(--color-primary);
+}
+
+/* 🧾 Section Titles: Deeper Glow */
+.light .section-title {
+  color: var(--color-text);
+  text-shadow: 0 0 5px var(--color-primary);
+}
+
+/* 📋 Copy Button: Enhanced Glow and Color Pop */
+.light .copy-btn {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--glass-border-light);
+  color: var(--color-text);
+  box-shadow: var(--glass-shadow-light);
+}
+
+.light .copy-btn:hover {
+  background: var(--btn-hover);
+  box-shadow: 0 0 10px var(--color-primary);
+}
+
+/* 🌐 Navbar */
+:root.light nav {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--glass-shadow-light);
+  backdrop-filter: blur(10px);
+}
+
+:root.light nav a {
+  color: var(--color-text);
+}
+
+:root.light nav a.active {
+  background: var(--color-accent);
+  box-shadow: 0 0 10px var(--color-primary);
+}
+
+/* 🎯 Marquee */
+.light .skills-marquee-wrapper {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 0 10px var(--color-shadow);
+}
+
+/* 🧊 Glass Cards & Tiles */
+.light .tile,
+.light .skill-tile,
+.light .category-tile,
+.light .glass,
+.light .card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--glass-shadow-light);
+  border: 1px solid var(--glass-border-light);
+  transition: all 0.3s ease;
+}
+
+.light .skill-tile:hover {
+    box-shadow: 0 0 15px var(--color-primary);
+    transform: translateY(-5px) scale(1.05);
+}
+
+/* 🏷 Headings */
+.light .tile h3,
+.light .skill-tile h3,
+.light .tile-header,
+.light .skill-name {
+  color: var(--color-text);
+}
+
+/* ✏️ Descriptions */
+.light .tile-description {
+  color: var(--color-text);
+}
+.light .project__description {
+    margin-bottom: 0.8rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--color-text);
+}
+
+/* 📛 Icons */
+.light .tile-icon,
+.light .skill-icon,
+.light .social-icon,
+.light .nav-icon,
+.light .footer-icon {
+  filter: drop-shadow(0 0 5px var(--color-primary));
+}
+
+/* 🔘 Buttons */
+.light .btn,
+.light button {
+  background: var(--color-accent);
+  color: var(--color-text);
+  box-shadow: 0 0 10px var(--color-primary);
+  transition: all 0.3s ease;
+}
+
+.light .btn:hover,
+.light button:hover {
+  background: var(--btn-hover);
+  box-shadow: 0 0 15px var(--color-primary);
+  transform: translateY(-2px) scale(1.05);
+}
+
+:root.light h2 {
+  color: var(--color-text);
+  text-shadow: 0 0 5px var(--color-primary);
+}
+
+/* 🔽 Scroll & Hero */
+.light .scroll-down-ball,
+.light .scroll-down-line,
+.light .hero-image,
+.light .hero-bg,
+.light .hero-wrapper {
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: var(--glass-shadow-light);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border-light);
+}
+
+/* 🔗 Links, Socials */
+.light a,
+.light .social-icon a,
+.light .footer-link a {
+  color: var(--color-text);
+  transition: all 0.3s ease;
+}
+
+.light a:hover,
+.light .social-icon a:hover,
+.light .footer-link a:hover {
+  color: var(--color-primary);
+  text-shadow: 0 0 5px var(--color-primary);
+}
+
+/* 💠 Glow Headings */
+.light .glow-dev {
+  color: var(--color-primary);
+  text-shadow: 0 0 10px var(--color-primary);
+}
+
+/* ✨ Transitions */
+:root.light * {
+  transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+}
+
+/* 🎯 Hero Intro Line: "Haider" and ".dev" title styling */
+.light .intro-line {
+    color: var(--color-text);
+    text-shadow: 0 0 5px var(--color-primary);
+}
+
+.light  .intro-name {
+    color: var(--color-primary);
+    text-shadow: 0 0 10px var(--color-primary);
+}
+
+.light .white-text {
+    color: var(--color-text);
+    text-shadow: 0 0 5px var(--color-primary);
+}
+.light .skill-card {
+  background-color: rgba(255, 255, 255, 0.1); /* Softer background */
+  border: 1px solid var(--glass-border-light);
+  box-shadow: var(--glass-shadow-light);
+}
+
+.light .skill-inner {
+  background-color: var(--color-tile-bg); /* Solid background */
+  border: 1px solid var(--glass-border-light);
+  box-shadow: var(--glass-shadow-light);
+}
+
+.light .skill-inner:hover {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 20px 2px var(--color-shadow);
+}
+
+.light .skill-name {
+  color: var(--color-text); /* Dark text for readability */
+}
+
+.light .skill-inner:hover .skill-name {
+  color: var(--color-primary);
+}
+
+.light .plan__features,
+.light .plan__price,
+.light .service__category p {
+   color: var(--color-text);
+
+}
+.light .footer {
+  color: var(--color-text);
+  
+}
+

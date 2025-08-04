@@ -1,6 +1,5 @@
-import { Dom7Array } from 'dom7';
-import { CSSSelector } from '../shared';
-import Swiper from '../swiper-class';
+import type { CSSSelector } from '../shared.d.ts';
+import type Swiper from '../swiper-class.d.ts';
 
 export interface PaginationMethods {
   /**
@@ -9,11 +8,11 @@ export interface PaginationMethods {
   el: HTMLElement;
 
   /**
-   * Dom7 array-like collection of pagination bullets
+   * Array of pagination bullets
    * HTML elements. To get specific slide HTMLElement
    * use `swiper.pagination.bullets[1]`.
    */
-  bullets: Dom7Array;
+  bullets: HTMLElement[];
 
   /**
    * Render pagination layout
@@ -142,13 +141,16 @@ export interface PaginationOptions {
    * ```js
    * const swiper = new Swiper('.swiper', {
    *   //...
-   *   renderBullet: function (index, className) {
-   *     return '<span class="' + className + '">' + (index + 1) + '</span>';
-   *   }
+   *   pagination: {
+   *     //...
+   *     renderBullet: function (index, className) {
+   *       return '<span class="' + className + '">' + (index + 1) + '</span>';
+   *     },
+   *   },
    * });
    * ```
    */
-  renderBullet?: (index: number, className: string) => void;
+  renderBullet?: (index: number, className: string) => string;
 
   /**
    * This parameter allows to customize "fraction" pagination html. Only for `'fraction'` pagination type
@@ -159,15 +161,18 @@ export interface PaginationOptions {
    * ```js
    * const swiper = new Swiper('.swiper', {
    *   //...
-   *   renderFraction: function (currentClass, totalClass) {
+   *   pagination: {
+   *     //...
+   *     renderFraction: function (currentClass, totalClass) {
    *       return '<span class="' + currentClass + '"></span>' +
    *               ' of ' +
    *               '<span class="' + totalClass + '"></span>';
-   *   }
+   *     },
+   *   },
    * });
    * ```
    */
-  renderFraction?: (currentClass: string, totalClass: string) => void;
+  renderFraction?: (currentClass: string, totalClass: string) => string;
 
   /**
    * This parameter allows to customize "progress" pagination. Only for `'progress'` pagination type
@@ -178,13 +183,16 @@ export interface PaginationOptions {
    * ```js
    * const swiper = new Swiper('.swiper', {
    *   //...
-   *   renderProgressbar: function (progressbarFillClass) {
+   *   pagination: {
+   *     //...
+   *     renderProgressbar: function (progressbarFillClass) {
    *       return '<span class="' + progressbarFillClass + '"></span>';
-   *   }
+   *     },
+   *   },
    * });
    * ```
    */
-  renderProgressbar?: (progressbarFillClass: string) => void;
+  renderProgressbar?: (progressbarFillClass: string) => string;
 
   /**
    * This parameter is required for `'custom'` pagination type where you have to specify
@@ -196,13 +204,16 @@ export interface PaginationOptions {
    * ```js
    * const swiper = new Swiper('.swiper', {
    *   //...
-   *   renderCustom: function (swiper, current, total) {
-   *     return current + ' of ' + total;
-   *   }
+   *   pagination: {
+   *     //...
+   *     renderCustom: function (swiper, current, total) {
+   *       return current + ' of ' + total;
+   *     },
+   *   },
    * });
    * ```
    */
-  renderCustom?: (swiper: Swiper, current: number, total: number) => void;
+  renderCustom?: (swiper: Swiper, current: number, total: number) => string;
 
   /**
    * CSS class name of single pagination bullet
