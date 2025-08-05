@@ -28,6 +28,10 @@
   box-shadow: var(--glass-shadow-light);
   color: var(--color-text);
 }
+/*type writter text*/
+.light .typed-role {
+  color: var(--color-primary); /* or set directly like #0a0a0a */
+}
 
 .light .about-left {
     border-right: none; /* Remove border for visual distinction */

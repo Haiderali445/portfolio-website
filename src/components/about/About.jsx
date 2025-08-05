@@ -2,6 +2,7 @@ import React from "react";
 import "./About.css";
 import { personalData } from "../../utils/data/personal-data";
 import { useState } from "react";
+import mypic from "../../Assets/images/img2.png";
 
 
   
@@ -24,7 +25,7 @@ const About = () => {
         {/* === Left Side: Profile Card === */}
         <div className="about-left about-card glass-style">
           <img
-            src={personalData.profile}
+            src={mypic}
             alt={personalData.name}
             className="about-image"
           />
