@@ -183,7 +183,7 @@
 /* 📱 For screens up to 600px */
 @media (max-width: 600px) {
   .testimonial__card {
-    width: 90%;
+    width: 85%;
     padding: 1rem;
     font-size: 0.9rem;
   }
@@ -210,7 +210,7 @@
 /* 📱 For screens up to 420px */
 @media (max-width: 420px) {
   .testimonial__card {
-    width: 95%;
+    width: 90%;
     padding: 0.9rem;
   }
 
@@ -236,7 +236,7 @@
 /* 📱 For screens up to 360px */
 @media (max-width: 360px) {
   .testimonial__card {
-    width: 96%;
+    width: 91%;
     padding: 0.8rem;
   }
 
