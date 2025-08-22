@@ -45,6 +45,20 @@ html {
   scroll-behavior: smooth;
 }
 
+body::before {
+  content: "";
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: radial-gradient(circle at 20% 20%, rgba(0, 234, 255, 0.1), transparent 50%),
+              radial-gradient(circle at 80% 30%, rgba(255, 0, 204, 0.08), transparent 50%),
+              radial-gradient(circle at 50% 80%, rgba(153, 255, 0, 0.08), transparent 50%);
+  animation: animateBubbles 20s infinite ease-in-out;
+  z-index: 0;
+    will-change: transform; 
+}
 body {
   font-family: "Poppins", sans-serif;
   background: var(--color-bg);
@@ -56,6 +70,7 @@ body {
 
 section{
   height:max-content;
+  scroll-behavior: smooth;
 }
 
 .container {

@@ -16,9 +16,12 @@ import ThemeToggle from './components/ThemeToggle/ThemeToggle';
 function App() {
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.2,         // smooth duration
-      smooth: true,          // enable smooth
-      smoothTouch: true,     // enable on touch devices too
+      duration: .05,           // smoother feel (1–1.5 is ideal)
+      easing: (t) => 1 - Math.pow(1 - t, 3), // custom cubic ease-out
+      smooth: true,            
+      smoothTouch: true,       
+      touchMultiplier: 1.5,    // makes touch scrolling feel natural
+      infinite: false,         // keep normal behavior
     });
 
     function raf(time) {
@@ -29,7 +32,7 @@ function App() {
     requestAnimationFrame(raf);
 
     return () => {
-      lenis.destroy(); // optional cleanup
+      lenis.destroy();
     };
   }, []);
 
