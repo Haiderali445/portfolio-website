@@ -271,3 +271,79 @@ body::before {
 body::before {
   pointer-events: none; /* Prevents the layer from blocking clicks */
 }
+
+/* ========================================
+   PHASE 1: UI/UX ENHANCEMENTS
+   ======================================== */
+
+/* Enhanced Glassmorphism */
+.glass-style,
+.glass {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Enhanced Button Micro-interactions */
+button:active,
+.btn:active {
+  transform: scale(0.95);
+}
+
+/* Enhanced Form Input Animations */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 
+    0 0 0 3px rgba(0, 234, 255, 0.1),
+    0 0 20px rgba(0, 234, 255, 0.2);
+  transform: translateY(-2px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Social Icon Enhanced Animations */
+.social-icons a:hover,
+a[class*="social"]:hover {
+  transform: translateY(-5px) scale(1.1);
+  filter: drop-shadow(0 5px 15px var(--color-primary));
+}
+
+/* Card Hover Enhancements */
+.project__item:hover,
+.service__category:hover,
+.skill-tile:hover {
+  transform: translateY(-8px);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(0, 234, 255, 0.2);
+}
+
+/* Link Hover Glow */
+a:not(.btn):hover {
+  text-shadow: 0 0 8px var(--color-primary);
+}
+
+/* Image Hover Effects */
+img:hover {
+  transform: scale(1.02);
+}
+
+/* Pulse Animation for Scroll Ball */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px var(--color-primary);
+  }
+  50% {
+    box-shadow: 0 0 20px var(--color-primary);
+  }
+}
+
+.scroll-ball {
+  animation: pulse-glow 2s infinite;
+}

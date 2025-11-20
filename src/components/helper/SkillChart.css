@@ -1,0 +1,146 @@
+.skill-chart-container {
+    margin-top: 4rem;
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    border-radius: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.skill-chart-main-title {
+    text-align: center;
+    color: var(--color-primary);
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    text-shadow: 0 0 15px var(--color-primary);
+}
+
+.skill-chart-subtitle {
+    text-align: center;
+    color: var(--color-light);
+    font-size: 1rem;
+    margin-bottom: 3rem;
+    opacity: 0.8;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+.skill-chart-section {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.chart-category-title {
+    color: var(--color-primary);
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Custom Tooltip */
+.custom-tooltip {
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid var(--color-primary);
+    padding: 0.8rem 1.2rem;
+    border-radius: 0.5rem;
+    backdrop-filter: blur(10px);
+}
+
+.tooltip-label {
+    color: var(--color-primary);
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    font-size: 0.95rem;
+}
+
+.tooltip-value {
+    color: var(--color-white);
+    font-size: 0.85rem;
+}
+
+/* Legend */
+.skill-legend {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-light);
+    font-size: 0.9rem;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    box-shadow: 0 0 8px currentColor;
+}
+
+.legend-dot.expert {
+    background: #00eaff;
+}
+
+.legend-dot.advanced {
+    background: #00d4ff;
+}
+
+.legend-dot.intermediate {
+    background: #00bfff;
+}
+
+.legend-dot.beginner {
+    background: #00aaff;
+}
+
+/* Recharts Overrides */
+.recharts-cartesian-axis-tick-value {
+    fill: var(--color-light) !important;
+    font-size: 0.85rem;
+}
+
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+    stroke: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .skill-chart-container {
+        padding: 2rem 1rem;
+    }
+
+    .skill-chart-main-title {
+        font-size: 1.6rem;
+    }
+
+    .charts-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .skill-legend {
+        gap: 1rem;
+    }
+
+    .legend-item {
+        font-size: 0.8rem;
+    }
+}

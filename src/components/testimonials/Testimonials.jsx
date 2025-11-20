@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { testimonialData } from '../../utils/data/testem-data';
-import './Testem.css';
+import './Testimonials.css';
 import { FaHeart, FaStar } from 'react-icons/fa';
 
 const Testem = () => {

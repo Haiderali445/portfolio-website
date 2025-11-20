@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import emailjs from '@emailjs/browser';
 import './Contact.css';
 import { contactsData } from '../../utils/data/contactsData';
+import toast from 'react-hot-toast';
 import {
   FaGithub,
   FaLinkedin,
@@ -16,15 +17,19 @@ const Contact = () => {
 
   const sendEmail = (e) => {
     e.preventDefault();
+    
+    // Show loading toast
+    const loadingToast = toast.loading('Sending message...');
+    
     emailjs
       .sendForm('service_fbo485p', 'template_fa82428', form.current, 'dXT9wdRoCleHwfiYg')
       .then(() => {
-        alert('Message sent successfully!');
+        toast.success('Message sent successfully! 🎉', { id: loadingToast });
         e.target.reset();
       })
       .catch((error) => {
         console.error(error);
-        alert('Something went wrong. Please try again.');
+        toast.error('Something went wrong. Please try again.', { id: loadingToast });
       });
   };
 

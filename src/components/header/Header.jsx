@@ -40,7 +40,7 @@ const Header = () => {
                   "MERN Stack Developer",
                   "Backend expert",
                   "UI/UX Designer",
-                  "System develper",
+                  "System developer",
                 ]}
                 loop
                 cursor
@@ -71,10 +71,19 @@ const Header = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.4, duration: 1 }}
           >
-            <div className="hero-img-wrapper">
+            <motion.div 
+              className="hero-img-wrapper"
+              style={{ y: 0 }}
+              whileInView={{ y: [-20, 20, -20] }}
+              transition={{ 
+                duration: 6, 
+                repeat: Infinity, 
+                ease: "easeInOut" 
+              }}
+            >
               <div className="bubble-tile" />
               <img src={img1} alt="Haider" className="hero-img" />
-            </div>
+            </motion.div>
           </motion.div>
 
           {/* === SCROLL INDICATOR BALL === */}

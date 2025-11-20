@@ -11,6 +11,8 @@
     "@emailjs/browser": "^4.4.1",
     "@headlessui/react": "^2.2.4",
     "@studio-freight/lenis": "^1.0.42",
+    "@tsparticles/react": "^3.0.0",
+    "@tsparticles/slim": "^3.9.1",
     "@vitejs/plugin-react": "^4.4.1",
     "aos": "^2.3.4",
     "emailjs-com": "^3.2.0",
@@ -21,12 +23,16 @@
     "react-dom": "^18.2.0",
     "react-fast-marquee": "^1.6.5",
     "react-hook-form": "^7.56.1",
+    "react-hot-toast": "^2.6.0",
     "react-icons": "^4.12.0",
+    "react-parallax-tilt": "^1.7.313",
     "react-responsive-masonry": "^2.7.1",
     "react-router-dom": "^6.30.0",
     "react-scroll": "^1.9.3",
     "react-simple-typewriter": "^5.0.1",
-    "swiper": "^11.2.10"
+    "recharts": "^3.4.1",
+    "swiper": "^11.2.10",
+    "tsparticles": "^3.9.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.14",
