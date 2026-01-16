@@ -4,7 +4,7 @@
 
 ![Project Preview](/path/to/preview-image.png)
 
-[**View Live Demo**](https://haideraliblog.netlify.ap/)
+[**View Live Demo**](https://haideraliblog.netlify.app/)
 
 ## 🚀 The Pitch
 This isn't just a portfolio; it's a statement of engineering precision. Built for the 2026 industry standard, this system bridges the gap between sophisticated design and robust architecture. It features deep-dive service documentation, a vertical timeline of experience, and a dynamic bento-grid layout—all powered by a backend-ready architecture.
@@ -60,4 +60,5 @@ Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to submit pull 
 
 ## 📄 License
 MIT License © 2026 Haider Ali
+
 
