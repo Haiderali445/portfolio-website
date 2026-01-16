@@ -1,37 +1,30 @@
 import React, { useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Lenis from '@studio-freight/lenis';
 import { Toaster } from 'react-hot-toast';
+import { AnimatePresence } from 'framer-motion';
 
-import Header from './components/header/Header';
 import Nav from './components/nav/Nav';
-import Skills from './components/skills/Skills';  
-import Testimonials from './components/testimonials/Testimonials';
-import Services from './components/services/Services';
-import Projects from './components/projects/Projects';
-import Footer from './components/footer/Footer'; 
-import HiderHeader from './components/hiderheader/HiderHeader';
-import About from './components/about/About';
-import Contact from './components/contact/Contact';
-import ThemeToggle from './components/ThemeToggle/ThemeToggle';
+import Footer from './components/footer/Footer';
 import ScrollProgress from './components/helper/ScrollProgress';
-import ParticleBackground from './components/helper/ParticleBackground';
+import Home from './components/Home';
+import ServiceDetail from './components/services/ServiceDetail';
 
 function App() {
+  const location = useLocation();
+
   useEffect(() => {
     const lenis = new Lenis({
-      duration: .05,           // smoother feel (1–1.5 is ideal)
-      easing: (t) => 1 - Math.pow(1 - t, 3), // custom cubic ease-out
-      smooth: true,            
-      smoothTouch: true,       
-      touchMultiplier: 1.5,    // makes touch scrolling feel natural
-      infinite: false,         // keep normal behavior
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smooth: true,
+      touchMultiplier: 2,
     });
 
     function raf(time) {
       lenis.raf(time);
       requestAnimationFrame(raf);
     }
-
     requestAnimationFrame(raf);
 
     return () => {
@@ -40,39 +33,36 @@ function App() {
   }, []);
 
   return (
-    <>
-      <ParticleBackground />
+    <div className="min-h-screen bg-background text-white selection:bg-primary/30 font-sans">
       <ScrollProgress />
-      <Toaster 
-        position="top-right"
+      <Toaster
+        position="top-center"
         toastOptions={{
-          duration: 3000,
           style: {
-            background: 'var(--color-glass-bg)',
-            color: 'var(--color-text)',
-            border: '1px solid var(--color-border-glow)',
+            background: 'rgba(5, 5, 5, 0.8)',
+            color: '#fff',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
             backdropFilter: 'blur(10px)',
-          },
-          success: {
-            iconTheme: {
-              primary: 'var(--color-primary)',
-              secondary: 'var(--color-bg)',
-            },
           },
         }}
       />
-      <ThemeToggle />
-      <HiderHeader />
-      <Header /> 
+
+      {/* Navigation - Only show on Home for now, or keep globally but sticky? 
+          User asked for "Back to Services" button on detail page, implying Nav might not be primary there or could be distracting.
+          But floating dock is nice. Let's keep it generally, or maybe hide it on detail page if user requested specific "Back" button focus.
+          For now, I'll leave it. It's unique.
+      */}
       <Nav />
-      <About />
-      <Skills />
-      <Projects />
-      <Services />     
-      <Testimonials />
-      <Contact />
-      <Footer />        
-    </>
+
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<Home />} />
+          <Route path="/services/:serviceId" element={<ServiceDetail />} />
+        </Routes>
+      </AnimatePresence>
+
+      <Footer />
+    </div>
   );
 }
 

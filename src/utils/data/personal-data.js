@@ -8,5 +8,5 @@ export const personalData = {
   address: 'Mohallah Kashmir nagar, Jalalpur Jattan, Gujrat, Pakistan',
   github: 'https://github.com/Haiderali445',
   instagram: 'https://www.instagram.com/hayder_alyy__/',
-  linkedIn: 'https://www.linkedin.com/in/hayder-ali-8a025b290/', 
+  linkedIn: 'https://www.linkedin.com/in/hayder-ali-8a025b290/',
 }

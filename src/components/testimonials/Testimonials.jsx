@@ -1,66 +1,71 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { testimonialData } from '../../utils/data/testem-data';
-import './Testimonials.css';
-import { FaHeart, FaStar } from 'react-icons/fa';
+import { FaHeart, FaStar, FaQuoteLeft } from 'react-icons/fa';
 
-const Testem = () => {
-  const [activeIndex, setActiveIndex] = useState(null);
-
-  const handleNext = () => {
-    setActiveIndex((prev) => (prev + 1 < testimonialData.length ? prev + 1 : null));
-  };
+const Testimonials = () => {
+  // Duplicate data to ensure seamless loop if not enough items
+  const displayData = [...testimonialData, ...testimonialData, ...testimonialData];
 
   return (
-    <section id="testimonials" className="testimonials">
-      <h2>Testimonials</h2>
-
-      <div className="testimonials__stack">
-        {testimonialData.map((testimonial, i) => (
-          <div
-            key={testimonial.id}
-            className="testimonial__card stacked-card"
-            style={{
-              transform: `rotate(${(i - 2) * 5}deg) translateY(${i * 12}px) scale(${1 - i * 0.02})`,
-              zIndex: testimonialData.length - i,
-            }}
-            onClick={() => setActiveIndex(i)}
-          >
-            <img src={testimonial.image} alt={testimonial.name} className="testimonial__image" />
-            <div className="testimonial__info">
-              <h3>{testimonial.name}</h3>
-              <p className="testimonial__title">{testimonial.title}, {testimonial.company}</p>
-              <p className="testimonial__content">"{testimonial.testimonial}"</p>
-              <div className="testimonial__actions">
-                <div className="action"><FaHeart className="icon heart" /> {testimonial.likes}</div>
-                <div className="action"><FaStar className="icon star" /> {testimonial.stars}</div>
-              </div>
-            </div>
-          </div>
-        ))}
+    <section id="testimonials" className="py-32 relative z-10 overflow-hidden bg-black/40 backdrop-blur-sm border-y border-white/5">
+      <div className="container mx-auto px-6 max-w-7xl mb-16 text-center">
+        <h2 className="text-4xl md:text-5xl font-sans font-bold mb-4 text-white">
+          Client <span className="text-text-muted">Feedback</span>
+        </h2>
       </div>
 
-      {activeIndex !== null && (
-        <div className="testimonial__popup">
-          <div className="popup__backdrop" onClick={() => setActiveIndex(null)} />
-          <div className="popup__card">
-            <div className="testimonial__card active">
-              <img src={testimonialData[activeIndex].image} alt={testimonialData[activeIndex].name} className="testimonial__image" />
-              <div className="testimonial__info">
-                <h3>{testimonialData[activeIndex].name}</h3>
-                <p className="testimonial__title">{testimonialData[activeIndex].title}, {testimonialData[activeIndex].company}</p>
-                <p className="testimonial__content">"{testimonialData[activeIndex].testimonial}"</p>
-                <div className="testimonial__actions">
-                  <div className="action"><FaHeart className="icon heart" /> {testimonialData[activeIndex].likes}</div>
-                  <div className="action"><FaStar className="icon star" /> {testimonialData[activeIndex].stars}</div>
+      {/* Infinite Horizontal Scroll Container */}
+      <div className="group relative w-full flex overflow-hidden mask-linear-fade">
+        {/* Mask effect on edges (optional gradient overlay) */}
+        <div className="absolute top-0 bottom-0 left-0 w-20 z-10 bg-gradient-to-r from-background to-transparent" />
+        <div className="absolute top-0 bottom-0 right-0 w-20 z-10 bg-gradient-to-l from-background to-transparent" />
+
+        <div className="flex animate-shimmer gap-8 whitespace-nowrap hover:[animation-play-state:paused] w-max">
+          {displayData.map((test, i) => (
+            <div
+              key={i}
+              className="w-[350px] md:w-[450px] whitespace-normal flex-shrink-0 p-8 rounded-3xl glass-card border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors duration-300 relative"
+            >
+              <FaQuoteLeft className="absolute top-8 left-8 text-6xl text-white/5 -z-0" />
+
+              <div className="relative z-10">
+                <p className="text-lg md:text-xl font-light italic text-white/90 mb-8 leading-relaxed">
+                  "{test.testimonial}"
+                </p>
+
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full overflow-hidden border border-white/10">
+                    <img src={test.image} alt={test.name} className="w-full h-full object-cover" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white text-base">{test.name}</h4>
+                    <p className="text-sm text-text-muted font-mono">{test.title}, {test.company}</p>
+                  </div>
                 </div>
-                <button className="popup__next" onClick={handleNext}>Next</button>
               </div>
             </div>
-          </div>
+          ))}
         </div>
-      )}
+
+        {/* Second duplicate track for seamlessness (logic handled by CSS normally, but React map here is 3x data) */}
+        {/* To make it truly infinite without gaps, usually you map the track twice in high-speed, 
+                    but here we used a long array and 'animate-shimmer' (defined in tailwind) 
+                    Wait, 'animate-shimmer' in my config was 'background position'. 
+                    I need a 'marquee' animation.
+                */}
+      </div>
+
+      <style jsx>{`
+                @keyframes scroll {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-33.33%); } /* Move 1/3 since we tripled data */
+                }
+                .animate-shimmer {
+                    animation: scroll 40s linear infinite;
+                }
+            `}</style>
     </section>
   );
 };
 
-export default Testem;
+export default Testimonials;
