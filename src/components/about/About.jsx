@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import mypic from "../../assets/images/img2.png";
+import mypic from "../../Assets/images/img2.png";
 import { FaCircle } from "react-icons/fa";
 
 const About = ({ personalData }) => {

@@ -3,7 +3,7 @@ import { Typewriter } from "react-simple-typewriter";
 import { motion, useScroll, useTransform } from "framer-motion";
 import SocialIcons from "../sidebar/socialcons";
 import MagneticButton from "../helper/MagneticButton";
-import imgghibli from '../../assets/images/imgghibli.png';
+import imgghibli from '../../Assets/images/imgghibli.png';
 
 const Header = ({ personalData = {} }) => {
   const { scrollY } = useScroll();
