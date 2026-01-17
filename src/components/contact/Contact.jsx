@@ -53,9 +53,15 @@ const Contact = ({ contactInfo }) => {
     e.preventDefault();
     setLoading(true);
 
-    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_fbo485p';
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_fa82428';
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'dXT9wdRoCleHwfiYg';
+
+    if (!publicKey) {
+      toast.error('Email service not configured (Public Key missing).');
+      setLoading(false);
+      return;
+    }
 
     emailjs.sendForm(serviceId, templateId, form.current, publicKey)
       .then(() => {
