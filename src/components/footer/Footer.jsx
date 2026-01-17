@@ -1,14 +1,14 @@
 import React from 'react';
 import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
 
-const Footer = () => {
+const Footer = ({ personalData }) => {
   return (
     <footer className="footer py-12 border-t border-white/5 bg-black text-center relative z-10 overflow-hidden">
       <div className="container mx-auto px-6">
 
         <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-12">
           <div className="text-left">
-            <h2 className="text-2xl font-bold text-white mb-2">Haider Ali</h2>
+            <h2 className="text-2xl font-bold text-white mb-2">{personalData.name}</h2>
             <p className="text-text-muted text-sm max-w-xs">
               Crafting digital experiences with code and passion. Open for collaborations.
             </p>
@@ -32,7 +32,7 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/5 text-sm text-text-muted font-mono">
-          <p>© {new Date().getFullYear()} Haider Ali. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} {personalData.name}. All rights reserved.</p>
           <p>Designed & Built with <span className="text-red-500">♥</span></p>
         </div>
       </div>

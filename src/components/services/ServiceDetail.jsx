@@ -1,16 +1,19 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { servicesData } from '../../utils/data/services-data';
+
 import { motion } from 'framer-motion';
 import MagneticButton from '../helper/MagneticButton';
 import { FaArrowLeft } from 'react-icons/fa';
 
-const ServiceDetail = () => {
+const ServiceDetail = ({ services = [] }) => {
     const { serviceId } = useParams();
     const navigate = useNavigate();
 
     // Find service data
-    const service = servicesData.find(s => s.id === parseInt(serviceId));
+    const service = services?.find(s => s.id === parseInt(serviceId));
+
+    // Quick Safety Guard
+    if (!service) return null;
 
     // Scroll to top on mount
     useEffect(() => {
@@ -36,7 +39,15 @@ const ServiceDetail = () => {
         >
             {/* Back Button */}
             <div className="mb-12">
-                <MagneticButton onClick={() => navigate('/')}>
+                <MagneticButton onClick={() => {
+                    navigate('/');
+                    setTimeout(() => {
+                        const servicesSection = document.getElementById('services');
+                        if (servicesSection) {
+                            servicesSection.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }, 100);
+                }}>
                     <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-sm font-mono cursor-pointer">
                         <FaArrowLeft /> Back to Services
                     </div>

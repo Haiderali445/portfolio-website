@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { projectsData as initialData } from '../../utils/data/projects-data';
+import React, { useState } from 'react';
 import { FaGithub, FaEye } from 'react-icons/fa';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -10,39 +9,12 @@ function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
-const Projects = () => {
-  const [projects, setProjects] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+const Projects = ({ projects = [] }) => {
   const [expanded, setExpanded] = useState(false);
-
-  // Mock API Fetch
-  useEffect(() => {
-    const fetchProjects = async () => {
-      setIsLoading(true);
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 800));
-        setProjects(initialData);
-      } catch (error) {
-        console.error("Failed to fetch projects:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchProjects();
-  }, []);
 
   const visibleProjects = expanded ? projects : projects.slice(0, 4);
 
-  if (isLoading) {
-    return (
-      <section id="projects" className="py-24 relative z-10">
-        <div className="container mx-auto px-4 text-center">
-          <div className="animate-spin-slow w-12 h-12 border-t-2 border-primary rounded-full mx-auto" />
-        </div>
-      </section>
-    );
-  }
+
 
   return (
     <section id="projects" className="py-32 relative z-10">

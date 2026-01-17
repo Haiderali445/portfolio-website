@@ -10,8 +10,18 @@ import ScrollProgress from './components/helper/ScrollProgress';
 import Home from './components/Home';
 import ServiceDetail from './components/services/ServiceDetail';
 
+import { usePortfolioData } from './hooks/usePortfolioData';
+
 function App() {
+  console.log('Mounting App...'); // Debug: App mount start
   const location = useLocation();
+  const { data, loading, error } = usePortfolioData();
+
+  // Safe Destructuring
+  const { personal, projects, experience, services, skills, contacts, testimonials, solutions } = data || {};
+
+  // Debug Log
+  console.log("App Render - Loading:", loading, "Data:", data, "Error:", error);
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -31,6 +41,11 @@ function App() {
       lenis.destroy();
     };
   }, []);
+
+  if (loading) return <div className='h-screen w-full bg-[#050505] flex items-center justify-center text-white font-mono'>INITIALIZING SYSTEM...</div>;
+
+  // Fail-safe for error or null data
+  if (error || !data) return <div className='h-screen w-full bg-[#050505] flex items-center justify-center text-red-500'>ERROR: DATA_LOAD_FAILED</div>;
 
   return (
     <div className="min-h-screen bg-background text-white selection:bg-primary/30 font-sans">
@@ -56,12 +71,12 @@ function App() {
 
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<Home />} />
-          <Route path="/services/:serviceId" element={<ServiceDetail />} />
+          <Route path="/" element={<Home portfolioData={data} />} />
+          <Route path="/services/:serviceId" element={<ServiceDetail services={services} />} />
         </Routes>
       </AnimatePresence>
 
-      <Footer />
+      <Footer personalData={personal} />
     </div>
   );
 }

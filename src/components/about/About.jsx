@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { personalData } from "../../utils/data/personal-data";
 import mypic from "../../Assets/images/img2.png";
 import { FaCircle } from "react-icons/fa";
 
-const About = () => {
+const About = ({ personalData }) => {
   const [copied, setCopied] = useState("");
 
   const handleCopy = (method) => {
@@ -20,27 +19,39 @@ const About = () => {
         </h2>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* === Left Side: Profile Card === */}
-          <div className="relative group perspective">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-purple-500/20 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+          {/* === Left Side: Galaxy Profile Box === */}
+          <div className="order-1 relative group w-full h-full">
+            {/* Galaxy Glow - Permanent & Intensified */}
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/30 to-purple-500/30 rounded-[2.5rem] blur-2xl group-hover:blur-3xl opacity-20 group-hover:opacity-60 transition-all duration-700" />
 
-            <div className="relative p-8 rounded-3xl glass-card bg-white/[0.03] border border-white/[0.08] transform transition-transform duration-500 hover:rotate-y-2">
-              <div className="w-32 h-32 md:w-48 md:h-48 mx-auto mb-8 rounded-full overflow-hidden border-4 border-white/5 shadow-2xl">
+            <div className="relative h-full bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl p-8 md:p-12 rounded-[2.5rem] flex flex-col justify-center items-center text-center gap-8 transform transition-all duration-500 hover:border-white/10 hover:shadow-2xl hover:shadow-primary/10">
+              {/* Profile Image Circle */}
+              <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-2 border-white/10 shadow-2xl relative group-hover:scale-105 transition-transform duration-500">
+                <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-purple-500/10 mix-blend-overlay z-10" />
                 <img
                   src={mypic}
                   alt={personalData.name}
                   className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
                 />
               </div>
+
+              {/* Name & Title */}
+              <div>
+                <h3 className="text-2xl font-bold text-white mb-2">{personalData.name}</h3>
+                <p className="text-primary font-mono text-sm tracking-wider uppercase mb-8">{personalData.designation}</p>
+              </div>
+
+              {/* Description Text */}
               <div
-                className="text-text-muted leading-relaxed text-sm md:text-base text-justify"
+                className="text-text-muted text-sm md:text-base leading-relaxed text-justify max-w-lg"
                 dangerouslySetInnerHTML={{ __html: personalData.description }}
               />
             </div>
           </div>
 
-          {/* === Right Side: Code Box + Chai === */}
-          <div className="flex flex-col gap-8">
+          {/* === Right Side: Description & Code Box === */}
+          <div className="order-2 flex flex-col gap-8 justify-center h-full">
+
             {/* Code Box */}
             <div className="rounded-xl bg-[#0a0a0a] border border-white/10 shadow-2xl overflow-hidden relative group">
               <div className="absolute top-0 right-0 p-4 opacity-50 text-xs font-mono text-white/20">developer.json</div>

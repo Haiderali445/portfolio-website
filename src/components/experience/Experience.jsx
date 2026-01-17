@@ -1,26 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { experienceData as initialData } from '../../utils/data/experience-data';
+import React from 'react';
 import { FaBriefcase, FaCalendarAlt } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
-const Experience = () => {
-    const [experiences, setExperiences] = useState(initialData);
-
-    // Backend-Ready Logic
-    /*
-    useEffect(() => {
-        const fetchExperience = async () => {
-            try {
-                const response = await fetch('/api/experience');
-                const data = await response.json();
-                setExperiences(data);
-            } catch (error) {
-                console.error('Failed to fetch experience:', error);
-            }
-        };
-        fetchExperience();
-    }, []);
-    */
+const Experience = ({ experiences = [] }) => {
 
     return (
         <section id="experience" className="py-24 relative z-10">

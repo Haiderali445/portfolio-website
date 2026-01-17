@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { solutionsData } from '../../utils/data/solutionsData';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPlus, FaMinus, FaLightbulb } from 'react-icons/fa';
 
@@ -45,30 +44,32 @@ const SolutionCard = ({ solution, isOpen, onClick }) => {
     );
 };
 
-const Solutions = () => {
-    const [openId, setOpenId] = useState(null);
+const Solutions = ({ solutions = [] }) => {
+    const [openIndex, setOpenIndex] = useState(null);
 
-    const handleToggle = (id) => {
-        setOpenId(openId === id ? null : id);
+    const toggleAccordion = (index) => {
+        setOpenIndex(openIndex === index ? null : index);
     };
 
     return (
         <section id="solutions" className="py-24 relative z-10">
-            <div className="container mx-auto px-6 max-w-7xl">
-                <div className="flex items-center gap-4 mb-12">
-                    <div className="p-3 rounded-full bg-primary/10 text-primary">
-                        <FaLightbulb size={24} />
-                    </div>
-                    <h2 className="text-3xl md:text-5xl font-sans font-bold text-white">Explored Solutions</h2>
+            <div className="container mx-auto px-6 max-w-6xl">
+                <div className="mb-16 text-center">
+                    <h2 className="text-4xl md:text-6xl font-bold text-white mb-4">
+                        Explored <span className="text-text-muted">Solutions</span>
+                    </h2>
+                    <p className="text-text-muted max-w-2xl mx-auto">
+                        A collection of technical challenges I've tackled, from system architecture to AI integration.
+                    </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {solutionsData.map((solution) => (
+                    {solutions.map((solution, index) => (
                         <SolutionCard
-                            key={solution.id}
+                            key={index}
                             solution={solution}
-                            isOpen={openId === solution.id}
-                            onClick={() => handleToggle(solution.id)}
+                            isOpen={openIndex === index}
+                            onClick={() => toggleAccordion(index)}
                         />
                     ))}
                 </div>

@@ -1,14 +1,16 @@
 import React from 'react'
 import { FaGithub, FaInstagram, FaLinkedin } from 'react-icons/fa'
-import { personalData } from '../../utils/data/personal-data'
 
-const SocialIcons = () => {
+
+const SocialIcons = ({ personalData }) => {
+  if (!personalData) return null;
+
   return (
     <div className="flex items-center gap-5 mt-8">
       {[
-        { icon: FaGithub, link: personalData.github },
-        { icon: FaLinkedin, link: personalData.linkedIn },
-        { icon: FaInstagram, link: personalData.instagram }
+        { icon: FaGithub, link: personalData?.github },
+        { icon: FaLinkedin, link: personalData?.linkedIn },
+        { icon: FaInstagram, link: personalData?.instagram }
       ].map((social, index) => (
         <a
           key={index}

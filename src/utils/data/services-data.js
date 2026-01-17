@@ -2,6 +2,7 @@ export const servicesData = [
     {
         id: 1,
         name: "Custom Business Solutions",
+        iconType: "Business",
         description: "We build tailored software solutions to address your unique business challenges. From CRM systems to workflow automation, we've got you covered.",
         fullTechStack: ["Python", "Django", "PostgreSQL", "Redis", "Docker", "React"],
         problem: "Businesses often struggle with off-the-shelf software that doesn't fit their specific operational prowess, leading to manual workarounds and data silos.",
@@ -16,6 +17,7 @@ export const servicesData = [
     {
         id: 2,
         name: "Modern Website Development",
+        iconType: "Website",
         description: "We create stunning, responsive websites that showcase your brand and drive conversions. We use the latest technologies to ensure your site is fast, secure, and user-friendly.",
         fullTechStack: ["Next.js", "Tailwind CSS", "Framer Motion", "Vercel", "Sanity CMS"],
         problem: "In a digital-first world, a slow or generic website kills credibility. High bounce rates and poor SEO are symptoms of outdated web architectures.",
@@ -30,6 +32,7 @@ export const servicesData = [
     {
         id: 3,
         name: "Innovative Web Applications",
+        iconType: "WebApps",
         description: "We develop cutting-edge web applications that streamline your operations, engage your customers, and provide a competitive edge.",
         fullTechStack: ["MERN Stack", "Socket.io", "AWS S3", "Redux Toolkit", "Stripe"],
         problem: "Static content is no longer enough. Users expect real-time interaction, complex data visualization, and seamless payments within the browser.",

@@ -1,10 +1,10 @@
 import React from 'react';
-import { testimonialData } from '../../utils/data/testem-data';
-import { FaHeart, FaStar, FaQuoteLeft } from 'react-icons/fa';
 
-const Testimonials = () => {
+import { FaQuoteLeft } from 'react-icons/fa';
+
+const Testimonials = ({ testimonials = [] }) => {
   // Duplicate data to ensure seamless loop if not enough items
-  const displayData = [...testimonialData, ...testimonialData, ...testimonialData];
+  const displayData = [...testimonials, ...testimonials, ...testimonials];
 
   return (
     <section id="testimonials" className="py-32 relative z-10 overflow-hidden bg-black/40 backdrop-blur-sm border-y border-white/5">

@@ -1,11 +1,11 @@
 import React from "react";
 import { Typewriter } from "react-simple-typewriter";
 import { motion, useScroll, useTransform } from "framer-motion";
-import img1 from "../../Assets/images/imgghibli.png";
 import SocialIcons from "../sidebar/socialcons";
 import MagneticButton from "../helper/MagneticButton";
+import imgghibli from '../../Assets/images/imgghibli.png';
 
-const Header = () => {
+const Header = ({ personalData = {} }) => {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 500], [0, 200]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
@@ -35,13 +35,13 @@ const Header = () => {
 
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-sans font-bold leading-tight tracking-tight mb-6 text-white group cursor-default">
             <span className="block text-text-muted text-4xl md:text-5xl font-normal mb-2 transition-colors duration-300 group-hover:text-primary/80">Hello, I'm</span>
-            Haider Ali
+            {personalData.name}
           </h1>
 
           <div className="text-xl md:text-2xl font-bold font-mono text-text-muted mb-10 h-8 flex items-center gap-2">
             <span className="text-primary">{">"}</span>
             <Typewriter
-              words={[
+              words={personalData.titles || [
                 "AI ARCHITECT",
                 "SOLUTION ENGINEER",
                 "AI INTEGRATION ENGINEER",
@@ -64,7 +64,7 @@ const Header = () => {
               </div>
             </MagneticButton>
 
-            <SocialIcons />
+            <SocialIcons personalData={personalData} />
           </div>
         </motion.div>
 
@@ -81,7 +81,7 @@ const Header = () => {
             >
               <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-20 opacity-40" />
               <img
-                src={img1}
+                src={imgghibli}
                 alt="Haider Ali"
                 className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700 ease-out grayscale hover:grayscale-0"
               />

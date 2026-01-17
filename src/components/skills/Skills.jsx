@@ -1,54 +1,61 @@
 import React from "react";
-import { skillsData } from "../../utils/data/skills";
-import { skillsImage } from "../../utils/skill-image";
 import Marquee from "react-fast-marquee";
+import { skillsImage } from "../../utils/skill-image";
 
-// Helper to categorize skills into the new 2026 buckets
-const categories = {
-  AI: ["AI Workflow Architecture", "Python", "TensorFlow", "PyTorch", "OpenAI", "LangChain"],
-  Backend: ["Backend Systems Engineering", "Node JS", "Express", "Microservices", "Docker", "Kubernetes", "PostgreSQL"],
-  Solutions: ["Cloud Solutions Architect", "AWS", "Google Cloud", "Git", "CI/CD Pipelines", "React", "Next JS"]
-};
+const SkillCard = ({ title, skills, glowClass, glowRGB, className }) => (
+  <div
+    className={`p-8 rounded-3xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl relative overflow-hidden group transition-all duration-500 hover:scale-[1.02] ${className} hover:border-opacity-50 hover:shadow-[0_0_50px_-12px_rgba(var(--glow-rgb),0.4)]`}
+    style={{ '--glow-rgb': glowRGB }}
+  >
+    {/* Dynamic Background Glow */}
+    <div className={`absolute inset-0 bg-gradient-to-br ${glowClass.replace('bg-', 'from-')} to-transparent opacity-0 group-hover:opacity-20 transition-opacity duration-700`} />
 
-// Brand Color Map for Glow
-const glowColors = {
-  "AI Workflow Architecture": "bg-purple-500",
-  "Backend Systems Engineering": "bg-blue-500",
-  "Cloud Solutions Architect": "bg-emerald-500",
-  // Map standard skills too for micro-glows inside cards
-  "Python": "bg-yellow-400",
-  "React": "bg-blue-400",
-  "AWS": "bg-orange-500",
-  "default": "bg-primary"
-};
+    {/* Border Glow */}
+    <div className={`absolute inset-0 rounded-3xl border-2 border-transparent ${glowClass.replace('bg-', 'group-hover:border-')}/40 transition-all duration-500`} />
 
-const SkillCard = ({ title, skills, glowColor, className }) => (
-  <div className={`p-8 rounded-3xl glass-card border border-glass-border relative overflow-hidden group ${className}`}>
-    {/* Dynamic Background Glow based on Category */}
-    <div className={`absolute inset-0 bg-gradient-to-br ${glowColor} to-transparent opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
-
-    <h3 className="text-2xl font-bold mb-6 text-white relative z-10">{title}</h3>
+    <h3 className="text-2xl font-bold mb-8 text-white relative z-10 flex items-center gap-3">
+      <span className={`w-2 h-8 rounded-full ${glowClass}`} />
+      {title}
+    </h3>
 
     <div className="flex flex-wrap gap-3 relative z-10">
-      {skills.map((skill, i) => {
-        // Fallback if specific skill isn't in categories but is in skillsData
-        return (
-          <div key={i} className="relative group/skill">
-            <span className="relative z-10 px-3 py-1.5 text-sm font-mono text-text-muted bg-black/40 rounded-md border border-white/5 hover:border-white/30 hover:text-white transition-all cursor-default block">
-              {skill}
-            </span>
-          </div>
-        );
-      })}
+      {skills.map((skill, i) => (
+        <div key={i} className="relative group/skill">
+          <span className="relative z-10 px-4 py-2 text-sm font-medium font-mono text-white/60 bg-black/40 rounded-lg border border-white/5 group-hover/skill:border-white/20 group-hover/skill:text-white transition-all cursor-default block backdrop-blur-sm">
+            {skill.name}
+          </span>
+        </div>
+      ))}
     </div>
   </div>
 );
 
-function Skills() {
-  // Filter skills based on the new categories
-  const aiSkills = skillsData.filter(s => categories.AI.includes(s) || s.includes("AI"));
-  const backendSkills = skillsData.filter(s => categories.Backend.includes(s) || s.includes("Backend") || s.includes("DB"));
-  const solutionSkills = skillsData.filter(s => categories.Solutions.includes(s) || (!categories.AI.includes(s) && !categories.Backend.includes(s)));
+function Skills({ skills = [] }) {
+  // Glow Config Map based on Category Name
+  const glowConfig = {
+    'AI': { class: 'bg-purple-500', rgb: '168, 85, 247' },
+    'Backend': { class: 'bg-blue-500', rgb: '59, 130, 246' },
+    'Solutions': { class: 'bg-emerald-500', rgb: '16, 185, 129' },
+    'Other': { class: 'bg-primary', rgb: '0, 234, 255' } // Cyan primary
+  };
+
+  // Group skills by category
+  const categories = skills.reduce((acc, skill) => {
+    const cat = skill.category || "Other";
+    if (!acc[cat]) {
+      const config = glowConfig[cat] || glowConfig['Other'];
+      acc[cat] = {
+        title: cat,
+        glowClass: config.class,
+        glowRGB: config.rgb,
+        items: []
+      };
+    }
+    acc[cat].items.push(skill);
+    return acc;
+  }, {});
+
+  const categoryKeys = Object.keys(categories);
 
   return (
     <section id="skills" className="py-32 relative z-10 overflow-hidden">
@@ -59,48 +66,42 @@ function Skills() {
           </h2>
         </div>
 
-        {/* Bento Grid Layout with Specific Glows */}
+        {/* Bento Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
-          <SkillCard
-            title="AI Workflow Architecture"
-            skills={aiSkills}
-            glowColor="from-purple-500"
-            className="lg:col-span-1 min-h-[300px]"
-          />
-          <SkillCard
-            title="Backend Engineering"
-            skills={backendSkills}
-            glowColor="from-blue-500"
-            className="lg:col-span-1 min-h-[300px]"
-          />
-          <SkillCard
-            title="AI Solutions"
-            skills={solutionSkills}
-            glowColor="from-emerald-500"
-            className="lg:col-span-1 min-h-[300px]"
-          />
+          {categoryKeys.map((key) => (
+            <SkillCard
+              key={key}
+              title={key}
+              skills={categories[key].items}
+              glowClass={categories[key].glowClass}
+              glowRGB={categories[key].glowRGB}
+              className="lg:col-span-1 min-h-[300px]"
+            />
+          ))}
         </div>
 
-        {/* Infinite Marquee with Mask and White Silhouette Filters */}
-        <div className="w-full py-10 border-y border-glass-border bg-black/20 backdrop-blur-sm relative">
-          <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
-          <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+        {/* Infinite Marquee */}
+        <div className="w-full py-10 border-y border-glass-border bg-black/20 backdrop-blur-sm relative overflow-hidden">
+          {/* Gradient Masks */}
+          <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#050505] to-transparent z-10 pointer-events-none" />
+          <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#050505] to-transparent z-10 pointer-events-none" />
 
           <Marquee gradient={false} speed={50} pauseOnHover>
-            {skillsData.map((skill, id) => {
-              const img = skillsImage(skill);
+            {skills.map((skill, id) => {
+              const img = skillsImage(skill.name);
               if (!img) return null;
               return (
-                <div key={id} className="mx-12 flex flex-col items-center gap-4 group">
+                <div key={id} className="mx-12 flex flex-col items-center gap-4 group min-w-[100px]">
                   <div className="w-16 h-16 relative transition-transform duration-300 group-hover:scale-110">
                     <img
                       src={img}
-                      alt={skill}
+                      alt={skill.name}
                       className="w-full h-full object-contain filter brightness-0 invert opacity-70 group-hover:opacity-100 transition-all duration-300"
                     />
                   </div>
+                  <p className="text-sm font-mono text-text-muted opacity-0 group-hover:opacity-100 transition-opacity duration-300">{skill.name}</p>
                 </div>
-              )
+              );
             })}
           </Marquee>
         </div>
