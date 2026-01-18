@@ -48,12 +48,44 @@ npm install
 npm run dev
 ```
 
-## 📁 Backend Integration Guide
-To connect a real backend:
-1. Navigate to `src/components/experience/Experience.jsx`.
-2. Uncomment the `useEffect` hook.
-3. Replace `initialData` with the `experiences` state.
-4. Update `.env` with your API endpoints.
+## � Project Structure
+
+This workspace is organized into a modular, multi-repo architecture to ensure separation of concerns:
+
+* **[portfolio-backend/](portfolio-backend/)** — **Scalable Backend**. FastAPI (Python) server handling agentic memory and task processing.
+* **[portfolio-dashboard/](portfolio-dashboard/)** — **Admin Control Center**. Refine.js & Puck.js visual builder for content management.
+* **[shared-docs/](shared-docs/)** — **Documentation Vault**. Contains all raw artifacts and architecture blueprints.
+
+---
+
+## 📚 Architecture & Documentation
+
+> [!IMPORTANT]
+> This project uses a **Scale-to-Zero** architecture. To understand how the three repositories (Portfolio, Dashboard, Backend) integrate, please review the documentation below.
+
+### 🔗 Central Integration
+* **[SYSTEM_FLOW.md](SYSTEM_FLOW.md)** — **Master Integration Guide**. Details secure communication between repositories, CORS settings, and data flow.
+* **[DEVOPS_OPTIMIZATION.md](DEVOPS_OPTIMIZATION.md)** — Strategies for 100% free-tier maintenance and bandwidth monitoring.
+
+### 🏗️ Backend & Agentic AI
+* **[BACKEND_ROADMAP.md](BACKEND_ROADMAP.md)** — Architectural details for pgvector, task queues, and FastAPI.
+* **[portfolio-backend/BACKEND_GUIDE.md](portfolio-backend/BACKEND_GUIDE.md)** — Render.com & Supabase deployment walkthrough.
+
+### 🎨 Dashboard & Visual Builder
+* **[DASHBOARD_SPECS.md](DASHBOARD_SPECS.md)** — Product specs for the Refine.js Admin Panel and Puck.js builder.
+* **[portfolio-dashboard/DASHBOARD_GUIDE.md](portfolio-dashboard/DASHBOARD_GUIDE.md)** — Dashboard setup and Refine.js configuration.
+
+### 🚀 Operations
+* **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** — Netlify/Vercel frontend deployment.
+* **[walkthrough.md](walkthrough.md)** — Comprehensive project implementation summary.
+* **[CHANGELOG.md](CHANGELOG.md)** — Version history and architectural updates.
+
+### Key Features
+- ✅ **100% Free Hosting** - Supabase Free Tier + Render Free Tier + Vercel Hobby Tier
+- ✅ **Agentic AI Workflows** - pgvector memory system with Groq Cloud / Hugging Face integration
+- ✅ **Visual Page Builder** - Drag-and-drop section reordering with Puck.js
+- ✅ **Auto Keep-Awake** - Cron job pings every 14 minutes to prevent Render sleep
+- ✅ **Optimized Performance** - Image compression, CDN caching, bandwidth monitoring
 
 ## 🤝 Contributing
 Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to submit pull requests.
