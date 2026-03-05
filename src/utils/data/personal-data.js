@@ -7,6 +7,6 @@ export const personalData = {
   phone: '+92322-5629058',
   address: 'Mohallah Kashmir nagar, Jalalpur Jattan, Gujrat, Pakistan',
   github: 'https://github.com/Haiderali445',
-  instagram: 'https://www.instagram.com/hayder_alyy__/',
+  instagram: 'https://www.instagram.com/haider__alyy__/',
   linkedIn: 'https://www.linkedin.com/in/hayder-ali-8a025b290/',
 }
