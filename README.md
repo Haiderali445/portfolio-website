@@ -2,7 +2,7 @@
 
 > A cinematic, high-fidelity portfolio experience for a modern software engineer, built as a polished frontend layer inside a larger monorepo ecosystem.
 
-![Portfolio Preview](src/Assets/images/img2.png)
+![Portfolio Preview](docs/web.png)
 
 [Live Demo](https://haideraliblog.netlify.app/) • [System Flow Docs](docs/SYSTEM_FLOW.md) • [GitHub](https://github.com/Haiderali445)
 
