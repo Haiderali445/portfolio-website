@@ -201,8 +201,6 @@ sequenceDiagram
 ```bash
 git clone https://github.com/Haiderali445/portfolio-website.git
 cd portfolio-website
-cd apps/ego-web
-```
 
 ### Prerequisites
 - Node.js 18+
