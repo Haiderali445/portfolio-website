@@ -2,7 +2,7 @@ export const experienceData = [
     {
         id: 1,
         title: "Backend Developer Intern",
-        company: "Your Company Name",
+        company: "VisionBird Technologies",
         duration: "2026 - Present",
         description: "Working as a Backend Developer Intern while leading backend development tasks across multiple features. Contributed to strengthening the company's website security by identifying and addressing vulnerabilities, improving API reliability, and implementing secure development practices. Actively developing and maintaining the company's website and CMS, collaborating with the team to deliver scalable, maintainable, and high-quality backend solutions.",
         tech: ["Node.js", "Express.js", "FastAPI", "PostgreSQL", "Firebase", "REST APIs", "Git"]
