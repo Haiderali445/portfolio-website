@@ -9,7 +9,7 @@ export const experienceData = [
     },
     {
         id: 2,
-        title: "Lead Backend Engineer Internee",
+        title: "Fullstack Engineer ",
         company: "TechNova Solution",
         duration: "2024 - 2026",
         description: "Leading the development of a cloud-native SaaS platform. Architected microservices using Node.js and Go, reducing system latency by 40%.",
