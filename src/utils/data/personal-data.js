@@ -2,11 +2,11 @@ export const personalData = {
   name: "HAIDER ALI",
   profile: 'src/Assets/images/img2.png',
   designation: "Software Developer",
-  description: "I’m <b>HAIDER ALI</b>, a passionate Full-Stack Developer with 2+ years of hands-on experience building modern, scalable, and customizable web applications. I specialize in the JavaScript ecosystem — from React and the MERN stack on the web to exploring React Native for mobile experiences and diving into AI/ML-powered solutions. I’ve helped businesses bring their ideas to life through sleek, performant apps tailored to real-world needs. I'm a fast learner, self-driven, and deeply committed to solving complex problems with clean, maintainable code. If you're looking for someone who can turn ideas into end-to-end digital products — I'm open to exciting collaborations and opportunities.",
+  description: "I’m <b>HAIDER ALI</b>, a passionate Full-Stack Developer and final-year Software Engineering student specializing in <b>.NET architecture, system design, and robust ERP solutions</b>. With hands-on experience spanning enterprise backend systems using .NET Core, Node.js, and FastAPI, I excel at architecting scalable microservices, event-driven workflows, and complex multi-warehouse enterprise platforms. Alongside deep backend and system design expertise, I integrate advanced <b>Agentic AI, MERN stack, and TypeScript</b> solutions to build clean, high-performance, and maintainable end-to-end digital products.",
   email: 'rajahaider7896@gmail.com',
   phone: '+92322-5629058',
   address: 'Mohallah Kashmir nagar, Jalalpur Jattan, Gujrat, Pakistan',
-  github: 'https://github.com/Haiderali445',
+  github: 'https://github.com/haiderali445',
   instagram: 'https://www.instagram.com/hayder_alyy__/',
   linkedIn: 'https://www.linkedin.com/in/haider-ali-8a025b290/',
 }
