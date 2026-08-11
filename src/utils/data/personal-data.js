@@ -1,5 +1,5 @@
-import profileImg from "../Assets/images/img2.png";
-import heroImg from "../Assets/images/imgghibli.png";
+import profileImg from "../../Assets/images/img2.png";
+import heroImg from "../../Assets/images/imgghibli.png";
 
 export const personalData = {
   name: "HAIDER ALI",
