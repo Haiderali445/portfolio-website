@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-
 import { motion } from 'framer-motion';
 import MagneticButton from '../helper/MagneticButton';
 import { FaArrowLeft } from 'react-icons/fa';
+import MetaTags from '../common/MetaTags';
 
 const ServiceDetail = ({ services = [] }) => {
     const { serviceId } = useParams();
@@ -12,42 +12,42 @@ const ServiceDetail = ({ services = [] }) => {
     // Find service data
     const service = services?.find(s => s.id === parseInt(serviceId));
 
-    // Quick Safety Guard
-    if (!service) return null;
-
-    // Scroll to top on mount
+    // Scroll to top cleanly on mount
     useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
+        window.scrollTo({ top: 0, behavior: 'instant' });
+    }, [serviceId]);
 
     if (!service) {
         return (
-            <div className="h-screen flex flex-col items-center justify-center">
-                <h2 className="text-2xl font-bold mb-4">Service Not Found</h2>
-                <button onClick={() => navigate('/')} className="text-primary hover:underline">Return Home</button>
+            <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center text-white">
+                <MetaTags title="Service Not Found | Haider Ali Portfolio" />
+                <h2 className="text-2xl font-bold mb-4 font-mono">Service Not Found</h2>
+                <button
+                    onClick={() => navigate('/#services')}
+                    className="px-6 py-3 bg-primary text-black font-semibold rounded-full hover:bg-cyan-300 transition-colors"
+                >
+                    Return to Services
+                </button>
             </div>
         );
     }
 
     return (
         <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '-100%' }}
-            transition={{ type: 'tween', ease: 'anticipate', duration: 0.8 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5, ease: 'easeOut' }}
             className="min-h-screen pt-32 pb-20 px-6 container mx-auto max-w-5xl relative z-10"
         >
+            <MetaTags
+                title={`${service.name} | Haider Ali`}
+                description={service.description}
+            />
+
             {/* Back Button */}
             <div className="mb-12">
-                <MagneticButton onClick={() => {
-                    navigate('/');
-                    setTimeout(() => {
-                        const servicesSection = document.getElementById('services');
-                        if (servicesSection) {
-                            servicesSection.scrollIntoView({ behavior: 'smooth' });
-                        }
-                    }, 100);
-                }}>
+                <MagneticButton onClick={() => navigate('/#services')}>
                     <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-sm font-mono cursor-pointer">
                         <FaArrowLeft /> Back to Services
                     </div>
@@ -59,7 +59,7 @@ const ServiceDetail = ({ services = [] }) => {
                 <motion.h1
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
+                    transition={{ delay: 0.1 }}
                     className="text-4xl md:text-6xl font-bold font-sans mb-6 text-white"
                 >
                     {service.name}
@@ -67,7 +67,7 @@ const ServiceDetail = ({ services = [] }) => {
                 <motion.p
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
+                    transition={{ delay: 0.2 }}
                     className="text-xl text-text-muted max-w-2xl leading-relaxed"
                 >
                     {service.description}
@@ -78,7 +78,7 @@ const ServiceDetail = ({ services = [] }) => {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
+                transition={{ delay: 0.3 }}
                 className="mb-24"
             >
                 <h3 className="text-sm font-mono text-primary mb-8 uppercase tracking-widest border-b border-white/10 pb-2 inline-block">Tech Stack Used</h3>
@@ -103,7 +103,7 @@ const ServiceDetail = ({ services = [] }) => {
                     >
                         <h3 className="text-xl font-bold text-white mb-4">The Challenge</h3>
                         <p className="text-text-muted leading-relaxed">
-                            {service.problem || "Organizations face scalability and maintenance hurdles when legacy systems fail to adapt to modern throughput demands."}
+                            {service.problem}
                         </p>
                     </motion.div>
 
@@ -115,7 +115,7 @@ const ServiceDetail = ({ services = [] }) => {
                     >
                         <h3 className="text-xl font-bold text-white mb-4">The Solution</h3>
                         <p className="text-text-muted leading-relaxed">
-                            {service.solution || "We implement an event-driven architecture that ensures decoupling, high availability, and seamless data consistency across services."}
+                            {service.solution}
                         </p>
                     </motion.div>
                 </div>

@@ -3,7 +3,6 @@ import { Typewriter } from "react-simple-typewriter";
 import { motion, useScroll, useTransform } from "framer-motion";
 import SocialIcons from "../sidebar/socialcons";
 import MagneticButton from "../helper/MagneticButton";
-import imgghibli from '../../Assets/images/imgghibli.png';
 
 const Header = ({ personalData = {} }) => {
   const { scrollY } = useScroll();
@@ -30,7 +29,7 @@ const Header = ({ personalData = {} }) => {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
             </span>
-            <span className="text-xs font-mono text-green-400 tracking-wide uppercase">System Status: Active & Available</span>
+            <span className="text-xs font-mono text-green-400 tracking-wide uppercase">System Status: {personalData.availabilityStatus}</span>
           </div>
 
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-sans font-bold leading-tight tracking-tight mb-6 text-white group cursor-default">
@@ -41,13 +40,7 @@ const Header = ({ personalData = {} }) => {
           <div className="text-xl md:text-2xl font-bold font-mono text-text-muted mb-10 h-8 flex items-center gap-2">
             <span className="text-primary">{">"}</span>
             <Typewriter
-              words={personalData.titles || [
-                "AI ARCHITECT",
-                "SOLUTION ENGINEER",
-                "AI INTEGRATION ENGINEER",
-                "SOFTWARE ARCHITECT",
-                "SYSTEM DESIGN SPECIALIST"
-              ]}
+              words={personalData.typewriterTitles}
               loop
               cursor
               cursorStyle="_"
@@ -81,8 +74,8 @@ const Header = ({ personalData = {} }) => {
             >
               <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-20 opacity-40" />
               <img
-                src={imgghibli}
-                alt="Haider Ali"
+                src={personalData.heroImage}
+                alt={personalData.name}
                 className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700 ease-out grayscale hover:grayscale-0"
               />
             </motion.div>

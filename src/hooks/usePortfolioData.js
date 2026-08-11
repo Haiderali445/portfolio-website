@@ -1,13 +1,5 @@
 import { useState, useEffect } from 'react';
-import { personalData } from '../utils/data/personal-data';
-import { projectsData } from '../utils/data/projects-data';
-import { experienceData } from '../utils/data/experience-data';
-import { servicesData } from '../utils/data/services-data';
-import { skillsData } from '../utils/data/skills';
-import { contactsData } from '../utils/data/contactsData';
-import { testimonialData } from '../utils/data/testem-data';
-import { solutionsData } from '../utils/data/solutionsData';
-// import { educations } from '../utils/data/educations'; // Optional if needed
+import { portfolioService } from '../services/portfolio.service';
 
 export const usePortfolioData = () => {
     const [data, setData] = useState(null);
@@ -15,37 +7,32 @@ export const usePortfolioData = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Simulate API Call
+        let isMounted = true;
+
         const fetchData = async () => {
-            console.log("usePortfolioData: Fetching data...");
             try {
                 setLoading(true);
-                // In the future, this will be:
-                // const response = await apiClient.get('/portfolio');
-                // setData(response.data);
-
-                // Mock Delay
-                await new Promise(resolve => setTimeout(resolve, 100));
-
-                setData({
-                    personal: personalData,
-                    projects: projectsData,
-                    experience: experienceData,
-                    services: servicesData,
-                    skills: skillsData,
-                    contacts: contactsData,
-                    testimonials: testimonialData,
-                    solutions: solutionsData,
-                });
+                const portfolioData = await portfolioService.getPortfolio();
+                if (isMounted) {
+                    setData(portfolioData);
+                }
             } catch (err) {
-                setError(err);
-                console.error("Error fetching portfolio data:", err);
+                if (isMounted) {
+                    setError(err);
+                    console.error("Error fetching portfolio data:", err);
+                }
             } finally {
-                setLoading(false);
+                if (isMounted) {
+                    setLoading(false);
+                }
             }
         };
 
         fetchData();
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     return { data, loading, error };

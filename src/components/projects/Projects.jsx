@@ -9,7 +9,7 @@ function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
-const Projects = ({ projects = [] }) => {
+const Projects = ({ projects = [], personalData = {} }) => {
   const [expanded, setExpanded] = useState(false);
 
   const visibleProjects = expanded ? projects : projects.slice(0, 4);
@@ -23,7 +23,7 @@ const Projects = ({ projects = [] }) => {
           Selected <span className="text-text-muted">Works</span>
         </h2>
         <p className="text-center text-text-muted mb-16 max-w-xl mx-auto">
-          A curated selection of projects that demonstrate my technical capabilities and product design sensibilities.
+          {personalData.projectsSectionSubtitle}
         </p>
 
         {/* Bento Grid */}
@@ -66,7 +66,7 @@ const Projects = ({ projects = [] }) => {
 
                   {/* Content */}
                   <div className="relative z-10 p-8 h-full flex flex-col justify-end">
-                    {project.inprogress && (
+                    {(project.inProgress || project.inprogress) && (
                       <div className="absolute top-6 right-6 px-3 py-1 bg-yellow-500/10 text-yellow-300 text-xs font-mono rounded-full border border-yellow-500/20 backdrop-blur-md">
                         WIP
                       </div>

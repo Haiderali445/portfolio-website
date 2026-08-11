@@ -44,7 +44,7 @@ const SolutionCard = ({ solution, isOpen, onClick }) => {
     );
 };
 
-const Solutions = ({ solutions = [] }) => {
+const Solutions = ({ solutions = [], personalData = {} }) => {
     const [openIndex, setOpenIndex] = useState(null);
 
     const toggleAccordion = (index) => {
@@ -59,7 +59,7 @@ const Solutions = ({ solutions = [] }) => {
                         Explored <span className="text-text-muted">Solutions</span>
                     </h2>
                     <p className="text-text-muted max-w-2xl mx-auto">
-                        A collection of technical challenges I've tackled, from system architecture to AI integration.
+                        {personalData.solutionsSectionSubtitle}
                     </p>
                 </div>
 

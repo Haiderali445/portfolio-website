@@ -10,7 +10,7 @@ const Footer = ({ personalData }) => {
           <div className="text-left">
             <h2 className="text-2xl font-bold text-white mb-2">{personalData.name}</h2>
             <p className="text-text-muted text-sm max-w-xs">
-              Crafting digital experiences with code and passion. Open for collaborations.
+              {personalData.footerTagline}
             </p>
           </div>
 
@@ -19,13 +19,7 @@ const Footer = ({ personalData }) => {
             <div className="inline-block text-left p-4 rounded-xl bg-white/5 border border-white/5 backdrop-blur-sm">
               <p className="text-xs font-mono text-text-muted mb-2 border-b border-white/5 pb-1">:: CORE STACK ::</p>
               <pre className="text-[10px] md:text-xs font-mono text-green-400/80 leading-relaxed">
-                {`const stack = {
-  os: "Linux",
-  editor: "Cursor",
-  shell: "ZSH",
-  framework: "React/Vite",
-  style: "Tailwind"
-};`}
+                {`const stack = {\n  os: "${personalData.devStack?.os}",\n  editor: "${personalData.devStack?.editor}",\n  shell: "${personalData.devStack?.shell}",\n  framework: "${personalData.devStack?.framework}",\n  style: "${personalData.devStack?.style}"\n};`}
               </pre>
             </div>
           </div>

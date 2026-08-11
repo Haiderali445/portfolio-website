@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Lenis from 'lenis';
 import { Toaster } from 'react-hot-toast';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import Nav from './components/nav/Nav';
 import Footer from './components/footer/Footer';
@@ -13,15 +13,10 @@ import ServiceDetail from './components/services/ServiceDetail';
 import { usePortfolioData } from './hooks/usePortfolioData';
 
 function App() {
-  console.log('Mounting App...'); // Debug: App mount start
   const location = useLocation();
   const { data, loading, error } = usePortfolioData();
 
-  // Safe Destructuring
-  const { personal, projects, experience, services, skills, contacts, testimonials, solutions } = data || {};
-
-  // Debug Log
-  console.log("App Render - Loading:", loading, "Data:", data, "Error:", error);
+  const { personal, services } = data || {};
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -42,10 +37,40 @@ function App() {
     };
   }, []);
 
-  if (loading) return <div className='h-screen w-full bg-[#050505] flex items-center justify-center text-white font-mono'>INITIALIZING SYSTEM...</div>;
+  // Reset scroll on route changes cleanly
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
-  // Fail-safe for error or null data
-  if (error || !data) return <div className='h-screen w-full bg-[#050505] flex items-center justify-center text-red-500'>ERROR: DATA_LOAD_FAILED</div>;
+  if (loading) {
+    return (
+      <div className="h-screen w-full bg-[#050505] flex flex-col items-center justify-center relative overflow-hidden">
+        {/* Animated Glow Backdrop */}
+        <div className="absolute w-96 h-96 bg-cyan-500/10 rounded-full blur-[120px] animate-pulse" />
+
+        <div className="relative z-10 p-8 rounded-3xl bg-white/[0.03] border border-white/10 backdrop-blur-xl flex flex-col items-center gap-6 shadow-2xl">
+          <div className="relative flex items-center justify-center w-16 h-16">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-30" />
+            <div className="w-12 h-12 rounded-full border-2 border-cyan-400/20 border-t-cyan-400 animate-spin" />
+          </div>
+          <p className="text-sm font-mono text-cyan-400 tracking-widest uppercase animate-pulse">
+            INITIALIZING SYSTEM...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="h-screen w-full bg-[#050505] flex flex-col items-center justify-center text-red-500 font-mono">
+        <div className="p-8 rounded-3xl bg-red-500/5 border border-red-500/20 backdrop-blur-xl text-center">
+          <h2 className="text-xl font-bold mb-2">ERROR: DATA_LOAD_FAILED</h2>
+          <p className="text-sm text-gray-400">Please check system logs or backend connectivity.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-white selection:bg-primary/30 font-sans">
@@ -62,11 +87,6 @@ function App() {
         }}
       />
 
-      {/* Navigation - Only show on Home for now, or keep globally but sticky? 
-          User asked for "Back to Services" button on detail page, implying Nav might not be primary there or could be distracting.
-          But floating dock is nice. Let's keep it generally, or maybe hide it on detail page if user requested specific "Back" button focus.
-          For now, I'll leave it. It's unique.
-      */}
       <Nav />
 
       <AnimatePresence mode="wait">

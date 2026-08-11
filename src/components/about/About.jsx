@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import mypic from "../../Assets/images/img2.png";
 import { FaCircle } from "react-icons/fa";
 
 const About = ({ personalData }) => {
@@ -29,7 +28,7 @@ const About = ({ personalData }) => {
               <div className="w-32 h-32 md:w-40 md:h-40 rounded-full overflow-hidden border-2 border-white/10 shadow-2xl relative group-hover:scale-105 transition-transform duration-500">
                 <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 to-purple-500/10 mix-blend-overlay z-10" />
                 <img
-                  src={mypic}
+                  src={personalData.profile}
                   alt={personalData.name}
                   className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
                 />
@@ -70,11 +69,14 @@ const About = ({ personalData }) => {
                     &nbsp;&nbsp;<span className="text-blue-400">"name"</span>: <span className="text-yellow-300">"{personalData.name}"</span>,<br />
                     &nbsp;&nbsp;<span className="text-blue-400">"role"</span>: <span className="text-yellow-300">"{personalData.designation}"</span>,<br />
                     &nbsp;&nbsp;<span className="text-blue-400">"email"</span>: <span className="text-yellow-300">"{personalData.email}"</span>,<br />
-                    &nbsp;&nbsp;<span className="text-blue-400">"status"</span>: <span className="text-orange-400">"Open for Innovation"</span>,<br />
+                    &nbsp;&nbsp;<span className="text-blue-400">"status"</span>: <span className="text-orange-400">"{personalData.availabilityLabel}"</span>,<br />
                     &nbsp;&nbsp;<span className="text-blue-400">"interests"</span>: <span className="text-purple-400">[</span>
                     <br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-yellow-300">"Architecture"</span>, <span className="text-yellow-300">"AI Integration"</span>,<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-yellow-300">"Cloud Native"</span>, <span className="text-yellow-300">"UX Engineering"</span>
+                    {personalData.interests?.map((interest, i) => (
+                      <span key={i}>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span className="text-yellow-300">"{interest}"</span>{i < personalData.interests.length - 1 ? ',' : ''}<br />
+                      </span>
+                    ))}
                     <br />
                     &nbsp;&nbsp;<span className="text-purple-400">]</span>
                     <br />
@@ -87,10 +89,10 @@ const About = ({ personalData }) => {
             {/* === Buy Me a Chai Box === */}
             <div className="p-6 rounded-2xl glass-card bg-white/[0.03] border border-white/[0.08] flex flex-col items-center text-center">
               <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
-                Fuel the Code ☕
+                {personalData.chaiBoxTitle}
               </h3>
               <p className="text-text-muted text-sm mb-6 max-w-sm">
-                Innovative solutions require high-octane chai. Support the craft!
+                {personalData.chaiBoxDescription}
               </p>
 
               <div className="flex gap-4">

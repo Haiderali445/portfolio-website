@@ -35,7 +35,7 @@ const Testimonials = ({ testimonials = [] }) => {
 
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-full overflow-hidden border border-white/10">
-                    <img src={test.image} alt={test.name} className="w-full h-full object-cover" />
+                    <img src={test.imageUrl || test.image} alt={test.name} className="w-full h-full object-cover" />
                   </div>
                   <div>
                     <h4 className="font-bold text-white text-base">{test.name}</h4>

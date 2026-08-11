@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
-import emailjs from '@emailjs/browser';
 import toast from 'react-hot-toast';
 import { FaGithub, FaLinkedin, FaInstagram, FaWhatsapp, FaEnvelope } from 'react-icons/fa';
+import { contactService } from '../../services/contact.service';
 
 const ContactField = ({ id, label, type = "text", name, ...props }) => {
   return (
@@ -36,42 +36,26 @@ const ContactField = ({ id, label, type = "text", name, ...props }) => {
   );
 };
 
-const Contact = ({ contactInfo }) => {
+const Contact = ({ contactInfo, personalData = {} }) => {
   const form = useRef();
   const [loading, setLoading] = useState(false);
 
-  // Fallback data if props are missing
-  const data = contactInfo || {
-    email: "rajahaider7896@gmail.com",
-    phone: "+923225629058",
-    github: "#",
-    linkedin: "#",
-    instagram: "#"
-  };
+  const data = contactInfo || {};
 
-  const handleSend = (e) => {
+  const handleSend = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_fbo485p';
-    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_fa82428';
-    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'dXT9wdRoCleHwfiYg';
-
-    if (!publicKey) {
-      toast.error('Email service not configured (Public Key missing).');
+    try {
+      await contactService.sendForm(form.current);
+      toast.success('Message sent successfully!');
+      e.target.reset();
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message || 'Failed to send message.');
+    } finally {
       setLoading(false);
-      return;
     }
-
-    emailjs.sendForm(serviceId, templateId, form.current, publicKey)
-      .then(() => {
-        toast.success('Message sent successfully!');
-        e.target.reset();
-      }, (error) => {
-        console.error(error);
-        toast.error('Failed to send message.');
-      })
-      .finally(() => setLoading(false));
   };
 
   return (
@@ -85,7 +69,7 @@ const Contact = ({ contactInfo }) => {
               Get in <span className="text-gray-500">Touch</span>
             </h2>
             <p className="text-gray-400 mb-12 text-lg max-w-md">
-              Have a project in mind or want to discuss AI? I'm open to new connections.
+              {personalData.contactSectionIntro}
             </p>
 
             <div className="space-y-6">
@@ -111,9 +95,9 @@ const Contact = ({ contactInfo }) => {
 
               <div className="flex gap-4 mt-8">
                 {[
-                  { icon: FaGithub, link: data.github },
-                  { icon: FaLinkedin, link: data.linkedin },
-                  { icon: FaInstagram, link: data.instagram }
+                  { icon: FaGithub,    link: data.github },
+                  { icon: FaLinkedin,  link: data.linkedIn },
+                  { icon: FaInstagram, link: data.instagram },
                 ].map((social, i) => (
                   <a key={i} href={social.link} target="_blank" rel="noreferrer"
                     className="p-4 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 text-gray-400 hover:text-white transition-all">
