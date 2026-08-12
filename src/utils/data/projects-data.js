@@ -7,7 +7,7 @@ export const projectsData = [
     tools: ['MongoDB', 'Express', 'React', 'Node.js', 'Redux', 'REST API', 'Chart.js', 'MUI', 'JWT'],
     role: 'Full Stack Developer',
     code: 'https://github.com/haiderali445/SIMS_Akura',
-    demo: 'https://haideraliblog.netlify.app/',
+    demo: null,
     inProgress: false,
     images: ['https://tinyurl.com/mrkcm6js']
   },
@@ -43,7 +43,7 @@ export const projectsData = [
     tools: ['Python', 'FastAPI', 'AI Agents', 'REST API', 'Automation'],
     role: 'Backend & AI Engineer',
     code: 'https://github.com/haiderali445/portfolio-backend',
-    demo: 'https://haideraliblog.netlify.app/',
+    demo: null,
     inProgress: true,
     images: ['https://tinyurl.com/45pysfm7']
   },
@@ -55,7 +55,7 @@ export const projectsData = [
     tools: ['Firebase', 'CRUD', 'JavaScript', 'Tailwind CSS', 'React'],
     role: 'Full Stack Developer',
     code: 'https://github.com/haiderali445/web-tailor',
-    demo: null,
+    demo: 'https://mehish-tailors.netlify.app/',
     inProgress: false,
     images: ['https://tinyurl.com/3hxbt288']
   },

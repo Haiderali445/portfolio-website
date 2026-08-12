@@ -12,23 +12,13 @@ import { pricingService } from './pricing.service';
 export const portfolioService = {
   /**
    * Aggregates all domain service data for the main application state.
+   * Uses Promise.allSettled to ensure a single failing service doesn't break the entire UI.
    * [Backend Swap]: Replace body with:
    *   const response = await apiClient.get('/portfolio');
    *   return response.data;
    */
   async getPortfolio() {
-    const [
-      personal,
-      site,
-      projects,
-      experience,
-      education,
-      services,
-      skills,
-      testimonials,
-      solutions,
-      pricing,
-    ] = await Promise.all([
+    const results = await Promise.allSettled([
       profileService.getProfile(),
       siteService.getSiteConfig(),
       projectsService.getProjects(),
@@ -41,10 +31,35 @@ export const portfolioService = {
       pricingService.getPricingPlans(),
     ]);
 
+    // Helper to safely extract settled values with appropriate fallbacks
+    const getValue = (index, fallback) => 
+      results[index].status === 'fulfilled' ? results[index].value : fallback;
+
+    // Optional: Log failures for monitoring without crashing execution
+    results.forEach((result, index) => {
+      if (result.status === 'rejected') {
+        console.warn(`Portfolio sub-service [Index ${index}] failed:`, result.reason);
+      }
+    });
+
+    const personal = getValue(0, {});
+    const site = getValue(1, {});
+    const projects = getValue(2, []);
+    const experience = getValue(3, []);
+    const education = getValue(4, []);
+    const services = getValue(5, []);
+    const skills = getValue(6, []);
+    const testimonials = getValue(7, []);
+    const solutions = getValue(8, []);
+    const pricing = getValue(9, []);
+
     // Merge siteConfig into personal object for smooth component prop compatibility
     const mergedPersonal = {
       ...personal,
       ...site,
+      // Explicitly pull through terminal credentials from your profile service data
+      terminalUser: personal?.terminalUser ?? 'haider@dev',
+      terminalPass: personal?.terminalPass ?? 'pass123',
     };
 
     return {
@@ -56,12 +71,12 @@ export const portfolioService = {
       services,
       skills,
       contacts: {
-        email: personal.email,
-        phone: personal.phone,
-        address: personal.address,
-        github: personal.github,
-        instagram: personal.instagram,
-        linkedIn: personal.linkedIn,
+        email: personal?.email ?? '',
+        phone: personal?.phone ?? '',
+        address: personal?.address ?? '',
+        github: personal?.github ?? '',
+        instagram: personal?.instagram ?? '',
+        linkedIn: personal?.linkedIn ?? '',
       },
       testimonials,
       solutions,
