@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { portfolioService } from '../services/portfolio.service';
+import { portfolioService } from '../api/portfolio.service';
 
 export const usePortfolioData = () => {
     const [data, setData] = useState(null);

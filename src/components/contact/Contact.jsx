@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaGithub, FaLinkedin, FaInstagram, FaWhatsapp, FaEnvelope } from 'react-icons/fa';
-import { contactService } from '../../services/contact.service';
+import { contactService } from '../../api/services/contact.service';
 
 const ContactField = ({ id, label, type = "text", name, ...props }) => {
   return (

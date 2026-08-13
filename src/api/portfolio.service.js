@@ -1,23 +1,30 @@
-import { profileService } from './profile.service';
-import { siteService } from './site.service';
-import { projectsService } from './projects.service';
-import { experienceService } from './experience.service';
-import { educationService } from './education.service';
-import { offeringsService } from './offerings.service';
-import { skillsService } from './skills.service';
-import { testimonialsService } from './testimonials.service';
-import { solutionsService } from './solutions.service';
-import { pricingService } from './pricing.service';
+import { profileService } from './services/profile.service';
+import { siteService } from './services/site.service';
+import { projectsService } from './services/projects.service';
+import { experienceService } from './services/experience.service';
+import { educationService } from './services/education.service';
+import { offeringsService } from './services/offerings.service';
+import { skillsService } from './services/skills.service';
+import { testimonialsService } from './services/testimonials.service';
+import { solutionsService } from './services/solutions.service';
+import { pricingService } from './services/pricing.service';
+import { BaseRepository } from './core/base.repository';
 
-export const portfolioService = {
-  /**
-   * Aggregates all domain service data for the main application state.
-   * Uses Promise.allSettled to ensure a single failing service doesn't break the entire UI.
-   * [Backend Swap]: Replace body with:
-   *   const response = await apiClient.get('/portfolio');
-   *   return response.data;
-   */
+class PortfolioService extends BaseRepository {
+  constructor() {
+    super('/portfolio');
+  }
+
   async getPortfolio() {
+    if (this.useBackend) {
+      try {
+        const response = await this.getAll();
+        return response;
+      } catch (error) {
+        console.warn('Backend portfolio fetch failed. Falling back to aggregated services.');
+      }
+    }
+
     const results = await Promise.allSettled([
       profileService.getProfile(),
       siteService.getSiteConfig(),
@@ -31,11 +38,9 @@ export const portfolioService = {
       pricingService.getPricingPlans(),
     ]);
 
-    // Helper to safely extract settled values with appropriate fallbacks
     const getValue = (index, fallback) => 
       results[index].status === 'fulfilled' ? results[index].value : fallback;
 
-    // Optional: Log failures for monitoring without crashing execution
     results.forEach((result, index) => {
       if (result.status === 'rejected') {
         console.warn(`Portfolio sub-service [Index ${index}] failed:`, result.reason);
@@ -53,11 +58,9 @@ export const portfolioService = {
     const solutions = getValue(8, []);
     const pricing = getValue(9, []);
 
-    // Merge siteConfig into personal object for smooth component prop compatibility
     const mergedPersonal = {
       ...personal,
       ...site,
-      // Explicitly pull through terminal credentials from your profile service data
       terminalUser: personal?.terminalUser ?? 'haider@dev',
       terminalPass: personal?.terminalPass ?? 'pass123',
     };
@@ -82,5 +85,7 @@ export const portfolioService = {
       solutions,
       pricing,
     };
-  },
-};
+  }
+}
+
+export const portfolioService = new PortfolioService();

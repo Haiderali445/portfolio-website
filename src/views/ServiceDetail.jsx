@@ -1,14 +1,14 @@
 import React, { useEffect, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import MagneticButton from "../helper/MagneticButton";
+import MagneticButton from "../components/helper/MagneticButton";
 import {
   FaArrowLeft,
   FaArrowRight,
   FaGithub,
   FaExternalLinkAlt,
 } from "react-icons/fa";
-import MetaTags from "../common/MetaTags";
+import MetaTags from "../components/common/MetaTags";
 const ServiceDetail = ({ services = [], projects = [] }) => {
   const { serviceId } = useParams();
   const navigate = useNavigate();

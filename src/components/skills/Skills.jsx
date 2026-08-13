@@ -1,6 +1,6 @@
 import React from "react";
 import Marquee from "react-fast-marquee";
-import { skillsImage } from "../../utils/skill-image";
+import { skillsImage } from "../../utils/images/skill-image";
 
 const getBestIcon = (skillName) => {
   if (!skillName) return null;

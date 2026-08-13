@@ -1,15 +1,15 @@
 import React from 'react';
-import Header from './header/Header';
-import About from './about/About';
-import Skills from './skills/Skills';
-import Experience from './experience/Experience';
-import Education from './education/Education';
-import Solutions from './solutions/Solutions';
-import Projects from './projects/Projects';
-import Services from './services/Services';
-import Testimonials from './testimonials/Testimonials';
-import Contact from './contact/Contact';
-import MetaTags from './common/MetaTags';
+import Header from '../components/header/Header';
+import About from '../components/about/About';
+import Skills from '../components/skills/Skills';
+import Experience from '../components/experience/Experience';
+import Education from '../components/education/Education';
+import Solutions from '../components/solutions/Solutions';
+import Projects from '../components/projects/Projects';
+import Services from '../components/services/Services';
+import Testimonials from '../components/testimonials/Testimonials';
+import Contact from '../components/contact/Contact';
+import MetaTags from '../components/common/MetaTags';
 
 const Home = ({ portfolioData }) => {
     if (!portfolioData) return null;
