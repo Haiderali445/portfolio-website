@@ -9,7 +9,12 @@ export const projectsData = [
     code: 'https://github.com/haiderali445/SIMS_Akura',
     demo: null,
     inProgress: false,
-    images: ['https://tinyurl.com/mrkcm6js']
+    images: ['https://tinyurl.com/mrkcm6js'],
+    websiteUrl: '',
+    contributors: [
+      { name: 'Haider Ali', github: 'haiderali445', profileUrl: 'https://github.com/haiderali445' },
+      { name: 'Fazina Mukhtar', github: 'fazinamukhtar786-sketch', profileUrl: 'https://github.com/fazinamukhtar786-sketch' }
+    ]
   },
   {
     id: 2,
@@ -21,7 +26,12 @@ export const projectsData = [
     code: 'https://github.com/haiderali445/mern-pos',
     demo: null,
     inProgress: false,
-    images: ['https://tinyurl.com/38ury6mx']
+    images: ['https://tinyurl.com/38ury6mx'],
+    websiteUrl: '',
+    contributors: [
+      { name: 'Haider Ali', github: 'haiderali445', profileUrl: 'https://github.com/haiderali445' },
+      { name: 'Fazina Mukhtar', github: 'fazinamukhtar786-sketch', profileUrl: 'https://github.com/fazinamukhtar786-sketch' }
+    ]
   },
   {
     id: 3,
@@ -33,7 +43,11 @@ export const projectsData = [
     code: 'https://github.com/haiderali445/sims_akura_core_mvc',
     demo: null,
     inProgress: false,
-    images: ['https://tinyurl.com/bdeey7vx']
+    images: ['https://tinyurl.com/bdeey7vx'],
+    websiteUrl: '',
+    contributors: [
+      { name: 'Haider Ali', github: 'haiderali445', profileUrl: 'https://github.com/haiderali445' }
+    ]
   },
   {
     id: 4,
@@ -45,7 +59,11 @@ export const projectsData = [
     code: 'https://github.com/haiderali445/portfolio-backend',
     demo: null,
     inProgress: true,
-    images: ['https://tinyurl.com/45pysfm7']
+    images: ['https://tinyurl.com/45pysfm7'],
+    websiteUrl: '',
+    contributors: [
+      { name: 'Haider Ali', github: 'haiderali445', profileUrl: 'https://github.com/haiderali445' }
+    ]
   },
   {
     id: 5,
@@ -57,7 +75,11 @@ export const projectsData = [
     code: 'https://github.com/haiderali445/web-tailor',
     demo: 'https://mehish-tailors.netlify.app/',
     inProgress: false,
-    images: ['https://tinyurl.com/3hxbt288']
+    images: ['https://tinyurl.com/3hxbt288'],
+    websiteUrl: 'https://mehish-tailors.netlify.app/',
+    contributors: [
+      { name: 'Haider Ali', github: 'haiderali445', profileUrl: 'https://github.com/haiderali445' }
+    ]
   },
   {
     id: 6,
@@ -69,7 +91,11 @@ export const projectsData = [
     code: 'https://github.com/haiderali445/portfolio-website',
     demo: 'https://haideraliblog.netlify.app/',
     inProgress: false,
-    images: ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbRtIxi-7_bSQ3jSd3bGBtW4pkz8kHodPSeQ&s']
+    images: ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbRtIxi-7_bSQ3jSd3bGBtW4pkz8kHodPSeQ&s'],
+    websiteUrl: 'https://haideraliblog.netlify.app/',
+    contributors: [
+      { name: 'Haider Ali', github: 'haiderali445', profileUrl: 'https://github.com/haiderali445' }
+    ]
   },
   {
     id: 7,
@@ -81,6 +107,10 @@ export const projectsData = [
     code: 'https://github.com/haiderali445/notification-socket',
     demo: null,
     inProgress: false,
-    images: ['https://tinyurl.com/h25c86p4']
+    images: ['https://tinyurl.com/h25c86p4'],
+    websiteUrl: '',
+    contributors: [
+      { name: 'Haider Ali', github: 'haiderali445', profileUrl: 'https://github.com/haiderali445' }
+    ]
   }
 ];

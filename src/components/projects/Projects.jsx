@@ -4,6 +4,7 @@ import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { motion, AnimatePresence } from 'framer-motion';
 import MagneticButton from '../helper/MagneticButton';
+import { getGitHubAvatar } from '../../utils/github';
 
 function cn(...inputs) {
   return twMerge(clsx(inputs));
@@ -13,8 +14,6 @@ const Projects = ({ projects = [], personalData = {} }) => {
   const [expanded, setExpanded] = useState(false);
 
   const visibleProjects = expanded ? projects : projects.slice(0, 4);
-
-
 
   return (
     <section id="projects" className="py-32 relative z-10">
@@ -66,6 +65,8 @@ const Projects = ({ projects = [], personalData = {} }) => {
 
                   {/* Content */}
                   <div className="relative z-10 p-8 h-full flex flex-col justify-end">
+                    
+                    {/* Top Right WIP Badge */}
                     {(project.inProgress || project.inprogress) && (
                       <div className="absolute top-6 right-6 px-3 py-1 bg-yellow-500/10 text-yellow-300 text-xs font-mono rounded-full border border-yellow-500/20 backdrop-blur-md">
                         WIP
@@ -92,26 +93,58 @@ const Projects = ({ projects = [], personalData = {} }) => {
                         )}
                       </div>
 
-                      <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
-                        {project.code && (
-                          <a
-                            href={project.code}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="p-3 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 transition-colors"
-                          >
-                            <FaGithub size={20} />
-                          </a>
-                        )}
-                        {project.demo && (
-                          <a
-                            href={project.demo}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="px-6 py-3 bg-white text-black font-medium rounded-full hover:bg-gray-200 transition-colors flex items-center gap-2"
-                          >
-                            <FaEye size={18} /> View Live
-                          </a>
+                      {/* Bottom Action Row (Links on left, Contributor Badges always visible on right) */}
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
+                          {project.code && (
+                            <a
+                              href={project.code}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="p-3 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 transition-colors"
+                            >
+                              <FaGithub size={20} />
+                            </a>
+                          )}
+                          {project.demo && (
+                            <a
+                              href={project.demo}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="px-6 py-3 bg-white text-black font-medium rounded-full hover:bg-gray-200 transition-colors flex items-center gap-2"
+                            >
+                              <FaEye size={18} /> View Live
+                            </a>
+                          )}
+                        </div>
+
+                        {/* Contributor Overlapping Stack - Always Visible on Bottom Right */}
+                        {project.contributors && project.contributors.length > 0 && (
+                          <div className="flex items-center -space-x-2 overflow-hidden bg-background/60 backdrop-blur-md p-1 rounded-full border border-white/10 ml-auto shadow-lg shrink-0">
+                            {project.contributors.map((contributor, i) => {
+                              const githubIdOrUrl = contributor.github || contributor.profileUrl;
+                              const avatarSrc = getGitHubAvatar(githubIdOrUrl, 56);
+
+                              return (
+                                <a
+                                  key={i}
+                                  href={contributor.profileUrl || `https://github.com/${contributor.github}`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  title={contributor.name}
+                                  className="inline-block transition-transform duration-300 hover:scale-125 hover:z-30 hover:-translate-y-1"
+                                >
+                                  <img
+                                    src={avatarSrc}
+                                    alt={contributor.name || 'Contributor'}
+                                    loading="eager"
+                                    decoding="async"
+                                    className="w-7 h-7 rounded-full object-cover ring-2 ring-background bg-slate-800 shadow-sm"
+                                  />
+                                </a>
+                              );
+                            })}
+                          </div>
                         )}
                       </div>
                     </div>
