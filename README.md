@@ -1,142 +1,230 @@
-# ⚡ Ego Web — High-Performance Portfolio Architecture
+# ⚡ Ego Web — Production-Grade Portfolio Architecture
 
-> A cinematic, high-fidelity portfolio experience for a modern software engineer, built as a polished frontend layer featuring strict 3-tier separation of concerns, dynamic service-driven data access, and an interactive secure command interface.
+> A cinematic, high-fidelity portfolio experience for a modern software engineer, engineered as a production-ready frontend system with strict 3-tier separation of concerns, normalized data architecture, service-driven access, interactive developer tooling, resilient UI behavior, and a clear migration path toward a backend-controlled architecture.
 
 ---
 
 <div align="center">
 
   <img src="https://img.shields.io/badge/React-18.x-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
-  <img src="https://img.shields.io/badge/Vite-Ready-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
+  <img src="https://img.shields.io/badge/Vite-Production-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
   <img src="https://img.shields.io/badge/Tailwind_CSS-3.x-38BDF8?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
   <img src="https://img.shields.io/badge/Architecture-3--Tier-10B981?style=for-the-badge&logo=codeforces&logoColor=white" alt="3-Tier Architecture" />
-  <img src="https://img.shields.io/badge/Security-Dynamic%20Auth-F59E0B?style=for-the-badge&logo=shield&logoColor=white" alt="Dynamic Authentication" />
   <img src="https://img.shields.io/badge/Terminal-Interactive-22C55E?style=for-the-badge&logo=linux&logoColor=white" alt="Interactive Terminal" />
-  <img src="https://img.shields.io/badge/Status-Active%20Deployment-success?style=for-the-badge" alt="Status" />
+  <img src="https://img.shields.io/badge/Deployment-Netlify-success?style=for-the-badge" alt="Netlify Deployment" />
 
 </div>
 
-## 🛑 Usage & Collaboration Notice
+---
+
+## 🛑 Usage & Collaboration
 
 > [!IMPORTANT]
-> This repository is **strictly closed for public contributions and active collaboration**. However, you are welcome to **download, fork, or clone** this codebase for your own personal use, inspiration, portfolio customization, or self-hosted adaptation.
+> This repository is strictly closed for public contributions and active collaboration. You may download, fork, clone, customize, and self-host the project for personal use, inspiration, or portfolio adaptation.
 
 ---
 
-## Overview
+# Overview
 
-This project is more than a personal website. It is a carefully crafted digital identity system that showcases engineering capability, product thinking, design sensibility, and communication clarity.
+**Ego Web** is more than a personal website. It is an interactive engineering showcase designed to demonstrate:
 
-The frontend is built with React and Vite and follows a strict separation between presentation, domain services, and normalized data. The system combines a premium cinematic interface with an architecture designed for maintainability, scalability, and future backend integration.
+* Frontend engineering
+* System architecture
+* Product thinking
+* UI/UX design
+* Data abstraction
+* Service-oriented architecture
+* Security awareness
+* Performance engineering
+* Documentation quality
+* Future backend readiness
 
-The portfolio also includes an **interactive developer command interface**, allowing visitors to interact with the portfolio through a Linux-inspired terminal experience while keeping restricted system commands behind an authentication gate.
-
-The experience combines:
-
-* A high-impact landing experience
-* Section-based storytelling for skills, services, projects, education, and experience
-* Animated interactions and motion design
-* A normalized 3-tier content architecture
-* Dedicated site configuration through `site-config.js`
-* Dynamic service-driven terminal credentials
-* A secure interactive command interface
-* Protected root-level commands
-* Guest and authenticated session management
-* An API-ready foundation for future backend integration
-
----
-
-## What This System Does
-
-The portfolio is organized around several core experiences:
-
-1. Hero + personal introduction
-2. About and capabilities section
-3. Skills and technology stack showcase
-4. Experience & education timelines
-5. Service deep-dive pages
-6. Project gallery with code and live-demo links
-7. Interactive command interface
-8. Protected system commands and authentication
-9. Contact and social engagement
-
-It is designed to make a strong first impression while also acting as a professional portfolio for hiring managers, collaborators, and clients.
-
----
-
-# 🖥️ Secure Command Interface
-
-One of the latest additions to the portfolio is a floating developer-style command interface implemented through `CommandTerminal.jsx`.
-
-The command interface is organized within the project's **helper layer** rather than being treated as a separate architectural tier.
-
-It is designed to feel like a real developer Linux terminal while remaining integrated with the portfolio's existing service and data architecture.
-
-### Terminal Capabilities
-
-* Floating command interface
-* Keyboard shortcut support
-* `Ctrl + `` terminal toggle
-* Command history navigation
-* Up/Down arrow key history
-* Automatically scrolling command logs
-* Guest and authenticated/root sessions
-* Masked password input
-* Protected system commands
-* Dynamic credential retrieval
-* Service-layer integration
-* Logout and exit handling
-
-The terminal acts as an interactive system interface rather than simply being a visual terminal mockup.
-
----
-
-## 🔐 Dynamic Service-Tier Authentication & Credentials
-
-Terminal authentication was redesigned to remove hardcoded credentials from environment variables and static frontend constants.
-
-Instead of storing terminal credentials directly inside the UI layer, the command interface retrieves the required authentication data dynamically through the application's service and data architecture.
-
-### Authentication Flow
-
-```mermaid
-flowchart TD
-    A[CommandTerminal.jsx] --> B[portfolioService]
-    B --> C[Domain Services]
-    C --> D[Data Layer]
-    D --> E[Terminal Credentials]
-    E --> D
-    D --> C
-    C --> B
-    B --> A
-    A --> F[Authentication Gatekeeper]
-    F --> G{Valid Credentials?}
-    G -->|Yes| H[Root Session]
-    G -->|No| I[Guest Session]
-```
-
-The terminal therefore follows the same architectural principles as the rest of the portfolio:
+The application combines a premium cinematic interface with a maintainable architecture based on:
 
 ```text
-Presentation / Helper
-        ↓
-Service Layer
-        ↓
-Data Layer
+Presentation
+      ↓
+Service
+      ↓
+Data
 ```
 
-This keeps credential retrieval and authentication-related data access separated from the terminal's presentation and interaction logic.
+The portfolio also provides a Linux-inspired interactive command interface with guest/root session behavior and protected commands.
 
-> [!NOTE]
-> The frontend terminal authentication is intended for the portfolio's interactive experience. Production-sensitive authentication, authorization, and privileged backend operations should ultimately be enforced server-side.
+The architecture is intentionally designed so the frontend can later migrate from local static data to a remote backend without forcing major UI rewrites.
 
 ---
 
-# 🛡️ Protected Root Commands & Gatekeeper
+# 🎯 Core Experiences
 
-Restricted terminal commands are protected behind an authentication gatekeeper.
+The portfolio provides:
 
-Commands that require elevated privileges include:
+1. Hero and personal introduction
+2. About and capabilities
+3. Skills and technology stack
+4. Experience timeline
+5. Education timeline
+6. Service pages and service details
+7. Project gallery
+8. Project code and live-demo links
+9. Interactive developer terminal
+10. Protected terminal commands
+11. Guest/root session management
+12. Contact system
+13. Social engagement
+14. Dynamic SEO
+15. Responsive layouts
+16. Production-ready error/loading states
+17. Backend-ready service architecture
+
+The experience is designed for:
+
+* Hiring managers
+* Recruiters
+* Clients
+* Collaborators
+* Developers
+* Technical reviewers
+
+---
+
+# 🏗️ Architecture
+
+`ego-web` follows a strict **3-tier frontend architecture**.
+
+```text
+┌──────────────────────────────┐
+│       PRESENTATION           │
+│ React Components / Pages     │
+│ UI / Routing / Animations    │
+└──────────────┬───────────────┘
+               ↓
+┌──────────────────────────────┐
+│          SERVICE             │
+│ Domain Services / Repository │
+│ apiClient / Integrations     │
+└──────────────┬───────────────┘
+               ↓
+┌──────────────────────────────┐
+│            DATA              │
+│ Normalized Modules / Config  │
+│ Local-first Portfolio Data   │
+└──────────────────────────────┘
+```
+
+### Presentation Tier
+
+Responsible for:
+
+* React components
+* Pages
+* Layouts
+* Routing
+* User interaction
+* Animations
+* Rendering
+
+### Service Tier
+
+Responsible for:
+
+* Domain services
+* Repository abstraction
+* API communication
+* Data aggregation
+* External integrations
+* Business/domain logic
+* Future backend communication
+
+### Data Tier
+
+Responsible for:
+
+* Normalized portfolio content
+* Site configuration
+* Terminal configuration
+* Local fallback data
+* Structured domain records
+
+The UI must not unnecessarily access raw data files directly.
+
+---
+
+# 🧰 Helper Layer
+
+The command terminal belongs to the helper layer.
+
+It is **not a fourth architectural tier**.
+
+```text
+Helper
+  ↓
+Service
+  ↓
+Data
+```
+
+The helper layer provides reusable interactive functionality while continuing to respect the primary architecture.
+
+---
+
+# 🖥️ Interactive Command Terminal
+
+The floating `CommandTerminal.jsx` provides a Linux-inspired developer interface.
+
+It must behave as an actual interactive system rather than being a static visual terminal.
+
+### Capabilities
+
+* Floating terminal
+* `Ctrl + `` toggle
+* Keyboard navigation
+* Up/down command history
+* Auto-scrolling logs
+* Guest mode
+* Authentication state
+* Root mode
+* Masked password input
+* Protected commands
+* Dynamic credential retrieval
+* Logout
+* Exit
+* Responsive mobile behavior
+
+---
+
+# 🔐 Terminal Authentication
+
+Terminal credentials must not be hardcoded directly inside the presentation layer.
+
+Credential retrieval follows:
+
+```text
+CommandTerminal.jsx
+        ↓
+terminal.service.js
+        ↓
+portfolio/domain services
+        ↓
+Data Layer
+        ↓
+Authentication Gatekeeper
+        ↓
+Guest / Root Session
+```
+
+The terminal therefore remains consistent with the application's service-driven architecture.
+
+> [!WARNING]
+> Frontend terminal authentication is an interactive portfolio feature, not a secure production authorization mechanism. Real authentication, authorization, privileged operations, and sensitive credentials must eventually be enforced server-side.
+
+Never expose real production secrets, API keys, database credentials, or privileged backend credentials in frontend code.
+
+---
+
+# 🛡️ Protected Commands
+
+The following commands require root authentication:
 
 ```text
 health
@@ -147,238 +235,202 @@ sudo hire
 coffee
 ```
 
-When a restricted command is executed without an authenticated session, the command interface prompts the user for a password.
+Authentication flow:
 
-### Authentication Behavior
-
-```mermaid
-flowchart TD
-    A[User enters command] --> B{Protected command?}
-    B -->|No| C[Execute command]
-    B -->|Yes| D{Root session active?}
-    D -->|Yes| C
-    D -->|No| E[Prompt for password]
-    E --> F{Credentials valid?}
-    F -->|Yes| G[Grant root privileges]
-    G --> C
-    F -->|No| H[Authentication failed]
-    H --> I[Remain in guest mode]
+```text
+User Command
+     ↓
+Protected?
+ ┌───┴────┐
+No       Yes
+ ↓         ↓
+Execute   Root Active?
+           ┌──┴──┐
+          Yes    No
+           ↓      ↓
+        Execute  Password
+                  ↓
+              Validate
+              ┌───┴───┐
+            Valid   Invalid
+              ↓        ↓
+            Root     Guest
 ```
 
-Password input is masked during authentication to prevent the credential from being visually exposed in the command interface.
+Password input must always be masked.
 
 ---
 
-# 🔑 Smart Session & Exit Handling
+# 🔑 Session Management
 
-The command interface includes session-aware privilege management.
+The terminal maintains three states:
 
-Once authenticated, the user can execute protected commands during the active root session.
-
-The session can be explicitly terminated using:
-
-```bash
-logout
+```text
+Guest
+Authenticating
+Root
 ```
 
-or:
+### `logout`
 
-```bash
-exit
-```
+Must:
 
-### Logout Behavior
+1. Revoke root privileges
+2. Clear authentication state
+3. Return to guest mode
+4. Keep the terminal open
 
-When `logout` is executed:
+### `exit`
 
-1. Root privileges are revoked.
-2. The authenticated session is cleared.
-3. The user returns to guest mode.
-4. The command interface remains available.
+Must:
 
-### Exit Behavior
+1. Revoke root privileges
+2. Clear authentication state
+3. Close the terminal
 
-When `exit` is executed:
-
-1. Root privileges are revoked.
-2. The authenticated session is cleared.
-3. The command interface closes.
-
-This prevents an authenticated/root state from remaining active after the user intentionally leaves the session.
+No root state should survive an explicit logout or exit operation.
 
 ---
 
-## Terminal Security Model
+# 🧱 Data Architecture
 
-```mermaid
-stateDiagram-v2
-    [*] --> Guest
+Portfolio content must remain normalized and modular.
 
-    Guest --> Authenticating: Protected command
-    Authenticating --> Root: Valid credentials
-    Authenticating --> Guest: Invalid credentials
+Required domains:
 
-    Root --> Root: Execute protected commands
-    Root --> Guest: logout
-    Root --> [*]: exit
+* Profile
+* Projects
+* Experience
+* Education
+* Services
+* Skills
+* Testimonials
+* Solutions
+* Pricing
+* Terminal
+* Site configuration
 
-    Guest --> [*]: exit
-```
+Use stable identifiers and sorting/index fields where required.
 
-The terminal maintains a clear distinction between:
-
-* **Guest mode** — Standard public commands
-* **Authenticating** — Credential verification state
-* **Root mode** — Elevated terminal privileges
-
----
-
-# 🏗️ Architecture at a Glance & 3-Tier Separation
-
-`ego-web` utilizes a strict **3-Tier Frontend Architecture**:
-
-**Presentation ➔ Service ➔ Data Layer**
-
-This ensures UI components do not directly query raw data stores or third-party integrations.
-
-```mermaid
-flowchart TD
-    A[User / Visitor] --> B[Presentation Tier: React UI & Components]
-    B --> C[Service Tier: Domain Services & apiClient]
-    C --> D[Data Tier: Normalized Content Modules & site-config]
-
-    B --> E[Helper Layer: Command Interface]
-    E --> C
-
-    C --> F[Dynamic Terminal Credentials]
-    E --> G[Authentication Gatekeeper]
-    G --> H[Guest / Root Session]
-
-    style A fill:#0f172a,stroke:#38bdf8,stroke-width:2px,color:#fff
-    style B fill:#1e293b,stroke:#a855f7,stroke-width:2px,color:#fff
-    style C fill:#1e293b,stroke:#3b82f6,stroke-width:2px,color:#fff
-    style D fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#fff
-    style E fill:#111827,stroke:#22c55e,stroke-width:2px,color:#fff
-    style F fill:#172554,stroke:#f59e0b,stroke-width:2px,color:#fff
-    style G fill:#450a0a,stroke:#ef4444,stroke-width:2px,color:#fff
-    style H fill:#052e16,stroke:#22c55e,stroke-width:2px,color:#fff
-```
-
-The helper layer supports interactive functionality but does **not** replace the three primary architectural tiers.
+Avoid duplicated content across components.
 
 ---
 
-## Frontend Flow
+# ⚙️ Repository Architecture
 
-The application loads through a centralized hook:
+All domain access should use a repository abstraction.
+
+```text
+UI
+ ↓
+Service
+ ↓
+BaseRepository
+ ↓
+Local Data
+```
+
+Future:
+
+```text
+UI
+ ↓
+Service
+ ↓
+BaseRepository
+ ↓
+apiClient
+ ↓
+Backend API
+ ↓
+PostgreSQL
+```
+
+`BaseRepository` should provide a consistent local-first access pattern while allowing the underlying source to change later.
+
+---
+
+# 🔄 Portfolio Aggregation
+
+`portfolioService` acts as the central aggregation point.
+
+It should concurrently resolve independent domains using:
+
+```javascript
+Promise.allSettled()
+```
+
+This prevents an optional data source failure from unnecessarily breaking the entire portfolio.
+
+Example:
 
 ```text
 usePortfolioData
        ↓
 portfolioService
        ↓
-Domain Services
+┌──────┼───────┬────────┬────────┐
+Projects Skills Experience Services
        ↓
-Normalized Data
+Normalized Portfolio Payload
+       ↓
+React UI
 ```
 
-The home screen composes major sections from the unified normalized dataset.
+---
 
-Service pages are routed dynamically for deeper content exploration.
+# 🧩 Centralized Configuration
 
-The command interface follows the same service-driven model:
+Use:
 
 ```text
-CommandTerminal.jsx
-       ↓
-portfolioService
-       ↓
-Domain Services
-       ↓
-Data Layer
-       ↓
-Dynamic Credentials
-       ↓
-Authentication Gatekeeper
-       ↓
-Guest / Root Session
+src/utils/data/site-config.js
 ```
 
-Motion and UI polish are layered on top of this content and service structure to create the premium portfolio experience.
+for centralized:
+
+* Branding
+* Status badges
+* Section subtitles
+* Technology manifests
+* Site-wide settings
+* System configuration
+* Feature configuration
+
+Configuration should not be scattered across presentation components.
 
 ---
 
-# ✨ Core Features
+# 👤 Personal Data
 
-## Premium UI Experience
+Use:
 
-* Dark, modern visual language
-* Glassmorphism-inspired cards and surfaces
-* Smooth inertial scrolling with Lenis
-* Animated transitions with Framer Motion
-* Responsive desktop, tablet, and mobile layouts
-* Floating interactive command interface
+```text
+personal-data.js
+```
 
-## Content & Data Architecture
+for:
 
-* Static content separated into normalized data modules
-* Strict primary keys and sorting indices
-* Dedicated `site-config.js` configuration file
-* Site copy and layout configuration decoupled from UI components
-* Service pages routed and rendered with dedicated detail views
-* Dynamic terminal credential retrieval through the service layer
-
-## Interactive Portfolio Experience
-
-* Animated hero and section transitions
-* Project cards with hover states and CTAs
-* Contact form isolated behind a service abstraction layer
-* Social links and direct communication channels
-* Developer-style interactive command interface
-* Command history and keyboard navigation
-* Guest/root session states
-* Protected terminal commands
-
-## Security-Oriented Terminal Features
-
-* No hardcoded terminal credentials in the UI
-* Dynamic credential retrieval
-* Protected root commands
-* Password masking
-* Authentication gatekeeper
-* Root privilege management
-* Explicit logout handling
-* Session cleanup on exit
-
-## Future-Ready Design
-
-The service layer is structured to seamlessly switch from local static data modules to a remote NestJS / PostgreSQL backend without requiring major UI changes.
-
-The architecture also provides a clear migration path for moving terminal authentication and privileged command execution to a backend-controlled authorization system.
+* Core identity
+* Biography
+* Contact information
+* Social links
+* Typewriter titles
+* Engineering interests
 
 ---
 
-# 🧰 Tech Stack
+# 🖥️ Terminal Data
 
-## Frontend Core & Styling
+Use:
 
-* **React 18** — Component-driven declarative UI orchestration
-* **Vite** — High-performance module bundling and HMR execution
-* **React Router DOM** — Sub-route orchestration and dynamic view transitions
-* **Tailwind CSS** — Utility-first styling with custom glassmorphism tokens
+```text
+terminalData.js
+```
 
-## Motion & Interaction
+for terminal configuration and interactive terminal data.
 
-* **Framer Motion** — Cinematic layout animations and scroll orchestration
-* **Lenis** — Smooth global inertial scrolling engine
-* **CommandTerminal.jsx** — Interactive developer command interface
-
-## Utilities & Integrations
-
-* **Axios** — Configured network client layer (`apiClient.js`)
-* **React Hot Toast** — Non-blocking notification feedback loops
-* **React Helmet Async** — Dynamic runtime SEO head tag management
-* **EmailJS** — Communication delivery abstracted through the service tier
+Access terminal data through the appropriate service rather than coupling the UI directly to the data module.
 
 ---
 
@@ -389,35 +441,14 @@ apps/
 └── ego-web/
     ├── src/
     │   ├── App.jsx
-    │   │   # App root, router orchestrator, & Lenis provider
-    │   │
     │   ├── main.jsx
-    │   │   # Application mounting entry point
     │   │
-    │   ├── components/
-    │   │   # 🎨 Presentation Layer
-    │   │   ├── about/
-    │   │   ├── common/
-    │   │   ├── contact/
-    │   │   ├── experience/
-    │   │   ├── footer/
-    │   │   ├── home/
-    │   │   ├── nav/
-    │   │   ├── projects/
-    │   │   ├── services/
-    │   │   └── skills/
-    │   │
-    │   ├── hooks/
-    │   │   # 🎣 State & Lifecycle Layer
-    │   │   └── usePortfolioData.js
-    │   │
-    │   ├── helper/
-    │   │   # 🧰 Shared helper & interactive functionality
-    │   │   └── CommandTerminal.jsx
+    │   ├── api/
+    │   │   └── core/
+    │   │       ├── apiClient.js
+    │   │       └── base.repository.js
     │   │
     │   ├── services/
-    │   │   # ⚙️ Service Layer
-    │   │   ├── apiClient.js
     │   │   ├── contact.service.js
     │   │   ├── education.service.js
     │   │   ├── experience.service.js
@@ -429,16 +460,39 @@ apps/
     │   │   ├── site.service.js
     │   │   ├── skills.service.js
     │   │   ├── solutions.service.js
+    │   │   ├── terminal.service.js
     │   │   └── testimonials.service.js
+    │   │
+    │   ├── components/
+    │   │   ├── about/
+    │   │   ├── common/
+    │   │   ├── contact/
+    │   │   ├── experience/
+    │   │   ├── footer/
+    │   │   ├── helper/
+    │   │   │   ├── CommandTerminal.jsx
+    │   │   │   ├── ErrorScreen.jsx
+    │   │   │   └── LoadingScreen.jsx
+    │   │   ├── home/
+    │   │   ├── layout/
+    │   │   ├── nav/
+    │   │   ├── projects/
+    │   │   ├── services/
+    │   │   └── skills/
+    │   │
+    │   ├── hooks/
+    │   │   ├── useLenis.js
+    │   │   └── usePortfolioData.js
     │   │
     │   ├── styles/
     │   │   └── index.css
     │   │
     │   └── utils/
-    │       # 🗄️ Data Layer
+    │       ├── images/
     │       └── data/
     │           ├── personal-data.js
     │           ├── site-config.js
+    │           ├── terminalData.js
     │           ├── projects/
     │           ├── experience/
     │           ├── education/
@@ -450,177 +504,394 @@ apps/
     ├── docs/
     │   └── SYSTEM_FLOW.md
     │
+    ├── public/
     ├── package.json
     ├── vite.config.js
     └── netlify.toml
 ```
 
+Keep `components/helper`, `services`, and `api/core` clearly separated.
+
 ---
 
-## Visual Folder Map
+# ✨ UI / UX
 
-```mermaid
-flowchart LR
-    A[App Entry] --> B[Components]
-    B --> C[Presentation Views]
-    B --> D[Common & Shared UI]
+The portfolio must feel like a premium developer product rather than a generic portfolio template.
 
-    A --> E[Hooks]
-    E --> F[Portfolio Aggregator Service]
+Use:
 
-    H[Helper Layer] --> T[CommandTerminal.jsx]
-    T --> F
-    T --> I[Authentication Gatekeeper]
-    I --> J[Guest / Root Session]
+* Dark modern visual language
+* Glassmorphism-inspired surfaces
+* Strong typography
+* Cinematic transitions
+* Layered visual depth
+* Responsive layouts
+* Developer-oriented interaction patterns
 
-    F --> G[Domain Services]
-    G --> K[Normalized Data Store]
-    K --> L[site-config.js]
+Technology:
+
+* React 18
+* Vite
+* Tailwind CSS
+* React Router DOM
+* Framer Motion
+* Lenis
+
+---
+
+# 📱 Responsive Design
+
+Support:
+
+* Desktop
+* Laptop
+* Tablet
+* Mobile
+
+The terminal must remain usable on small screens.
+
+Prevent:
+
+* Horizontal overflow
+* Broken layouts
+* Unreadable typography
+* Inaccessible controls
+* Overlapping UI
+* Animation-related layout failures
+
+---
+
+# ♿ Accessibility
+
+Production UI must include:
+
+* Semantic HTML
+* Keyboard navigation
+* Visible focus states
+* Accessible buttons
+* Accessible form controls
+* Proper labels
+* ARIA attributes where necessary
+* Sufficient contrast
+* Reduced-motion consideration
+* Screen-reader-friendly interactive states
+
+The terminal must remain keyboard accessible.
+
+---
+
+# ⚡ Performance
+
+Prioritize:
+
+* Vite production builds
+* Lazy-loaded routes where appropriate
+* Efficient React rendering
+* Memoization only where justified
+* Optimized images
+* Avoiding unnecessary network requests
+* Concurrent data loading
+* Efficient animations
+* Minimal unnecessary re-renders
+
+Animations must not compromise usability or performance.
+
+---
+
+# 🛡️ Frontend Security
+
+Follow production-conscious security practices:
+
+* Never expose real secrets in frontend source
+* Never store production credentials in static frontend files
+* Validate user input
+* Sanitize/escape rendered dynamic content where applicable
+* Avoid unsafe HTML injection
+* Avoid unnecessary browser storage of sensitive information
+* Do not treat client-side authorization as real authorization
+* Keep privileged backend operations server-controlled
+
+For deployment, use appropriate security headers and SPA routing configuration through Netlify where applicable.
+
+---
+
+# 📝 Contact System
+
+Use:
+
+```text
+Contact Component
+      ↓
+contact.service.js
+      ↓
+EmailJS
+```
+
+The UI must not directly contain EmailJS implementation logic.
+
+Use React Hot Toast for:
+
+* Success messages
+* Error messages
+* Non-blocking feedback
+
+Validate contact form input before submission.
+
+---
+
+# 🔎 SEO
+
+Use React Helmet Async for:
+
+* Page titles
+* Meta descriptions
+* Open Graph metadata
+* Social previews
+* Dynamic service/project metadata
+
+Each important route should have meaningful metadata.
+
+---
+
+# 🚨 Error Handling
+
+Provide:
+
+```text
+LoadingScreen.jsx
+ErrorScreen.jsx
+```
+
+Also use resilient application-level error handling.
+
+The application should:
+
+* Fail gracefully
+* Display useful feedback
+* Recover from optional service failures
+* Avoid blank screens
+* Avoid exposing internal errors to visitors
+
+Use `Promise.allSettled` for independent portfolio data sources.
+
+---
+
+# 🧪 Quality & Validation
+
+Production changes should maintain:
+
+* Successful `npm run build`
+* No avoidable console errors
+* No broken routes
+* No missing imports
+* No unused architectural dead ends
+* Responsive behavior
+* Accessible interactions
+
+Where testing infrastructure exists, preserve and extend it rather than bypassing it.
+
+Recommended production checks:
+
+```text
+Build
+Lint
+Type / static validation where applicable
+Route validation
+Responsive verification
+Terminal interaction verification
 ```
 
 ---
 
-# 🧩 Key Areas
+# 🔌 External Integrations
 
-### `src/components`
+Use service abstractions for:
 
-UI sections and feature modules:
+### Axios
 
-* About
-* Contact
-* Experience
-* Footer
-* Home
-* Navigation
-* Projects
-* Services
-* Skills
-* Shared/common UI
+Network client through:
 
-### `src/hooks`
+```text
+apiClient.js
+```
 
-State management, lifecycle handling, and centralized portfolio data consumption.
+### EmailJS
 
-* `usePortfolioData.js`
+Contact delivery through:
 
-### `src/helper`
+```text
+contact.service.js
+```
 
-Shared helper and interactive functionality.
+### React Hot Toast
 
-* `CommandTerminal.jsx` — Interactive command interface, command handling, history, authentication state, and session behavior.
+Non-blocking user feedback.
 
-### `src/services`
+### React Helmet Async
 
-Domain service layer responsible for abstracting data sources, aggregation, authentication-related data access, and external integrations.
-
-### `src/utils/data`
-
-Normalized portfolio content modules and centralized site configuration.
-
-### `docs`
-
-Product architecture, system flow, and future backend integration documentation.
+SEO metadata.
 
 ---
 
-# 📊 Data Model & Services Overview
+# ☁️ Backend Migration
 
-The portfolio is powered by a normalized content architecture consisting of:
+The architecture must support future:
 
-### Profile Data
+```text
+NestJS
++
+PostgreSQL
+```
 
-**`personal-data.js`**
+migration.
 
-Contains:
+Target:
 
-* Core identity
-* Biography
-* Contact information
-* Social links
-* Typewriter titles
-* Engineering interests
+```text
+React
+ ↓
+Hooks
+ ↓
+Domain Services
+ ↓
+Repository
+ ↓
+apiClient
+ ↓
+NestJS API
+ ↓
+PostgreSQL
+```
 
-### Site Configuration
+The UI should not need a major rewrite when the data source becomes remote.
 
-**`site-config.js`**
+Terminal authentication and privileged operations should eventually become:
 
-Provides centralized website configuration such as:
-
-* Status badges
-* Section subtitles
-* Technology manifests
-* Branding copy
-* Site-wide configuration
-* System-related configuration
-
-Keeping site configuration in its own dedicated data file prevents configuration and branding information from being scattered throughout UI components.
-
-### Domain Modules
-
-The normalized domain data includes:
-
-* Projects
-* Experiences
-* Education
-* Service offerings
-* Skills
-* Testimonials
-* Solutions
-* Pricing tiers
-* Terminal-related authentication data
-
-The `portfolioService` acts as the central aggregation point for portfolio data and can concurrently resolve multiple domain services.
-
----
-
-# 🔄 System Flow
-
-```mermaid
-sequenceDiagram
-    participant Visitor
-    participant Frontend as React Presentation Layer
-    participant Helper as Helper / Command Interface
-    participant Service as Domain Service Layer
-    participant Data as Normalized Data + site-config
-    participant Auth as Authentication Gatekeeper
-    participant Contact as EmailJS Service
-
-    Visitor->>Frontend: Open portfolio route
-    Frontend->>Service: Call portfolioService.getPortfolio()
-    Service->>Data: Fetch & aggregate normalized stores
-    Data-->>Service: Return structured content records
-    Service-->>Frontend: Resolve data payloads
-    Frontend-->>Visitor: Render cinematic UI layout
-
-    Visitor->>Helper: Open command interface
-    Helper->>Service: Request dynamic terminal credentials
-    Service->>Data: Retrieve credential data
-    Data-->>Service: Return credential data
-    Service-->>Helper: Provide authentication data
-
-    Visitor->>Helper: Run protected command
-    Helper->>Auth: Request authentication
-    Auth-->>Helper: Validate credentials
-    Helper-->>Visitor: Grant root session
-
-    Visitor->>Helper: logout / exit
-    Helper->>Auth: Revoke root privileges
-    Auth-->>Helper: Guest / Closed session
-
-    Visitor->>Contact: Submit contact message form
-    Contact-->>Visitor: Success toast confirmation
+```text
+Frontend Terminal
+       ↓
+Backend Authentication
+       ↓
+Authorization
+       ↓
+Privileged API
 ```
 
 ---
 
-# ⌨️ Terminal Command Model
+# 🚀 Local Development
 
-The command interface operates with two primary privilege levels:
+## Requirements
+
+* Node.js 18+
+* npm or pnpm
+
+## Install
+
+```bash
+npm install
+```
+
+## Development
+
+```bash
+npm run dev
+```
+
+## Production Build
+
+```bash
+npm run build
+```
+
+The application must successfully build through the standard Vite production pipeline.
+
+---
+
+# 🌐 Deployment
+
+The application is optimized for Netlify.
+
+Maintain:
+
+```text
+netlify.toml
+```
+
+for:
+
+* SPA routing
+* Production build configuration
+* Deployment behavior
+* Appropriate production headers where required
+
+The production deployment must preserve React Router functionality on direct route access.
+
+---
+
+# 📚 Documentation
+
+Maintain:
+
+```text
+docs/SYSTEM_FLOW.md
+```
+
+Document:
+
+* Architecture
+* Data flow
+* Service boundaries
+* Repository pattern
+* Terminal architecture
+* Authentication flow
+* Backend migration
+* Important architectural decisions
+
+Documentation should be updated when significant architecture changes occur.
+
+---
+
+# 📊 System Flow
+
+```text
+                    VISITOR
+                       ↓
+              React Presentation
+                       ↓
+                  usePortfolioData
+                       ↓
+                portfolioService
+                       ↓
+               Domain Services
+                       ↓
+                 BaseRepository
+                       ↓
+                 Normalized Data
+                       ↓
+                  Cinematic UI
+
+
+                 COMMAND TERMINAL
+                       ↓
+                 terminal.service
+                       ↓
+                  Terminal Data
+                       ↓
+             Authentication Gate
+                       ↓
+               Guest / Root State
+                       ↓
+                Protected Commands
+```
+
+---
+
+# ⌨️ Terminal Model
 
 ```text
 ┌─────────────────────────────┐
 │           GUEST             │
-│                             │
 │ Public commands available   │
 │ No root privileges          │
 └──────────────┬──────────────┘
@@ -629,7 +900,6 @@ The command interface operates with two primary privilege levels:
                ▼
 ┌─────────────────────────────┐
 │       AUTHENTICATION        │
-│                             │
 │ Password input is masked    │
 └──────────────┬──────────────┘
                │
@@ -637,7 +907,6 @@ The command interface operates with two primary privilege levels:
                ▼
 ┌─────────────────────────────┐
 │            ROOT             │
-│                             │
 │ Protected commands enabled  │
 │ Session privileges active   │
 └──────────────┬──────────────┘
@@ -649,144 +918,167 @@ The command interface operates with two primary privilege levels:
 
 ---
 
-# 🚀 Getting Started Locally
+# 📬 Contact & Social
 
-## Prerequisites
+**Email:** [rajahaider7896@gmail.com](mailto:rajahaider7896@gmail.com)
 
-* Node.js 18+
-* npm or pnpm
+**WhatsApp:** +92 322 5629058
 
-## Clone the Repository
+**GitHub:** https://github.com/Haiderali445
 
-```bash
-git clone https://github.com/Haiderali445/portfolio-website.git
-cd portfolio-website
-```
+**LinkedIn:** https://www.linkedin.com/in/haider-ali-8a025b290/
 
-## Install Dependencies
+**Instagram:** https://www.instagram.com/hayder_alyy__/
 
-```bash
-npm install
-```
+---
 
-## Run Locally
+# 🔗 Project Links
 
-```bash
-npm run dev
-```
+**Live Site**
 
-Then open the local Vite URL shown in the terminal.
+https://haideraliblog.netlify.app/
 
-## Build for Production
+**GitHub**
 
-```bash
-npm run build
+https://github.com/Haiderali445
+
+**Documentation**
+
+```text
+docs/SYSTEM_FLOW.md
 ```
 
 ---
 
-# 📈 Quick Project Health Chart
-
-```mermaid
-pie title Project Composition
-    "UI Presentation Components" : 40
-    "Normalized Content Data" : 18
-    "Service & Domain Layer" : 16
-    "Interactive Terminal & Auth" : 8
-    "Animations & Motion" : 10
-    "Utilities & Routing" : 8
-```
-
----
-
-# 🧱 Build & Footer Experience
-
-The portfolio includes a polished footer section built from contact data and social channels.
-
-The footer presents:
-
-* Professional email address
-* WhatsApp / phone contact
-* GitHub, LinkedIn, and Instagram profiles
-* Clear call-to-action for collaboration
-
----
-
-# 📬 Contact & Social Links
-
-* **Email:** [rajahaider7896@gmail.com](mailto:rajahaider7896@gmail.com)
-* **WhatsApp:** +92 322 5629058
-* **GitHub:** https://github.com/Haiderali445
-* **LinkedIn:** https://www.linkedin.com/in/haider-ali-8a025b290/
-* **Instagram:** https://www.instagram.com/hayder_alyy__/
-
----
-
-# ☁️ Deployment
-
-This app is optimized for static hosting platforms such as Netlify.
-
-The repository includes:
-
-* `netlify.toml` for Netlify routing and build configuration
-* Standard Vite production build workflow
-* `npm run build` production compilation
-
----
-
-# 📚 Documentation
-
-For a broader view of the overall system architecture and future backend migration roadmap, see:
-
-* `docs/SYSTEM_FLOW.md`
-
----
-
-# ⭐ Why This Project Stands Out
-
-This portfolio is built with precision:
-
-* Premium, immersive user experience
-* Strict separation between presentation, services, and data
-* Normalized and modular content architecture
-* Dedicated `site-config.js` configuration layer
-* Dynamic service-driven terminal authentication
-* Protected root-level terminal commands
-* Session-aware privilege management
-* Interactive Linux-inspired command interface
-* Keyboard-driven command history
-* Scalable service architecture
-* Backend-ready data flow
-* Strong foundation for future CMS and API integration
-
-The result is not simply a portfolio website.
-
-It is an **interactive engineering showcase** designed to demonstrate both frontend craftsmanship and architectural thinking.
-
----
-
-# 🔗 Links
-
-* **Live Site:** https://haideraliblog.netlify.app/
-* **GitHub:** https://github.com/Haiderali445
-* **LinkedIn:** https://www.linkedin.com/in/haider-ali-8a025b290/
-* **Instagram:** https://www.instagram.com/hayder_alyy__/
-* **Email:** [rajahaider7896@gmail.com](mailto:rajahaider7896@gmail.com)
-
----
-
-# 📜 License & Permissions
+# 📜 License
 
 Distributed for **Personal Use Only**.
 
-You are free to download, fork, and customize this repository for your own personal portfolio needs.
+You may:
+
+* Download
+* Clone
+* Fork
+* Customize
+* Self-host
 
 Public collaboration and pull requests are not accepted.
 
 ---
 
-# 🖼️ Preview & Demo
+# ⭐ Why Ego Web Stands Out
 
-![Portfolio Preview](docs/web.png)
+Ego Web combines:
 
-**[Live Demo](https://haideraliblog.netlify.app/)** • **[System Flow Docs](docs/SYSTEM_FLOW.md)** • **[GitHub](https://github.com/Haiderali445)**
+* Premium cinematic UI
+* Strict 3-tier architecture
+* Normalized content architecture
+* Service/repository abstraction
+* Dynamic terminal integration
+* Protected command experience
+* Session-aware privilege management
+* Keyboard-driven developer tooling
+* Responsive design
+* Accessibility-conscious UI
+* SEO support
+* Resilient error handling
+* Performance-oriented rendering
+* Backend-ready architecture
+* Future CMS/API integration
+
+The result is not simply a portfolio website.
+
+It is an **interactive engineering showcase** demonstrating both:
+
+**what the engineer builds and how the engineer thinks about software systems.**
+
+---
+
+# 🧠 Production Engineering Rules
+
+When modifying the project:
+
+1. Preserve the Presentation → Service → Data architecture.
+2. Do not bypass services without a clear reason.
+3. Keep domain logic outside presentation components.
+4. Keep portfolio data normalized.
+5. Centralize site configuration.
+6. Keep terminal logic inside the helper layer.
+7. Retrieve terminal data through services.
+8. Keep protected commands behind the authentication gatekeeper.
+9. Explicitly clear root privileges on logout and exit.
+10. Never expose real production secrets in frontend code.
+11. Treat frontend authentication as an interactive feature only.
+12. Keep production authorization server-side.
+13. Preserve backend migration compatibility.
+14. Preserve responsive behavior.
+15. Preserve accessibility.
+16. Preserve SEO behavior.
+17. Maintain loading and error states.
+18. Avoid unnecessary rewrites.
+19. Avoid unnecessary dependencies.
+20. Prefer reusable components, hooks, services, and repositories.
+21. Keep external integrations behind service abstractions.
+22. Keep documentation synchronized with major architectural changes.
+23. Verify production builds after significant changes.
+24. Preserve existing functionality when introducing new features.
+
+---
+
+# 🎯 Final Architecture
+
+The permanent architectural identity of Ego Web is:
+
+```text
+                 PRESENTATION
+                      ↓
+                   SERVICES
+                      ↓
+                     DATA
+```
+
+Interactive tooling:
+
+```text
+                  HELPER
+                     ↓
+                  SERVICES
+                     ↓
+                    DATA
+```
+
+Terminal:
+
+```text
+              COMMAND TERMINAL
+                     ↓
+              TERMINAL SERVICE
+                     ↓
+               TERMINAL DATA
+                     ↓
+          AUTHENTICATION GATEKEEPER
+                     ↓
+              GUEST / ROOT
+```
+
+Future production backend:
+
+```text
+                  REACT
+                    ↓
+                  HOOKS
+                    ↓
+                SERVICES
+                    ↓
+               REPOSITORY
+                    ↓
+                APICLIENT
+                    ↓
+                NESTJS API
+                    ↓
+               POSTGRESQL
+```
+
+Build Ego Web as a **production-quality, maintainable, accessible, performant, security-conscious, cinematic engineering portfolio** — not a generic React template.
+
+Every feature must fit naturally into the architecture and preserve the project's long-term ability to evolve into a backend-powered portfolio/CMS platform.
