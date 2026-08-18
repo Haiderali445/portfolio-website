@@ -9,6 +9,7 @@ import { testimonialsService } from './services/testimonials.service';
 import { solutionsService } from './services/solutions.service';
 import { pricingService } from './services/pricing.service';
 import { terminalService } from './services/terminal.service';
+import { gmailService } from './services/gmail.service';
 import { TERMINAL_DEFAULT_CONFIG } from '../utils/data/terminalData';
 import { BaseRepository } from './core/base.repository';
 
@@ -77,7 +78,7 @@ class PortfolioService {
       
       // Ensure site config properties exist right on personalData if components look there
       footerTagline: personal?.footerTagline || personal?.footertagline || site?.footerTagline || site?.footertagline || "Crafting digital experiences with code and passion. Open for collaborations.",
-      chaiBoxTitle: personal?.chaiBoxTitle || personal?.chaiboxtitle || site?.chaiBoxTitle || site?.chaiboxtitle || "Fuel the Code ☕",
+      chaiBoxTitle: personal?.chaiBoxTitle || personal?.chaiboxtitle || site?.chaiBoxTitle || site?.chaiBoxTitle || "Fuel the Code ☕",
       chaiBoxDescription: personal?.chaiBoxDescription || personal?.chaiboxdescription || site?.chaiBoxDescription || site?.chaiBoxDescription || "Innovative solutions require high-octane chai. Support the craft!",
       contactSectionIntro: personal?.contactSectionIntro || personal?.contactsectionintro || site?.contactSectionIntro || site?.contactsectionintro || "Have a project in mind or want to discuss AI? I'm open to new connections.",
       projectsSectionSubtitle: personal?.projectsSectionSubtitle || personal?.projectssectionsubtitle || site?.projectsSectionSubtitle || site?.projectssectionsubtitle || "A curated selection of projects that demonstrate my technical capabilities and product design sensibilities.",
@@ -116,6 +117,9 @@ class PortfolioService {
       solutions,
       pricing,
       terminalConfig,
+      dispatchers: {
+        gmail: gmailService,
+      },
     };
   }
 }

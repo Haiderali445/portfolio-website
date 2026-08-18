@@ -18,7 +18,6 @@ class TerminalService extends BaseRepository {
       const { data: configData, error: configError } = await this.supabase
         .from('terminal_config')
         .select('*')
-        .limit(1)
         .single();
 
       if (configError && configError.code !== 'PGRST116') throw configError;
