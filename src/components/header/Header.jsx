@@ -74,7 +74,7 @@ const Header = ({ personalData = {} }) => {
             >
               <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-20 opacity-40" />
               <img
-                src={personalData.heroImage}
+                src={personalData.profile}
                 alt={personalData.name}
                 className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700 ease-out grayscale hover:grayscale-0"
               />

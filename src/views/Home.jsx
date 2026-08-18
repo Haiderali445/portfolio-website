@@ -14,7 +14,8 @@ import MetaTags from '../components/common/MetaTags';
 const Home = ({ portfolioData }) => {
     if (!portfolioData) return null;
 
-    const { personal, skills, experience, education, solutions, projects, services, testimonials, contacts } = portfolioData;
+    // Destructure pricing right alongside your other data objects
+    const { personal, skills, experience, education, solutions, projects, services, testimonials, contacts, pricing } = portfolioData;
 
     return (
         <main className="flex flex-col w-full overflow-hidden">
@@ -29,7 +30,8 @@ const Home = ({ portfolioData }) => {
             <Education educations={education} />
             <Solutions solutions={solutions} personalData={personal} />
             <Projects projects={projects} personalData={personal} />
-            <Services services={services} />
+            {/* Pass pricing down as a prop so the Services component can render your investment tiers */}
+            <Services services={services} pricing={pricing} />
             <Testimonials testimonials={testimonials} />
             <Contact contactInfo={contacts} personalData={personal} />
         </main>

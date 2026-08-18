@@ -9,7 +9,7 @@ const SocialIcons = ({ personalData }) => {
     <div className="flex items-center gap-5 mt-8">
       {[
         { icon: FaGithub, link: personalData?.github },
-        { icon: FaLinkedin, link: personalData?.linkedIn },
+        { icon: FaLinkedin, link: personalData?.linkedin || personalData?.linkedIn },
         { icon: FaInstagram, link: personalData?.instagram }
       ].map((social, index) => (
         <a

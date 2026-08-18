@@ -6,6 +6,7 @@ import LoadingScreen from "./components/helper/LoadingScreen";
 import ErrorScreen from "./components/helper/ErrorScreen";
 import AppLayout from "./components/layout/AppLayout";
 
+
 function App() {
   // Initialize smooth scrolling 
   useLenis();
