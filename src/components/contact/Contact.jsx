@@ -36,7 +36,7 @@ const ContactField = ({ id, label, type = "text", name, ...props }) => {
   );
 };
 
-const Contact = ({ contactInfo, personalData = {} }) => {
+const Contact = ({ contactInfo, personalData = {}, gmailDispatcher }) => {
   const form = useRef();
   const [loading, setLoading] = useState(false);
 
@@ -47,7 +47,13 @@ const Contact = ({ contactInfo, personalData = {} }) => {
     setLoading(true);
 
     try {
-      await contactService.sendForm(form.current);
+      if (gmailDispatcher) {
+        await gmailDispatcher.sendDirectMail(form.current, {
+          toEmail: data.email
+        });
+      } else {
+        await contactService.sendForm(form.current);
+      }
       toast.success('Message sent successfully!');
       e.target.reset();
     } catch (error) {

@@ -14,7 +14,8 @@ import MetaTags from '../components/common/MetaTags';
 const Home = ({ portfolioData }) => {
     if (!portfolioData) return null;
 
-    const { personal, skills, experience, education, solutions, projects, services, testimonials, contacts } = portfolioData;
+    // Destructure pricing and dispatchers (including gmail) alongside your other data objects
+    const { personal, skills, experience, education, solutions, projects, services, testimonials, contacts, pricing, dispatchers } = portfolioData;
 
     return (
         <main className="flex flex-col w-full overflow-hidden">
@@ -29,9 +30,11 @@ const Home = ({ portfolioData }) => {
             <Education educations={education} />
             <Solutions solutions={solutions} personalData={personal} />
             <Projects projects={projects} personalData={personal} />
-            <Services services={services} />
+            {/* Pass pricing down as a prop so the Services component can render your investment tiers */}
+            <Services services={services} pricing={pricing} />
             <Testimonials testimonials={testimonials} />
-            <Contact contactInfo={contacts} personalData={personal} />
+            {/* Pass contactInfo and gmail dispatcher down to Contact component */}
+            <Contact contactInfo={contacts} personalData={personal} gmailDispatcher={dispatchers?.gmail} />
         </main>
     );
 };
