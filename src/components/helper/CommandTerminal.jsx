@@ -12,11 +12,26 @@ export default function CommandTerminal({ portfolioData }) {
   const [awaitingPassword, setAwaitingPassword] = useState(false);
   const [pendingCommand, setPendingCommand] = useState(null);
 
-  // Mapped correctly to your centralized PortfolioService structure:
+  // Mapped correctly with default fallback map so lookups and custom sections never fail
   const profile = portfolioData?.personal || portfolioData?.profile || {};
   const contacts = portfolioData?.contacts || profile;
   const config = portfolioData?.terminalConfig || {};
-  const sectionMap = config.sectionMap || {};
+  
+  const dynamicSectionMap = config.sectionMap && typeof config.sectionMap === "object" ? config.sectionMap : {};
+  const sectionMap = {
+    top: "",
+    bottom: "footer",
+    about: "about",
+    skills: "skills",
+    experience: "experience",
+    education: "education",
+    solutions: "solutions",
+    projects: "projects",
+    services: "services",
+    contact: "contact",
+    pricing: "pricing",
+    ...dynamicSectionMap,
+  };
 
   const TERMINAL_USER = profile.terminalUser || profile.terminaluser || config.defaultUser || "root";
   const TERMINAL_PASS = profile.terminalPass || profile.terminalpass || config.defaultPass || "";
@@ -200,14 +215,34 @@ export default function CommandTerminal({ portfolioData }) {
     const newLogs = [...logs, { type: "input", text: `$ ${rawCmd}` }];
 
     if (action === "goto" && target) {
-      const sectionKey = sectionMap[target] || target;
-      const element = document.getElementById(sectionKey);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-        newLogs.push({ type: "success", text: `Scrolling to section '${target}'...` });
+      if (target === "top") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        newLogs.push({ type: "success", text: "Scrolling to top of page..." });
+      } else if (target === "bottom") {
+        window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "smooth" });
+        newLogs.push({ type: "success", text: "Scrolling to bottom of page..." });
       } else {
-        newLogs.push({ type: "error", text: `Section '${target}' not found in database view map.` });
+        const mappedTarget = sectionMap[target] !== undefined ? sectionMap[target] : target;
+        let element = document.getElementById(mappedTarget) || document.getElementById(target);
+
+        if (!element) {
+          const allElements = document.querySelectorAll("[id]");
+          for (const el of allElements) {
+            if (el.id.toLowerCase() === target.toLowerCase() || el.id.toLowerCase() === mappedTarget.toLowerCase()) {
+              element = el;
+              break;
+            }
+          }
+        }
+
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+          newLogs.push({ type: "success", text: `Scrolling to section '${target}'...` });
+        } else {
+          newLogs.push({ type: "error", text: `Section '${target}' not found in DOM or database view map.` });
+        }
       }
+
       setLogs(newLogs);
       return;
     }

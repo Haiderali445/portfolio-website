@@ -34,14 +34,8 @@ class TerminalService extends BaseRepository {
         }
       }
 
-      let sectionMap = {
-        about: "about",
-        projects: "projects",
-        services: "services",
-        experience: "experience",
-        contact: "contact",
-        pricing: "pricing"
-      };
+      // Fully dynamic map driven entirely by the database table rows
+      let sectionMap = {};
       
       if (configData) {
         const { data: mapData } = await this.supabase
@@ -53,7 +47,7 @@ class TerminalService extends BaseRepository {
           sectionMap = mapData.reduce((acc, curr) => {
             acc[curr.map_key] = curr.map_value;
             return acc;
-          }, sectionMap);
+          }, {});
         }
       }
 
