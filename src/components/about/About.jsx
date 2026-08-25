@@ -14,9 +14,7 @@ import {
   FaTerminal
 } from "react-icons/fa6";
 
-// ==========================================
 // Main Component
-// ==========================================
 const About = ({ personalData }) => {
   const [copied, setCopied] = useState("");
   const [jsonExpanded, setJsonExpanded] = useState(true);

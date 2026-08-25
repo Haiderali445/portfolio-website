@@ -5,6 +5,7 @@ import { useLenis } from "./hooks/useLenis";
 import LoadingScreen from "./components/helper/LoadingScreen";
 import ErrorScreen from "./components/helper/ErrorScreen";
 import AppLayout from "./components/layout/AppLayout";
+import AIChatWidget from "./components/helper/AIChatWidget";
 
 
 function App() {
@@ -14,10 +15,18 @@ function App() {
   // Fetch centralized data layer
   const { data, loading, error } = usePortfolioData();
 
-  if (loading) return <LoadingScreen />;
-  if (error || !data) return <ErrorScreen />;
-
-  return <AppLayout data={data} />;
+  return (
+    <>
+      <AIChatWidget />
+      {loading ? (
+        <LoadingScreen />
+      ) : error || !data ? (
+        <ErrorScreen />
+      ) : (
+        <AppLayout data={data} />
+      )}
+    </>
+  );
 }
 
 export default App;

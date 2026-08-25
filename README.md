@@ -8,6 +8,8 @@
 ![Vite](https://img.shields.io/badge/Vite-Production-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![Supabase](https://img.shields.io/badge/Supabase-Database-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38BDF8?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Groq AI](https://img.shields.io/badge/Groq-Llama_3.3_70B-F05A28?style=for-the-badge&logo=openai&logoColor=white)
+![AI Copilot](https://img.shields.io/badge/AI_Copilot-Tool_Calling-8B5CF6?style=for-the-badge&logo=probot&logoColor=white)
 ![Architecture](https://img.shields.io/badge/Architecture-3--Tier-10B981?style=for-the-badge&logo=codeforces&logoColor=white)
 ![Terminal](https://img.shields.io/badge/Terminal-Interactive-22C55E?style=for-the-badge&logo=linux&logoColor=white)
 ![Netlify](https://img.shields.io/badge/Deployment-Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)
@@ -28,6 +30,7 @@ Key engineering decisions driving the project:
 - **3-tier frontend architecture** — Presentation → Service → Data, strictly enforced with no layer bypassing
 - **Supabase-backed data layer with graceful fallback** — Live cloud database querying via `BaseRepository` with seamless offline/mock data fallback
 - **Normalized domain services** — 11 content domains, each isolated, independently composable, and queryable
+- **AI architectural copilot & tool calling** — Groq-powered multi-model fallback pipeline with read-only domain service tools, session token guardrails, and typo resilience
 - **Sandboxed code playground & mini-IDE** — In-browser JavaScript runtime inside an isolated iframe sandbox with live console interception
 - **Interactive command terminal** — Guest/root session model, masked authentication, and protected system commands
 - **Performance monitoring & logger** — Custom Morgan-style colored logger tracking request response times and status codes
@@ -46,11 +49,12 @@ Key engineering decisions driving the project:
 | 6 | 🧩 Services | Service catalog with investment tiers and individual detail pages |
 | 7 | 🗂️ Projects | Asymmetrical bento grid with dynamic GitHub avatars and magnetic physics hover buttons |
 | 8 | 🖥️ Terminal | Interactive Linux-inspired developer interface toggled via `Ctrl + \`` |
-| 9 | 📬 Contact | Validated form with EmailJS delivery and toast feedback |
-| 10 | 📏 Scroll Bar | Fixed gradient reading progress tracker reflecting page depth |
-| 11 | 🔎 SEO | Route-level metadata via React Helmet Async |
-| 12 | 📱 Responsive | Full layout support from mobile to wide desktop |
-| 13 | ♿ Accessible | Keyboard nav, ARIA, visible focus, reduced-motion support |
+| 9 | 🤖 Ego Copilot | AI architectural assistant powered by Groq LLMs & read-only domain service tools |
+| 10 | 📬 Contact | Validated form with EmailJS delivery and toast feedback |
+| 11 | 📏 Scroll Bar | Fixed gradient reading progress tracker reflecting page depth |
+| 12 | 🔎 SEO | Route-level metadata via React Helmet Async |
+| 13 | 📱 Responsive | Full layout support from mobile to wide desktop |
+| 14 | ♿ Accessible | Keyboard nav, ARIA, visible focus, reduced-motion support |
 
 ---
 
@@ -60,8 +64,8 @@ Key engineering decisions driving the project:
 
 ```mermaid
 flowchart TD
-    P["🖥️ PRESENTATION\nReact · Views · Components · Routing · Animations"]
-    S["⚙️ SERVICE & API LAYER\nDomain Services · portfolioService · BaseRepository · Supabase Client · Dev Logger"]
+    P["🖥️ PRESENTATION\nReact · Views · Components · AIChatWidget · Routing · Animations"]
+    S["⚙️ SERVICE & API LAYER\nDomain Services · aiService · portfolioService · BaseRepository · Supabase Client · Dev Logger"]
     D["📦 DATA & PERSISTENCE\nSupabase Cloud DB · Relational Tables · Local Mock Fallbacks · Site Config"]
 
     P --> S --> D
@@ -82,6 +86,7 @@ The helper layer provides interactive subsystems, developer utilities, and syste
 ```mermaid
 flowchart TD
     subgraph Helpers ["🧰 HELPER LAYER"]
+        AI["AIChatWidget\nCopilot & Tool Calling"]
         CT["CommandTerminal\nGuest/Root CLI"]
         CP["CodePlayground\nSandboxed JS Mini-IDE"]
         MB["MagneticButton\nPhysics-based Hover"]
@@ -102,6 +107,7 @@ flowchart TD
 
 | Helper Component | File | Architectural Role |
 | :--- | :--- | :--- |
+| **AI Chat Widget** | `AIChatWidget.jsx` | Floating & full-screen AI copilot with dynamic token guard, tool calling, and strict scroll isolation |
 | **Command Terminal** | `CommandTerminal.jsx` | Floating developer terminal with session auth, command history, and CLI tooling |
 | **Code Playground** | `CodePlayground.jsx` | Isolated iframe JavaScript runner with console interception and `developerData` binding |
 | **Magnetic Button** | `MagneticButton.jsx` | Framer Motion spring physics cursor attraction with radial ambient glow |
@@ -119,6 +125,7 @@ flowchart TD
         direction TB
         UI["React Views: Home.jsx · ServiceDetail.jsx"]
         COMPS["Domain Components: Hero · About · Skills · Experience · Projects · Services · Contact"]
+        AIC["AIChatWidget (Mobile Sheet / Desktop Popup)"]
     end
 
     subgraph L2 ["🧰 2. HELPER SUBSYSTEM LAYER"]
@@ -128,12 +135,13 @@ flowchart TD
 
     subgraph L3 ["🪝 3. HOOKS & ORCHESTRATION LAYER"]
         direction TB
-        HOOK["usePortfolioData() Hook & useLenis()"]
+        HOOK["usePortfolioData() · useAIChat() · useLenis()"]
         PSVC["portfolioService (Promise.allSettled Aggregator)"]
     end
 
-    subgraph L4 ["⚙️ 4. DOMAIN SERVICE LAYER (11 Domains)"]
+    subgraph L4 ["⚙️ 4. DOMAIN & AI SERVICE LAYER"]
         direction TB
+        AISVC["ai.service.js · ai.tools.js (Read-Only) · intentNormalizer.js · tokenUsageGuard.js"]
         DS["projects · profile · skills · experience · services · solutions · pricing · terminal ..."]
     end
 
@@ -142,6 +150,7 @@ flowchart TD
         REPO["BaseRepository (Generic CRUD + Automatic Error Fallback)"]
         LOG["logger.js (Morgan Benchmark & Duration ms)"]
         CLIENT["supabase.client.js (@supabase/supabase-js)"]
+        GROQ["Groq Cloud API (Llama 3.3 70B & Fallback Rotation)"]
     end
 
     subgraph L6 ["📦 6. PERSISTENCE & STORAGE LAYER"]
@@ -151,14 +160,19 @@ flowchart TD
     end
 
     UI --> COMPS
+    AIC --> HOOK
     COMPS -.-> HELPERS
     UI --> HOOK
     HOOK --> PSVC
+    HOOK --> AISVC
     PSVC --> DS
+    AISVC --> DS
+    AISVC --> GROQ
     DS --> REPO
     REPO --> CLIENT --> DB
     REPO -->|"Fallback on Error or Empty"| MOCK
     REPO -.-> LOG
+    AISVC -.-> LOG
 
     style L1 fill:#0f172a,stroke:#61DAFB,color:#e2e8f0
     style L2 fill:#1e1b4b,stroke:#a855f7,color:#e2e8f0
@@ -711,16 +725,24 @@ apps/
     │   ├── api/                           ← Centralized API & Service Layer
     │   │   ├── portfolio.service.js       ← Promise.allSettled domain aggregator
     │   │   │
+    │   │   ├── ai/                        ← AI Copilot & Multi-Turn Tool Calling Engine
+    │   │   │   ├── ai.config.js           ← Groq model configs & jolly copilot system prompt
+    │   │   │   ├── ai.service.js          ← Groq execution loop with auto-selecting fallback models
+    │   │   │   ├── ai.tools.js            ← Read-only function tool schemas mapped to domain services
+    │   │   │   ├── intentNormalizer.js    ← Typo tolerance & keyword intent detector
+    │   │   │   └── tokenUsageGuard.js     ← Session token guardrail & capacity tracker
+    │   │   │
     │   │   ├── core/                      ← Infrastructure & data clients
     │   │   │   ├── apiClient.js           ← Axios HTTP client instance
     │   │   │   ├── base.repository.js     ← Supabase generic CRUD with fallback
     │   │   │   ├── logger.js              ← Custom Morgan-style colored dev logger
     │   │   │   └── supabase.client.js     ← @supabase/supabase-js client
     │   │   │
-    │   │   └── services/                  ← Domain services
+    │   │   └── services/                  ← Domain services (Strict Read-Only access for AI)
     │   │       ├── contact.service.js
     │   │       ├── education.service.js
     │   │       ├── experience.service.js
+    │   │       ├── gmail.service.js       ← Direct mail dispatch handler
     │   │       ├── offerings.service.js
     │   │       ├── pricing.service.js
     │   │       ├── profile.service.js
@@ -733,6 +755,7 @@ apps/
     │   │
     │   ├── components/
     │   │   ├── helper/                    ← Interactive helper subsystem
+    │   │   │   ├── AIChatWidget.jsx       ← Responsive full-screen mobile sheet & desktop AI popup
     │   │   │   ├── CodePlayground.jsx     ← In-browser sandboxed JS mini-IDE
     │   │   │   ├── CommandTerminal.jsx    ← Interactive developer terminal
     │   │   │   ├── ErrorScreen.jsx        ← Graceful error boundary screen
@@ -757,6 +780,7 @@ apps/
     │   │   └── testimonials/              ← Client & peer testimonials
     │   │
     │   ├── hooks/
+    │   │   ├── useAIChat.js               ← AI Copilot conversation state, unread badges & tokens
     │   │   ├── useLenis.js                ← Lenis smooth momentum scroll initialization
     │   │   └── usePortfolioData.js        ← Central portfolio fetcher with unmount guards
     │   │
@@ -803,6 +827,7 @@ All external services and heavy utility libraries are cleanly isolated behind th
 | Integration | Abstracted Through | Purpose |
 |-------------|-------------------|---------|
 | ⚡ Supabase | `api/core/supabase.client.js` & `base.repository.js` | Cloud PostgreSQL database queries & live portfolio persistence |
+| 🤖 Groq Cloud AI | `api/ai/ai.service.js` & `ai.tools.js` | Multi-model Llama 3.3/3.1 LLM tool-calling inference & conversational copilot |
 | 🌐 Axios | `api/core/apiClient.js` | Generic HTTP client for custom endpoints |
 | 📧 EmailJS | `contact.service.js` | Serverless contact form submission |
 | 💻 PrismJS & Code Editor | `CodePlayground.jsx` & `About.jsx` | In-browser syntax highlighting and code editing |
@@ -879,6 +904,201 @@ flowchart LR
 ```
 
 EmailJS logic is fully contained in `contact.service.js`. The React component only calls the service and handles the toast response.
+
+---
+
+## 🤖 Ego Copilot & AI Architecture Subsystem
+
+Ego Web features an interactive, production-grade AI architectural assistant (**Ego Copilot**) integrated into the presentation and service layers. Rather than a static mock chatbot, Ego Copilot executes **live multi-turn function/tool calling** against the portfolio's domain services, allowing visitors and technical recruiters to converse directly with an AI copilot about Haider's engineering background, .NET stack, projects, and system architectures.
+
+---
+
+### 🔄 Multi-Turn Tool Execution & Sequence Flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as 👤 User
+    participant W as 📱 AIChatWidget (UI)
+    participant H as 🪝 useAIChat Hook
+    participant G as 🛡️ tokenUsageGuard
+    participant N as 🔤 intentNormalizer
+    participant S as ⚙️ ai.service.js
+    participant M as 🔄 Groq Multi-Model (Llama 3.3 / 3.1)
+    participant T as 🛠️ ai.tools.js (Read-Only)
+    participant DS as 📦 Domain Services (Supabase / Mock)
+
+    U->>W: Types query (e.g., "tell me about his dotnet projects")
+    W->>H: sendMessage(content)
+    H->>S: aiService.sendMessage({ messages, content })
+    
+    Note over S,G: Step 1: Guardrail Check
+    S->>G: isLimitReached()?
+    alt 🛑 Token Capacity Reached (100%)
+        G-->>S: true (Block outbound calls)
+        S-->>W: Render Graceful Limit Notice & Reset CTA
+    else 🟢 Session Allowed
+        Note over S,N: Step 2: Typo Tolerance & Preprocessing
+        S->>N: normalizeUserQuery(content)
+        N-->>S: { normalizedText: "tell me about his .NET projects" }
+        
+        Note over S,M: Step 3: Fetch & Multi-Turn Tool Calling
+        S->>M: POST /chat/completions with aiToolDefinitions
+        alt 🔄 Model 404 / Unavailable
+            S->>S: Auto-rotate to backup model (llama-3.1-8b-instant)
+        end
+        M-->>S: tool_calls: [get_projects({ query: ".NET" })]
+        
+        Note over S,T: Step 4: Process via Service Layer
+        S->>T: executeAITool("get_projects", args)
+        T->>DS: projectsService.getProjects()
+        DS-->>T: Filtered Project Records
+        T-->>S: Sanitized JSON payload (No bulk bloat)
+        
+        Note over S,M: Step 5: Conversational Synthesis
+        S->>M: POST /chat/completions with tool output
+        M-->>S: Synthesized Markdown Response (Jolly Persona)
+        
+        Note over S,G: Step 6: Telemetry & Token Tracking
+        S->>G: trackUsage(prompt, response)
+        G-->>H: { currentTokens, maxTokens, isWarning }
+        S-->>W: Render formatted markdown & demo links
+    end
+```
+
+---
+
+### 🏗️ Subsystem Component Architecture
+
+```mermaid
+flowchart TD
+    subgraph UI_LAYER ["🖥️ PRESENTATION & HOOKS LAYER"]
+        WIDGET["📱 AIChatWidget.jsx\n• Responsive Viewport (Mobile Sheet / Desktop Box)\n• Scroll Containment (overscroll-contain)\n• Live Token Capacity & Status Badges"]
+        HOOK["🪝 useAIChat.js\n• Reactive Message Stream\n• Token Telemetry State\n• Session Reset Synchronization"]
+        WIDGET <--> HOOK
+    end
+
+    subgraph PRE_PROCESS ["🛡️ PREPROCESSING & GUARD LAYER"]
+        GUARD{"🛡️ tokenUsageGuard.js\nisLimitReached()?"}
+        NORM["🔤 intentNormalizer.js\n• Typo Tolerance ('dotnet' → '.NET')\n• Keyword Intent Router"]
+    end
+
+    subgraph ENGINE ["⚙️ AI ORCHESTRATION ENGINE"]
+        SVC["⚙️ ai.service.js\nFetch → Process → Format → Send Pipeline"]
+        ROTATOR["🔄 Model Fallback Controller\nAuto-detects 404 / Decommissioned Models"]
+    end
+
+    subgraph LLM_CLOUD ["☁️ GROQ INFERENCE LAYER"]
+        GROQ1["🧠 Llama 3.3 70B (Primary)"]
+        GROQ2["⚡ Llama 3.1 8B Instant (Backup)"]
+        GROQ3["🛠️ Llama 3.1 70B / Mixtral"]
+    end
+
+    subgraph TOOLS_DATA ["📦 READ-ONLY DOMAIN TOOLS LAYER"]
+        REGISTRY["🛠️ ai.tools.js\n11 OpenAI Function Tool Schemas"]
+        DOMAIN["📦 Domain Services\nprojects · profile · skills · experience · services ..."]
+        OFFLINE["📁 Local Heuristic Synthesis Agent\nZero-Key / Offline Fallback"]
+    end
+
+    HOOK --> GUARD
+    GUARD -- "Allowed (< 100%)" --> NORM --> SVC
+    GUARD -- "Blocked (100%)" --> WIDGET
+    SVC --> ROTATOR
+    ROTATOR --> GROQ1
+    GROQ1 -. "404 / Fail" .-> GROQ2 -. "Fail" .-> GROQ3 -. "All Fail" .-> OFFLINE
+    GROQ1 & GROQ2 & GROQ3 -- "Tool Call Request" --> REGISTRY
+    REGISTRY --> DOMAIN
+    DOMAIN --> REGISTRY --> SVC
+    OFFLINE --> SVC
+    SVC --> HOOK
+
+    style UI_LAYER fill:#0f172a,stroke:#61DAFB,color:#e2e8f0
+    style PRE_PROCESS fill:#1e1b4b,stroke:#818cf8,color:#e2e8f0
+    style ENGINE fill:#064e3b,stroke:#10B981,color:#e2e8f0
+    style LLM_CLOUD fill:#451a03,stroke:#F59E0B,color:#e2e8f0
+    style TOOLS_DATA fill:#1f2937,stroke:#a855f7,color:#e2e8f0
+```
+
+---
+
+### 🔄 Auto-Selecting Multi-Model Fallback Hierarchy
+
+To guarantee zero downtime and resilient uptime during cloud outages or model deprecation, `ai.service.js` manages an automated self-healing fallback pipeline:
+
+```mermaid
+flowchart LR
+    M1["🧠 Primary Model\nllama-3.3-70b-versatile"]
+    M2["⚡ Fast Backup\nllama-3.1-8b-instant"]
+    M3["🌐 Secondary Backup\nllama-3.1-70b-versatile"]
+    M4["🧩 Multi-Expert\nmixtral-8x7b-32768"]
+    M5["📁 Offline Agent\nLocal Heuristic Fallback"]
+
+    M1 -->|"404 / Model Error"| M2
+    M2 -->|"404 / Model Error"| M3
+    M3 -->|"404 / Model Error"| M4
+    M4 -->|"All API Outages"| M5
+
+    style M1 fill:#064e3b,stroke:#10B981,color:#e2e8f0
+    style M2 fill:#0f172a,stroke:#38BDF8,color:#e2e8f0
+    style M3 fill:#1e1b4b,stroke:#818cf8,color:#e2e8f0
+    style M4 fill:#451a03,stroke:#F59E0B,color:#e2e8f0
+    style M5 fill:#3b0764,stroke:#c084fc,color:#e2e8f0
+```
+
+---
+
+### ⚡ Session Token Guardrail Lifecycle
+
+```mermaid
+flowchart TD
+    REQ["💬 User Query Received"]
+    ACC["📊 Calculate Session Token Count\n(Prompt + Completion Tokens)"]
+    CHECK{"Capacity Check\n(Max: 6,000 Tokens)"}
+    
+    OK["🟢 Normal State (< 80%)\nLive Status Indicator in Header"]
+    WARN["🟡 Warning State (80% - 99%)\n'⚡ ~85% Cap' Pulsing Badge"]
+    BLOCK["🛑 Circuit Breaker (100%)\n• Freeze Outbound API Calls\n• Display Limit Alert Banner\n• Offer Reset Session (↻) CTA"]
+
+    REQ --> ACC --> CHECK
+    CHECK -- "< 4,800 tokens" --> OK
+    CHECK -- "4,800 - 5,999 tokens" --> WARN
+    CHECK -- "≥ 6,000 tokens" --> BLOCK
+
+    style OK fill:#064e3b,stroke:#10B981,color:#e2e8f0
+    style WARN fill:#451a03,stroke:#F59E0B,color:#e2e8f0
+    style BLOCK fill:#450a0a,stroke:#EF4444,color:#e2e8f0
+```
+
+---
+
+### 🏛️ Key AI Subsystem Modules
+
+| Module | File Path | Architectural Responsibility |
+| :--- | :--- | :--- |
+| **Presentation Widget** | `src/components/helper/AIChatWidget.jsx` | Full-screen mobile sheet & desktop floating card with strict scroll isolation (`overscroll-contain`) and safe-area padding |
+| **State Orchestrator** | `src/hooks/useAIChat.js` | Message lifecycle, unread badges, open/close toggles, token usage state synchronization, and session reset |
+| **Service Pipeline** | `src/api/ai/ai.service.js` | `Fetch -> Process -> Format -> Send` execution engine with backend proxy and local heuristic agent fallbacks |
+| **Tool Registry** | `src/api/ai/ai.tools.js` | OpenAI/Groq compatible read-only function schemas mapped strictly to domain service layer retrieval methods |
+| **Persona & Config** | `src/api/ai/ai.config.js` | System instructions enforcing the jolly, technical architecture copilot persona with strict anti-data-dump rules |
+| **Fuzzy Normalizer** | `src/api/ai/intentNormalizer.js` | Normalizes developer typos (`dotnet`, `projejcts`, `expierence`, `specilties`) and provides heuristic intent detection |
+| **Token Guardrail** | `src/api/ai/tokenUsageGuard.js` | Session-based token tracker with subtle 80% warning badges and 100% capacity circuit breaker |
+
+---
+
+### 🛡️ 1. Strict Read-Only Security Boundary
+
+The AI copilot adheres strictly to read-only retrieval operations. It has zero access to write, insert, update, delete, or mutation endpoints:
+
+- **11 Mapped Content Domains:** `get_profile`, `get_projects`, `get_project_by_id`, `get_skills`, `get_experience`, `get_education`, `get_services`, `get_solutions`, `get_pricing`, `get_testimonials`, `get_site_config`.
+- **Sanitized Tool Payloads:** Tools automatically strip internal database columns, stop-words, and bloated nested relations before passing payloads to the LLM context window.
+
+---
+
+### 📱 2. Responsive Viewport & Scroll Containment
+
+- **Adaptive Mobile Layout (`< 768px`):** Automatically switches from a desktop floating box to a full-viewport modal (`fixed inset-0 w-full h-[100dvh]`) respecting mobile notches (`env(safe-area-inset-top)`) and gesture home bars (`env(safe-area-inset-bottom)`).
+- **Desktop Popup (`md:` and above):** Compact side popup card (`350px × 450px`) docked in the bottom-right corner.
+- **Scroll Isolation Fix:** Applied `overscroll-contain`, `overscroll-behavior: contain`, and event stopping (`onWheel={(e) => e.stopPropagation()}`) to ensure scrolling within the chat box never bleeds through to the underlying page or Lenis smooth scroll instance.
 
 ---
 
@@ -998,6 +1218,14 @@ VITE_SUPABASE_PUBLISHABLE_KEY=your-supabase-publishable-anon-key
 
 # Data Mode Switch (true: Live Supabase DB queries | false: Offline local data)
 VITE_USE_BACKEND=true
+
+# Groq Cloud AI Integration (Llama 3.3 70B Multi-Turn Tool Calling)
+VITE_GROQ_API_KEY=gsk_your_groq_api_key_here
+
+# EmailJS Contact Delivery
+VITE_EMAILJS_SERVICE_ID=service_id
+VITE_EMAILJS_TEMPLATE_ID=template_id
+VITE_EMAILJS_PUBLIC_KEY=public_key
 
 # Optional Legacy / REST API Fallback Base URL
 VITE_API_URL=http://localhost:5000/api

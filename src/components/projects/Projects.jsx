@@ -25,29 +25,27 @@ const Projects = ({ projects = [], personalData = {} }) => {
           {personalData.projectsSectionSubtitle}
         </p>
 
-        {/* Bento Grid */}
+        {/* Dynamic Balanced Bento Grid with grid-flow-dense to prevent layout holes */}
         <motion.div
           layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[400px]"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[400px] grid-flow-dense"
         >
           <AnimatePresence>
             {visibleProjects.map((project, index) => {
-              // Asymmetrical grid logic: 
-              // Every 1st item spans 2 cols on large screens
-              // Every 4th item spans 2 cols
-              const isFeatured = index === 0 || index === 3;
+              // Every 3rd item (0, 3, 6...) spans 2 columns
+              const isFeatured = index % 3 === 0;
 
               return (
                 <motion.div
                   layout
-                  initial={{ opacity: 0, scale: 0.9 }}
+                  initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.3 }}
                   key={project.id}
                   className={cn(
                     "group relative overflow-hidden rounded-3xl glass-card transition-all duration-500 hover:border-white/20",
-                    isFeatured ? "md:col-span-2" : "col-span-1"
+                    isFeatured ? "md:col-span-2 lg:col-span-2" : "col-span-1"
                   )}
                 >
                   {/* Image Background */}
@@ -83,17 +81,17 @@ const Projects = ({ projects = [], personalData = {} }) => {
                       </p>
 
                       <div className="flex flex-wrap gap-2 mb-8">
-                        {project.tools.slice(0, 4).map((tool, i) => (
+                        {project.tools && project.tools.slice(0, 4).map((tool, i) => (
                           <span key={i} className="text-xs font-mono text-white/70 bg-white/5 px-2 py-1 rounded border border-white/5">
                             {tool}
                           </span>
                         ))}
-                        {project.tools.length > 4 && (
+                        {project.tools && project.tools.length > 4 && (
                           <span className="text-xs font-mono text-white/50 px-2 py-1">+{project.tools.length - 4}</span>
                         )}
                       </div>
 
-                      {/* Bottom Action Row (Links on left, Contributor Badges always visible on right) */}
+                      {/* Bottom Action Row */}
                       <div className="flex items-center justify-between gap-4">
                         <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
                           {project.code && (
@@ -118,7 +116,7 @@ const Projects = ({ projects = [], personalData = {} }) => {
                           )}
                         </div>
 
-                        {/* Contributor Overlapping Stack - Always Visible on Bottom Right */}
+                        {/* Contributor Overlapping Stack */}
                         {project.contributors && project.contributors.length > 0 && (
                           <div className="flex items-center -space-x-2 overflow-hidden bg-background/60 backdrop-blur-md p-1 rounded-full border border-white/10 ml-auto shadow-lg shrink-0">
                             {project.contributors.map((contributor, i) => {
@@ -156,11 +154,11 @@ const Projects = ({ projects = [], personalData = {} }) => {
         </motion.div>
 
         {/* View All Button */}
-        {!expanded && projects.length > 4 && (
+        {projects.length > 4 && (
           <div className="mt-16 flex justify-center">
-            <MagneticButton onClick={() => setExpanded(true)}>
+            <MagneticButton onClick={() => setExpanded(!expanded)}>
               <div className="relative px-8 py-4 bg-transparent text-white font-mono text-sm tracking-widest uppercase rounded-full border border-primary/30 hover:bg-primary/10 transition-all duration-300 shadow-[0_0_20px_rgba(0,234,255,0.1)] hover:shadow-[0_0_30px_rgba(0,234,255,0.2)]">
-                View All Projects
+                {expanded ? 'Show Less Projects' : `View All Projects (${projects.length})`}
               </div>
             </MagneticButton>
           </div>
