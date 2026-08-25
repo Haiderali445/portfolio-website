@@ -154,8 +154,40 @@ export default function AIChatWidget() {
   const [input, setInput] = useState('');
   const [copiedId, setCopiedId] = useState(null);
   const [bannerDismissed, setBannerDismissed] = useState(false);
+  const [viewportHeight, setViewportHeight] = useState('100dvh');
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+
+  // Dynamic visualViewport tracker for mobile software keyboards
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleViewportChange = () => {
+      if (window.visualViewport) {
+        setViewportHeight(`${window.visualViewport.height}px`);
+      } else {
+        setViewportHeight(`${window.innerHeight}px`);
+      }
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleViewportChange);
+      window.visualViewport.addEventListener('scroll', handleViewportChange);
+      handleViewportChange();
+    } else {
+      window.addEventListener('resize', handleViewportChange);
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleViewportChange);
+        window.visualViewport.removeEventListener('scroll', handleViewportChange);
+      } else {
+        window.removeEventListener('resize', handleViewportChange);
+      }
+    };
+  }, [isOpen]);
 
   // Auto-scroll to bottom of messages
   useEffect(() => {
@@ -190,11 +222,18 @@ export default function AIChatWidget() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
+  const handleInputFocus = () => {
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 150);
+  };
+
   return (
     <>
       {/* ─── FLOATING TRIGGER BUTTON & SUBTLE INVITATION BANNER ─────────────────── */}
-      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[999] flex items-center justify-end font-sans">
-        {/* Subtle Invitation Banner */}
+      {/* Lifted to bottom-24 on mobile to safely clear the fixed bottom navigation dock */}
+      <div className="fixed bottom-24 right-4 sm:bottom-6 sm:right-6 z-[999] flex items-center justify-end font-sans">
+        {/* Subtle Invitation Banner (Visible on all devices) */}
         <AnimatePresence>
           {!isOpen && !bannerDismissed && (
             <motion.div
@@ -202,11 +241,11 @@ export default function AIChatWidget() {
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, x: 8, scale: 0.94 }}
               transition={{ delay: 0.8, duration: 0.25 }}
-              className="mr-2.5 hidden md:flex items-center gap-2 rounded-full border border-white/10 bg-[#0c0e16]/95 py-1.5 pl-3 pr-2 shadow-lg shadow-black/50 backdrop-blur-md cursor-pointer group hover:border-cyan-500/30 transition-all"
+              className="mr-2 sm:mr-2.5 flex items-center gap-1.5 sm:gap-2 rounded-full border border-white/10 bg-[#0c0e16]/95 py-1 sm:py-1.5 pl-2.5 sm:pl-3 pr-1.5 sm:pr-2 shadow-lg shadow-black/60 backdrop-blur-md cursor-pointer group hover:border-cyan-500/30 transition-all max-w-[calc(100vw-85px)] shrink-0"
               onClick={toggleOpen}
             >
-              <Sparkles size={12} className="text-cyan-400 opacity-80" />
-              <span className="text-[11.5px] font-medium text-gray-300 group-hover:text-white">
+              <Sparkles size={12} className="text-cyan-400 opacity-80 shrink-0" />
+              <span className="text-[11px] sm:text-[11.5px] font-medium text-gray-300 group-hover:text-white whitespace-nowrap">
                 Ask <span className="text-cyan-400 font-semibold">Ego AI</span>
               </span>
               <button
@@ -216,7 +255,7 @@ export default function AIChatWidget() {
                   e.stopPropagation();
                   setBannerDismissed(true);
                 }}
-                className="ml-0.5 rounded-full p-0.5 text-gray-500 hover:bg-white/10 hover:text-gray-300"
+                className="ml-0.5 rounded-full p-0.5 text-gray-500 hover:bg-white/10 hover:text-gray-300 shrink-0"
               >
                 <X size={11} />
               </button>
@@ -263,7 +302,8 @@ export default function AIChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.96 }}
             transition={{ type: 'spring', damping: 28, stiffness: 340 }}
-            className="fixed inset-0 z-[9999] flex flex-col w-full h-[100dvh] bg-[#090b12] font-sans md:inset-auto md:bottom-20 md:right-6 md:w-[380px] md:h-[500px] md:max-h-[calc(100vh-6.5rem)] md:rounded-2xl md:border md:border-white/10 md:bg-[#0a0c13]/98 md:shadow-2xl md:shadow-black/90 md:backdrop-blur-xl overflow-hidden"
+            style={{ height: viewportHeight, maxHeight: viewportHeight }}
+            className="fixed inset-0 z-[9999] flex flex-col w-full bg-[#090b12] font-sans md:inset-auto md:bottom-20 md:right-6 md:w-[380px] md:!h-[500px] md:!max-h-[calc(100vh-6.5rem)] md:rounded-2xl md:border md:border-white/10 md:bg-[#0a0c13]/98 md:shadow-2xl md:shadow-black/90 md:backdrop-blur-xl overflow-hidden"
             aria-label="AI Assistant Interface"
           >
             {/* Header with Dynamic Token Guard Status & Safe Top Spacing */}
@@ -461,6 +501,7 @@ export default function AIChatWidget() {
                 ref={inputRef}
                 type="text"
                 value={input}
+                onFocus={handleInputFocus}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder={
                   usage?.isLimitReached
