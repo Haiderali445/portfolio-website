@@ -8,6 +8,7 @@ import Nav from "../nav/Nav";
 import Footer from "../footer/Footer";
 import ScrollProgress from "../helper/ScrollProgress";
 import CommandTerminal from "../helper/CommandTerminal";
+import AIChatWidget from "../helper/AIChatWidget";
 import Home from "../../views/Home";
 import ServiceDetail from "../../views/ServiceDetail";
 
@@ -23,6 +24,7 @@ export default function AppLayout({ data }) {
     <div className="min-h-screen bg-background text-white selection:bg-primary/30 font-sans">
       <ScrollProgress />
       <CommandTerminal portfolioData={data} />
+      <AIChatWidget />
       <Toaster
         position="top-center"
         toastOptions={{
