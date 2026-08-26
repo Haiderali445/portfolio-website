@@ -2,7 +2,8 @@ import { apiClient } from '../core/apiClient';
 import { aiToolDefinitions, executeAITool } from './ai.tools';
 import { AI_CONFIG, AI_SYSTEM_PROMPT } from './ai.config';
 import { tokenUsageGuard } from './tokenUsageGuard';
-import { normalizeUserQuery, detectIntentTool } from './intentNormalizer';
+import { normalizeUserQuery } from './intentNormalizer';
+import { aiRouter } from './ai.router';
 import { logger } from '../core/logger';
 
 const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY || '';
@@ -253,11 +254,11 @@ class AIService {
    */
   async executeLocalAgentFallback(query) {
     const { normalizedText } = normalizeUserQuery(query);
-    const targetTool = detectIntentTool(normalizedText);
+    const targetTool = aiRouter.resolveLocalFallbackTool(normalizedText);
 
     logger.info('AI_LOCAL_AGENT', `Executing local synthesized fallback for intent [${targetTool}]`);
 
-    if (targetTool === 'get_projects' || /project|work|app|build|built|portfolio/i.test(normalizedText)) {
+    if (targetTool === 'get_projects') {
       const projectsJson = await executeAITool('get_projects', { limit: 5 });
       const projects = JSON.parse(projectsJson);
       if (Array.isArray(projects) && projects.length) {
@@ -268,7 +269,7 @@ class AIService {
       }
     }
 
-    if (targetTool === 'get_skills' || /skill|stack|tech|specialt|\.net|c#|react/i.test(normalizedText)) {
+    if (targetTool === 'get_skills') {
       const skillsJson = await executeAITool('get_skills');
       const data = JSON.parse(skillsJson);
       const categories = data.categories || [];
@@ -280,7 +281,7 @@ class AIService {
       }
     }
 
-    if (targetTool === 'get_experience' || /experience|career|job|worked|role/i.test(normalizedText)) {
+    if (targetTool === 'get_experience') {
       const expJson = await executeAITool('get_experience', { limit: 4 });
       const exps = JSON.parse(expJson);
       if (Array.isArray(exps) && exps.length) {
@@ -291,7 +292,7 @@ class AIService {
       }
     }
 
-    if (targetTool === 'get_services' || /service|hire|consult|help|offer/i.test(normalizedText)) {
+    if (targetTool === 'get_services') {
       const servicesJson = await executeAITool('get_services');
       const services = JSON.parse(servicesJson);
       if (Array.isArray(services) && services.length) {
@@ -302,7 +303,7 @@ class AIService {
       }
     }
 
-    if (targetTool === 'get_pricing' || /price|cost|tier|rate/i.test(normalizedText)) {
+    if (targetTool === 'get_pricing') {
       const pricingJson = await executeAITool('get_pricing');
       const plans = JSON.parse(pricingJson);
       if (Array.isArray(plans) && plans.length) {

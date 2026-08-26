@@ -106,22 +106,4 @@ export function normalizeUserQuery(text = '') {
   };
 }
 
-/**
- * Lightweight intent detector for local agent heuristic routing.
- * @param {string} text
- * @returns {string | null} toolName
- */
-export function detectIntentTool(text = '') {
-  const q = text.toLowerCase();
-
-  if (/project|app|built|portfolio|work|repo|github/i.test(q)) return 'get_projects';
-  if (/skill|stack|technolog|specialt|c#|\.net|react|typescript|backend|frontend|database/i.test(q)) return 'get_skills';
-  if (/experience|career|job|employ|history|role|worked/i.test(q)) return 'get_experience';
-  if (/education|degree|university|study|college|academic/i.test(q)) return 'get_education';
-  if (/service|hire|consult|offering|solution|architect/i.test(q)) return 'get_services';
-  if (/price|pricing|cost|rate|package|tier/i.test(q)) return 'get_pricing';
-  if (/testimonial|review|feedback|client|endorsement/i.test(q)) return 'get_testimonials';
-  if (/who|haider|about|bio|contact|email|phone|resume|profile/i.test(q)) return 'get_profile';
-
-  return 'get_profile';
-}
+export { detectIntentTool } from './ai.router';
