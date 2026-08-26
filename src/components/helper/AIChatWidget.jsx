@@ -294,67 +294,83 @@ export default function AIChatWidget() {
         </motion.button>
       </div>
 
-      {/* ─── SLIDE-OUT CHAT DRAWER / POP-UP WIDGET (FULL-SCREEN MOBILE & COMPACT DESKTOP) ─────── */}
+      {/* ─── SLIDE-OUT CHAT DRAWER / POP-UP WIDGET (MOBILE BOTTOM SHEET & COMPACT DESKTOP) ─────── */}
       <AnimatePresence>
         {isOpen && (
-          <motion.aside
-            initial={{ opacity: 0, y: 20, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.96 }}
-            transition={{ type: 'spring', damping: 28, stiffness: 340 }}
-            style={{ height: viewportHeight, maxHeight: viewportHeight }}
-            className="fixed inset-0 z-[9999] flex flex-col w-full bg-[#090b12] font-sans md:inset-auto md:bottom-20 md:right-6 md:w-[380px] md:!h-[500px] md:!max-h-[calc(100vh-6.5rem)] md:rounded-2xl md:border md:border-white/10 md:bg-[#0a0c13]/98 md:shadow-2xl md:shadow-black/90 md:backdrop-blur-xl overflow-hidden"
-            aria-label="AI Assistant Interface"
-          >
-            {/* Header with Dynamic Token Guard Status & Safe Top Spacing */}
-            <div className="flex items-center justify-between border-b border-white/10 bg-[#0c0e17]/90 px-4 py-3 md:px-3 md:py-2 backdrop-blur-md shrink-0 pt-[max(0.75rem,env(safe-area-inset-top))] md:pt-2">
-              <div className="flex items-center gap-2.5 md:gap-2">
-                <div className="relative flex h-8 w-8 md:h-6 md:w-6 items-center justify-center rounded-lg md:rounded-md border border-white/10 bg-[#0e121d] text-cyan-400">
-                  <Brain size={16} className="md:w-3.5 md:h-3.5" />
-                  <span className={`absolute -bottom-0.5 -right-0.5 h-2 w-2 md:h-1.5 md:w-1.5 rounded-full ${
-                    usage?.isLimitReached ? 'bg-red-400' : usage?.isWarning ? 'bg-amber-400 animate-pulse' : 'bg-emerald-400'
-                  }`} />
-                </div>
-                <div>
-                  <div className="flex items-center gap-1.5">
-                    <h3 className="text-xs md:text-[11.5px] font-semibold tracking-wide text-white">Ego Copilot</h3>
-                    {usage?.isLimitReached ? (
-                      <span className="rounded bg-red-500/10 px-1.5 py-0.5 md:px-1 md:py-0.2 text-[9px] md:text-[8px] font-mono text-red-400 border border-red-500/20">
-                        Limit Reached
-                      </span>
-                    ) : usage?.isWarning ? (
-                      <span className="rounded bg-amber-500/10 px-1.5 py-0.5 md:px-1 md:py-0.2 text-[9px] md:text-[8px] font-mono text-amber-300 border border-amber-500/20 animate-pulse" title={`${usage.currentTokens}/${usage.maxTokens} tokens`}>
-                        ⚡ ~{usage.percentage}% Cap
-                      </span>
-                    ) : (
-                      <span className="rounded bg-white/5 px-1.5 py-0.5 md:px-1 md:py-0.2 text-[9px] md:text-[8px] font-mono text-cyan-400 border border-white/10">
-                        Live
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-[10px] md:text-[9px] text-gray-400 leading-none">Architecture & Portfolio AI</p>
-                </div>
-              </div>
+          <>
+            {/* Mobile Backdrop Overlay (dismisses on tap) */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={closeChat}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998] md:hidden"
+            />
 
-              <div className="flex items-center gap-1 md:gap-0.5">
-                <button
-                  type="button"
-                  onClick={clearChat}
-                  title="Clear conversation & reset session"
-                  className="rounded-lg md:rounded p-2 md:p-1 text-gray-400 transition-colors hover:bg-white/10 hover:text-gray-200"
-                >
-                  <RotateCcw size={15} className="md:w-3 md:h-3" />
-                </button>
-                <button
-                  type="button"
-                  onClick={closeChat}
-                  title="Close widget"
-                  className="rounded-lg md:rounded p-2 md:p-1 text-gray-400 transition-colors hover:bg-white/10 hover:text-gray-200"
-                >
-                  <X size={18} className="md:w-3.5 md:h-3.5" />
-                </button>
+            <motion.aside
+              initial={{ opacity: 0, y: 30, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 30, scale: 0.98 }}
+              transition={{ type: 'spring', damping: 28, stiffness: 340 }}
+              style={{ height: viewportHeight, maxHeight: viewportHeight }}
+              className="fixed inset-x-0 bottom-0 top-auto z-[9999] flex flex-col w-full h-[85dvh] max-h-[90dvh] rounded-t-2xl border-t border-x border-white/15 bg-[#090b12] shadow-2xl md:inset-auto md:bottom-20 md:right-6 md:w-[380px] md:!h-[500px] md:!max-h-[calc(100vh-6.5rem)] md:rounded-2xl md:border md:border-white/10 md:bg-[#0a0c13]/98 md:shadow-black/90 md:backdrop-blur-xl overflow-hidden font-sans"
+              aria-label="AI Assistant Interface"
+            >
+              {/* Header with Drag Handle on Mobile & Dynamic Token Guard Status */}
+              <div className="flex flex-col border-b border-white/10 bg-[#0c0e17]/95 px-4 py-2.5 md:py-2 backdrop-blur-md shrink-0">
+                {/* Mobile Drawer Pull Bar */}
+                <div className="mx-auto mb-1.5 h-1 w-10 rounded-full bg-white/20 md:hidden" />
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5 md:gap-2">
+                    <div className="relative flex h-8 w-8 md:h-6 md:w-6 items-center justify-center rounded-lg md:rounded-md border border-white/10 bg-[#0e121d] text-cyan-400">
+                      <Brain size={16} className="md:w-3.5 md:h-3.5" />
+                      <span className={`absolute -bottom-0.5 -right-0.5 h-2 w-2 md:h-1.5 md:w-1.5 rounded-full ${
+                        usage?.isLimitReached ? 'bg-red-400' : usage?.isWarning ? 'bg-amber-400 animate-pulse' : 'bg-emerald-400'
+                      }`} />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-1.5">
+                        <h3 className="text-xs md:text-[11.5px] font-semibold tracking-wide text-white">Ego Copilot</h3>
+                        {usage?.isLimitReached ? (
+                          <span className="rounded bg-red-500/10 px-1.5 py-0.5 md:px-1 md:py-0.2 text-[9px] md:text-[8px] font-mono text-red-400 border border-red-500/20">
+                            Limit Reached
+                          </span>
+                        ) : usage?.isWarning ? (
+                          <span className="rounded bg-amber-500/10 px-1.5 py-0.5 md:px-1 md:py-0.2 text-[9px] md:text-[8px] font-mono text-amber-300 border border-amber-500/20 animate-pulse" title={`${usage.currentTokens}/${usage.maxTokens} tokens`}>
+                            ⚡ ~{usage.percentage}% Cap
+                          </span>
+                        ) : (
+                          <span className="rounded bg-white/5 px-1.5 py-0.5 md:px-1 md:py-0.2 text-[9px] md:text-[8px] font-mono text-cyan-400 border border-white/10">
+                            Live
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-[10px] md:text-[9px] text-gray-400 leading-none">Architecture & Portfolio AI</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-1 md:gap-0.5">
+                    <button
+                      type="button"
+                      onClick={clearChat}
+                      title="Clear conversation & reset session"
+                      className="rounded-lg md:rounded p-2 md:p-1 text-gray-400 transition-colors hover:bg-white/10 hover:text-gray-200"
+                    >
+                      <RotateCcw size={15} className="md:w-3 md:h-3" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={closeChat}
+                      title="Close widget"
+                      className="rounded-lg md:rounded p-2 md:p-1 text-gray-400 transition-colors hover:bg-white/10 hover:text-gray-200"
+                    >
+                      <X size={18} className="md:w-3.5 md:h-3.5" />
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
 
             {/* Messages Scroll Area with Strict Scroll Isolation */}
             <div 
@@ -521,6 +537,7 @@ export default function AIChatWidget() {
               </button>
             </form>
           </motion.aside>
+          </>
         )}
       </AnimatePresence>
     </>
