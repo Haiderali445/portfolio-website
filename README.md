@@ -37,6 +37,10 @@ Key engineering decisions driving the project:
 
 ### Recent Implementation Updates
 
+- **AI Copilot UX pass** — The floating chat widget now has a cleaner top-level layout, more compact quick prompts, better mobile spacing, keyboard-safe viewport handling, and a fresh reset flow that clears history on refresh.
+- **Professional AI messaging and email generation** — The copilot prompt layer and tool registry were refined to handle portfolio inquiries, collaboration outreach, and professional email drafting with stricter structured context and clearer user intent handling.
+- **Gmail/email delivery hardening** — The contact and Gmail service flow were tightened to validate environment variables, normalize form mapping, and better handle direct sends for portfolio inquiries and outreach requests.
+- **Subtle loading system** — The global loading overlay was reduced to a refined dev-style loader with soft glow and minimal visual noise, while region skeletons remain in place to maintain layout stability without jank.
 - **Live GitHub metrics** — Repository language totals are aggregated dynamically from GitHub data and converted into percentages; the banner also includes loading skeletons, activity fallbacks, refresh handling, and stable dimensions.
 - **Experience company links** — Experience records accept both `company_url` and `companyUrl`; the service and `useExperience` hook normalize the field before the timeline and hero use it.
 - **Scroll performance** — Scroll progress and navigation highlighting use passive listeners with `requestAnimationFrame` throttling. Lenis includes reduced-motion and touch-device safeguards.
@@ -49,11 +53,13 @@ Key engineering decisions driving the project:
 This implementation pass also includes:
 
 - **Backend integration hardening** — Portfolio aggregation, domain services, fallback datasets, Supabase access, request logging, and terminal configuration remain centralized behind the service and repository layers.
+- **AI + contact workflow integration** — Portfolio chat, email drafting, and direct message execution are aligned to the same product identity and business context, giving the site a more cohesive client-facing assistant experience.
 - **Experience presentation** — Work entries support clickable company destinations with external-link semantics while retaining a plain-text fallback when no URL is configured.
 - **GitHub presentation** — The banner displays live repository, commit, code-volume, push, star, activity-grid, and top-language information without fixed language percentages.
 - **Scroll and motion polish** — Scroll progress and navigation updates are batched per animation frame; reveal animations are buffered and run once; Lenis avoids unnecessary work on touch and reduced-motion devices.
 - **Responsive overlays** — The command terminal is left-oriented and dynamically constrained for narrow, short, and wide viewports.
 - **Resilient UI states** — Initial portfolio loading, GitHub refreshes, image loading, errors, and content replacement provide visible feedback without collapsing layout space.
+- **Resettable AI state** — The AI session intentionally clears on refresh to prevent stale conversation history and keep the interaction lightweight and reliable.
 
 ---
 
