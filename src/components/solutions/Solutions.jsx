@@ -66,9 +66,45 @@ const SolutionCard = ({ solution, isOpen, onClick, onTagClick, activeTag }) => {
     );
 };
 
-const Solutions = ({ solutions = [], personalData = {} }) => {
+const SolutionsSkeleton = () => (
+    <section id="solutions" className="py-24 relative z-10">
+        <div className="container mx-auto px-6 max-w-6xl">
+            <div className="mb-16 text-center">
+                <div className="mx-auto mb-4 h-12 w-72 rounded-full skeleton-shimmer bg-white/[0.06]" />
+                <div className="mx-auto h-4 w-96 max-w-full rounded-full skeleton-shimmer bg-white/[0.05]" />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {Array.from({ length: 4 }).map((_, index) => (
+                    <div key={index} className="rounded-3xl border border-white/[0.08] bg-white/[0.03] p-6">
+                        <div className="mb-4 h-4 w-24 rounded-full skeleton-shimmer bg-white/[0.06]" />
+                        <div className="mb-3 h-7 w-3/4 rounded-xl skeleton-shimmer bg-white/[0.07]" />
+                        <div className="space-y-3 pt-4">
+                            <div className="h-4 w-full rounded-full skeleton-shimmer bg-white/[0.05]" />
+                            <div className="h-4 w-11/12 rounded-full skeleton-shimmer bg-white/[0.05]" />
+                            <div className="h-4 w-2/3 rounded-full skeleton-shimmer bg-white/[0.05]" />
+                        </div>
+                        <div className="mt-5 flex flex-wrap gap-2">
+                            {Array.from({ length: 3 }).map((__, tagIndex) => (
+                                <div key={tagIndex} className="h-8 w-20 rounded-full skeleton-shimmer bg-white/[0.05]" />
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    </section>
+);
+
+const Solutions = ({ solutions = [], personalData = {}, isLoading = false }) => {
     const [openIndex, setOpenIndex] = useState(null);
     const [activeTagFilter, setActiveTagFilter] = useState(null);
+
+    if (isLoading) {
+        return <SolutionsSkeleton />;
+    }
+
+    if (!solutions || solutions.length === 0) return null;
 
     const toggleAccordion = (index) => {
         setOpenIndex(openIndex === index ? null : index);
@@ -106,7 +142,9 @@ const Solutions = ({ solutions = [], personalData = {} }) => {
                     )}
                 </div>
 
-                {filteredSolutions.length > 0 ? (
+                {isLoading ? (
+                    <SolutionsSkeleton />
+                ) : filteredSolutions.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {filteredSolutions.map((solution, index) => (
                             <SolutionCard

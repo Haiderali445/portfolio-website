@@ -1,6 +1,6 @@
 import { BaseRepository } from '../core/base.repository';
-import emailjs from '@emailjs/browser';
 import { logger } from '../core/logger';
+import { gmailService } from './gmail.service';
 
 class ContactService extends BaseRepository {
   constructor() {
@@ -42,25 +42,24 @@ class ContactService extends BaseRepository {
   }
 
   async sendForm(formElement) {
-    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-
-    if (!serviceId || !templateId || !publicKey) {
-      throw new Error('Contact form is not configured. Please set up EmailJS environment variables.');
-    }
-
     if (this.useBackend) {
       try {
         const formData = new FormData(formElement);
-        const payload = Object.fromEntries(formData);
-        return await this.create(payload);
+        const payload = {
+          name: formData.get('from_name') || formData.get('name'),
+          email: formData.get('from_email') || formData.get('email'),
+          message: formData.get('message'),
+        };
+        await this.create(payload);
       } catch (error) {
-        logger.error(this.endpoint, 'Failed to save contact submission to Supabase backend, attempting EmailJS fallback', error);
+        logger.error(this.endpoint, 'Failed to save contact submission to Supabase backend, continuing with EmailJS', error);
       }
     }
 
-    return emailjs.sendForm(serviceId, templateId, formElement, publicKey);
+    return gmailService.sendDirectMail(formElement, {
+      origin_mode: 'Direct Visitor Submission (Human)',
+      sendConfirmation: true,
+    });
   }
 }
 

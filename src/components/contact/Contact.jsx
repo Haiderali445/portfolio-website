@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { FaGithub, FaLinkedin, FaInstagram, FaWhatsapp, FaEnvelope } from 'react-icons/fa';
 import { contactService } from '../../api/services/contact.service';
+import { gmailService } from '../../api/services/gmail.service';
 
 const ContactField = ({ id, label, type = "text", name, ...props }) => {
   return (
@@ -47,14 +48,19 @@ const Contact = ({ contactInfo, personalData = {}, gmailDispatcher }) => {
     setLoading(true);
 
     try {
-      if (gmailDispatcher) {
-        await gmailDispatcher.sendDirectMail(form.current, {
-          toEmail: data.email
+      const dispatcher = gmailDispatcher || gmailService;
+      const ownerEmail = data.email || personalData.email;
+
+      if (dispatcher?.sendDirectMail) {
+        await dispatcher.sendDirectMail(form.current, {
+          toEmail: ownerEmail,
+          origin_mode: 'Direct Visitor Submission (Human)',
+          sendConfirmation: true,
         });
       } else {
         await contactService.sendForm(form.current);
       }
-      toast.success('Message sent successfully!');
+      toast.success('Message sent successfully! A confirmation copy was sent to your inbox.');
       e.target.reset();
     } catch (error) {
       console.error(error);
@@ -118,8 +124,8 @@ const Contact = ({ contactInfo, personalData = {}, gmailDispatcher }) => {
           <div className="bg-white/[0.03] p-8 rounded-3xl border border-white/[0.08] backdrop-blur-md">
             <h3 className="text-2xl font-semibold mb-6 text-white">Send a message</h3>
             <form ref={form} onSubmit={handleSend} className="space-y-6">
-              <ContactField id="name" name="name" label="Your Name" required />
-              <ContactField id="email" name="email" type="email" label="Your Email" required />
+              <ContactField id="name" name="from_name" label="Your Name" required />
+              <ContactField id="email" name="from_email" type="email" label="Your Email" required />
               <ContactField id="message" name="message" type="textarea" label="Message" required />
 
               <button

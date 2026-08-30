@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 const SkeletonBlock = ({ className = "" }) => (
   <div className={`skeleton-shimmer rounded-xl bg-white/[0.07] ${className}`} />
@@ -11,22 +11,58 @@ const SkeletonSection = ({ children, className = "" }) => (
 );
 
 export default function LoadingScreen() {
-  return (
-    <div className="min-h-screen w-full overflow-hidden bg-[#050505] text-white" aria-busy="true" aria-label="Loading portfolio">
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top,rgba(0,234,255,0.08),transparent_34rem)]" />
+  const [activeNode, setActiveNode] = useState(0);
 
-      <div className="pointer-events-none fixed inset-0 z-20 flex items-center justify-center px-6">
-        <div className="flex items-center gap-3 rounded-2xl border border-cyan-400/20 bg-[#080a0d]/90 px-4 py-3 font-mono text-xs text-cyan-300 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-60" />
-            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-cyan-400" />
-          </span>
-          <span>INITIALIZING PORTFOLIO DATA...</span>
+  // Cycles through active boot states interactively
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveNode((prev) => (prev + 1) % 4);
+    }, 400);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="min-h-screen w-full overflow-hidden bg-[#050505] text-white select-none" aria-busy="true" aria-label="Loading portfolio">
+      {/* Background Radial Glow */}
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_center,rgba(0,234,255,0.07),transparent_38rem)]" />
+
+      {/* Interactive Central Tech Loader HUD */}
+      <div className="pointer-events-none fixed inset-0 z-30 flex items-center justify-center px-6">
+        <div className="relative flex flex-col items-center gap-5 p-7 rounded-3xl border border-cyan-500/20 bg-[#080a0d]/90 shadow-2xl shadow-cyan-500/10 backdrop-blur-xl">
+          
+          {/* Outer Rotating HUD Ring */}
+          <div className="relative flex h-24 w-24 items-center justify-center">
+            <div className="absolute inset-0 rounded-full border border-white/10 bg-white/[0.02]" />
+            <div className="absolute inset-0 rounded-full border-t-2 border-cyan-400 animate-spin" />
+            <div className="absolute inset-2 rounded-full border-b-2 border-emerald-400 animate-[spin_3s_linear_infinite_reverse]" />
+
+            {/* Core Center Pulse Node */}
+            <div className="absolute h-3 w-3 rounded-full bg-cyan-400 shadow-[0_0_16px_rgba(0,234,255,0.9)] animate-ping" />
+            <div className="absolute h-2.5 w-2.5 rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(0,234,255,0.8)]" />
+          </div>
+
+          {/* Micro Node Activity Indicator Pills */}
+          <div className="flex items-center gap-1.5 font-mono text-[10px] tracking-widest text-cyan-300">
+            {['API', 'MESH', 'DB', 'READY'].map((node, idx) => (
+              <span
+                key={node}
+                className={`px-2 py-0.5 rounded transition-all duration-300 border ${
+                  activeNode === idx 
+                    ? 'bg-cyan-500/20 border-cyan-400 text-cyan-200 shadow-[0_0_10px_rgba(0,234,255,0.3)] scale-105' 
+                    : 'bg-white/5 border-white/10 text-slate-500 opacity-60'
+                }`}
+              >
+                {node}
+              </span>
+            ))}
+          </div>
+
         </div>
       </div>
 
-      <div className="relative">
-        <header className="min-h-[min(42rem,82vh)] border-b border-white/[0.06] px-6 py-28 md:py-36">
+      {/* Underlying Layout Skeletons */}
+      <div className="relative z-0 opacity-95 blur-[0.5px]">
+        <header className="min-h-[min(42rem,82vh)] border-b border-white/[0.06] bg-[#06080b]/70 px-6 py-28 backdrop-blur-sm md:py-36">
           <div className="container mx-auto max-w-7xl">
             <SkeletonBlock className="mb-6 h-4 w-36" />
             <SkeletonBlock className="h-14 w-[min(34rem,90vw)] md:h-20" />
@@ -54,7 +90,7 @@ export default function LoadingScreen() {
           </div>
         </SkeletonSection>
 
-        <SkeletonSection className="border-y border-white/[0.04]">
+        <SkeletonSection className="border-y border-white/[0.04] bg-white/[0.02]">
           <SkeletonBlock className="mx-auto mb-12 h-10 w-64" />
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, index) => (
@@ -72,7 +108,7 @@ export default function LoadingScreen() {
           </div>
         </SkeletonSection>
 
-        <SkeletonSection className="border-y border-white/[0.04]">
+        <SkeletonSection className="border-y border-white/[0.04] bg-white/[0.02]">
           <SkeletonBlock className="mx-auto mb-12 h-10 w-72" />
           <div className="grid gap-5 md:grid-cols-2">
             {Array.from({ length: 4 }).map((_, index) => <SkeletonBlock key={index} className="h-32" />)}
@@ -89,7 +125,7 @@ export default function LoadingScreen() {
           </div>
         </SkeletonSection>
 
-        <SkeletonSection className="border-t border-white/[0.04]">
+        <SkeletonSection className="border-t border-white/[0.04] bg-white/[0.02]">
           <SkeletonBlock className="mx-auto mb-12 h-10 w-64" />
           <div className="grid gap-5 md:grid-cols-3">
             {Array.from({ length: 3 }).map((_, index) => <SkeletonBlock key={index} className="h-72" />)}

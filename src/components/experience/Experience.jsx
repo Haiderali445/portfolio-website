@@ -3,9 +3,49 @@ import { FaBriefcase, FaArrowUpRightFromSquare, FaClock } from 'react-icons/fa6'
 import { motion } from 'framer-motion';
 import { useExperience } from '../../hooks/useExperience';
 
-const Experience = ({ experiences = [] }) => {
+const Experience = ({ experiences = [], isLoading = false }) => {
     const [activeTechFilter, setActiveTechFilter] = useState(null);
     const normalizedExperiences = useExperience(experiences);
+
+    if (isLoading) {
+        return (
+            <section id="experience" className="py-24 relative z-10">
+                <div className="container mx-auto px-6 max-w-6xl">
+                    <div className="mb-16 flex flex-col md:flex-row items-center md:items-start gap-4">
+                        <div className="h-14 w-14 rounded-full skeleton-shimmer bg-white/[0.06]" />
+                        <div className="w-full md:w-auto">
+                            <div className="mx-auto h-10 w-64 rounded-full skeleton-shimmer bg-white/[0.06] md:mx-0" />
+                            <div className="mt-3 h-4 w-72 rounded-full skeleton-shimmer bg-white/[0.04] mx-auto md:mx-0" />
+                        </div>
+                    </div>
+
+                    <div className="space-y-8">
+                        {Array.from({ length: 3 }).map((_, index) => (
+                            <div key={index} className="rounded-3xl border border-white/[0.06] bg-white/[0.03] p-8">
+                                <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                                    <div className="space-y-3">
+                                        <div className="h-7 w-72 rounded-xl skeleton-shimmer bg-white/[0.06]" />
+                                        <div className="h-5 w-52 rounded-xl skeleton-shimmer bg-white/[0.05]" />
+                                    </div>
+                                    <div className="h-10 w-32 rounded-full skeleton-shimmer bg-white/[0.05]" />
+                                </div>
+                                <div className="space-y-3 pt-3">
+                                    <div className="h-4 w-full rounded-full skeleton-shimmer bg-white/[0.05]" />
+                                    <div className="h-4 w-11/12 rounded-full skeleton-shimmer bg-white/[0.05]" />
+                                    <div className="h-4 w-4/5 rounded-full skeleton-shimmer bg-white/[0.05]" />
+                                </div>
+                                <div className="mt-6 flex flex-wrap gap-2">
+                                    {Array.from({ length: 4 }).map((__, tagIndex) => (
+                                        <div key={tagIndex} className="h-8 w-20 rounded-full skeleton-shimmer bg-white/[0.05]" />
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        );
+    }
 
     const handleTechClick = (tech) => {
         setActiveTechFilter(activeTechFilter === tech ? null : tech);
@@ -45,7 +85,9 @@ const Experience = ({ experiences = [] }) => {
                     </div>
                 )}
 
-                {!normalizedExperiences || normalizedExperiences.length === 0 ? (
+                {isLoading ? (
+                    <ExperienceSkeleton />
+                ) : !normalizedExperiences || normalizedExperiences.length === 0 ? (
                     <div className="text-center text-text-muted py-12 glass-card rounded-3xl border border-glass-border">
                         <p className="font-mono text-sm">No professional history available.</p>
                     </div>

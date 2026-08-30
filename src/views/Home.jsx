@@ -25,11 +25,11 @@ const Home = ({ portfolioData }) => {
             />
             <Header personalData={personal} experience={experience} />
             <About personalData={personal} />
-            <Skills skills={skills} />
-            <Experience experiences={experience} />
+            <Skills skills={skills} isLoading={!Array.isArray(skills) || skills.length === 0} />
+            <Experience experiences={experience} isLoading={!Array.isArray(experience) || experience.length === 0} />
             <Education educations={education} />
-            <Solutions solutions={solutions} personalData={personal} />
-            <Projects projects={projects} personalData={personal} />
+            <Solutions solutions={solutions} personalData={personal} isLoading={!Array.isArray(solutions) || solutions.length === 0} />
+            <Projects projects={projects} personalData={personal} isLoading={!Array.isArray(projects) || projects.length === 0} />
             {/* Pass pricing down as a prop so the Services component can render your investment tiers */}
             <Services services={services} pricing={pricing} />
             <Testimonials testimonials={testimonials} />

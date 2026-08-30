@@ -110,10 +110,42 @@ const MarqueeFade = ({ fromColor = "from-black" }) => (
   </>
 );
 
-function Skills({ skills = [] }) {
+const SkillsSkeleton = () => (
+  <section id="skills" className="py-20 relative z-10 overflow-hidden">
+    <div className="container mx-auto px-6 max-w-7xl">
+      <div className="mb-16 text-center">
+        <div className="mx-auto h-10 w-64 rounded-full skeleton-shimmer bg-white/[0.06]" />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20 auto-rows-fr">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <div key={index} className="rounded-3xl border border-white/[0.08] bg-white/[0.03] p-8">
+            <div className="mb-8 h-8 w-40 rounded-xl skeleton-shimmer bg-white/[0.06]" />
+            <div className="space-y-3">
+              {Array.from({ length: 7 }).map((__, itemIndex) => (
+                <div key={itemIndex} className="h-10 rounded-xl skeleton-shimmer bg-white/[0.06]" />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="space-y-6">
+        <div className="h-20 rounded-2xl skeleton-shimmer bg-white/[0.06]" />
+        <div className="h-16 rounded-2xl skeleton-shimmer bg-white/[0.06]" />
+      </div>
+    </div>
+  </section>
+);
+
+function Skills({ skills = [], isLoading = false }) {
   const skillList = Array.isArray(skills)
     ? skills.filter((skill) => skill && typeof skill === "object")
     : [];
+
+  if (isLoading) {
+    return <SkillsSkeleton />;
+  }
 
   if (skillList.length === 0) return null;
 
