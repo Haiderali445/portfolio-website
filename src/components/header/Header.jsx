@@ -4,12 +4,12 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import SocialIcons from "../sidebar/socialcons";
 import MagneticButton from "../helper/MagneticButton";
 
-const Header = ({ personalData = {} }) => {
+const Header = ({ personalData = {}, experience = [] }) => {
   const { scrollY } = useScroll();
 
-  const imageY = useTransform(scrollY, [0, 600], [0, 30]);
-  const contentY = useTransform(scrollY, [0, 500], [0, -18]);
-  const contentOpacity = useTransform(scrollY, [0, 450], [1, 0.2]);
+  const imageY = useTransform(scrollY, [0, 600], [0, 22]);
+  const contentY = useTransform(scrollY, [0, 500], [0, -12]);
+  const contentOpacity = useTransform(scrollY, [0, 450], [1, 0.22]);
 
   const scrollToProjects = () => {
     const projects = document.getElementById("projects");
@@ -25,6 +25,22 @@ const Header = ({ personalData = {} }) => {
   const typewriterTitles = Array.isArray(personalData.typewriterTitles)
     ? personalData.typewriterTitles
     : [];
+
+  const topExperience = Array.isArray(experience)
+    ? [...experience].sort((a, b) => {
+        const aOrder = Number(a?.sortOrder ?? Number.MAX_SAFE_INTEGER);
+        const bOrder = Number(b?.sortOrder ?? Number.MAX_SAFE_INTEGER);
+        return aOrder - bOrder;
+      })[0]
+    : null;
+
+  const normalizedCompanyUrl = (() => {
+    if (!topExperience) return "";
+    const rawUrl = topExperience.companyUrl ?? topExperience.company_url ?? "";
+    return typeof rawUrl === "string" ? rawUrl.trim() : "";
+  })();
+
+  const topCompanyName = topExperience?.company || "";
 
   return (
     <header
@@ -153,6 +169,7 @@ const Header = ({ personalData = {} }) => {
           lg:px-12
           xl:px-16
         "
+        style={{ transform: "translate3d(0, 0, 0)" }}
       >
         <div
           className="
@@ -177,6 +194,8 @@ const Header = ({ personalData = {} }) => {
             style={{
               y: contentY,
               opacity: contentOpacity,
+              willChange: "transform, opacity",
+              transform: "translate3d(0,0,0)",
             }}
             className="
               min-w-0
@@ -369,6 +388,32 @@ const Header = ({ personalData = {} }) => {
               </motion.div>
             )}
 
+            {topCompanyName && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: 0.5 }}
+                className="mt-5"
+              >
+                {normalizedCompanyUrl ? (
+                  <a
+                    href={normalizedCompanyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-white/75 backdrop-blur-md transition-all duration-300 hover:border-primary/30 hover:bg-primary/10 hover:text-primary"
+                  >
+                    <span className="text-primary">@</span>
+                    <span className="truncate">{topCompanyName}</span>
+                  </a>
+                ) : (
+                  <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-white/75 backdrop-blur-md">
+                    <span className="text-primary">@</span>
+                    <span className="truncate">{topCompanyName}</span>
+                  </span>
+                )}
+              </motion.div>
+            )}
+
             {/* =====================================================
                 ACTIONS
             ====================================================== */}
@@ -444,7 +489,11 @@ const Header = ({ personalData = {} }) => {
 ======================================================== */}
 
 <motion.div
-  style={{ y: imageY }}
+  style={{
+    y: imageY,
+    willChange: "transform",
+    transform: "translate3d(0,0,0)",
+  }}
   initial={{
     opacity: 0,
     scale: 0.97,

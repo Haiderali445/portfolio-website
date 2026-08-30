@@ -4,13 +4,13 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { AnimatePresence } from "framer-motion";
 
-import Nav from "../nav/Nav";
-import Footer from "../footer/Footer";
-import ScrollProgress from "../helper/ScrollProgress";
-import CommandTerminal from "../helper/CommandTerminal";
-import AIChatWidget from "../helper/AIChatWidget";
-import Home from "../../views/Home";
-import ServiceDetail from "../../views/ServiceDetail";
+import Nav from "../components/nav/Nav";
+import Footer from "../components/footer/Footer";
+import ScrollProgress from "../components/helper/ScrollProgress";
+import CommandTerminal from "../components/helper/CommandTerminal";
+import AIChatWidget from "../components/helper/AIChatWidget";
+import Home from "../views/Home";
+import ServiceDetail from "../views/ServiceDetail";
 
 export default function AppLayout({ data }) {
   const location = useLocation();
@@ -21,7 +21,7 @@ export default function AppLayout({ data }) {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen bg-background text-white selection:bg-primary/30 font-sans">
+    <div className="min-h-screen overflow-x-clip bg-background text-white selection:bg-primary/30 font-sans">
       <ScrollProgress />
       <CommandTerminal portfolioData={data} />
       <AIChatWidget />

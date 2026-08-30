@@ -10,6 +10,7 @@ import { solutionsService } from './services/solutions.service';
 import { pricingService } from './services/pricing.service';
 import { terminalService } from './services/terminal.service';
 import { gmailService } from './services/gmail.service';
+import { githubService } from './services/github.service';
 import { TERMINAL_DEFAULT_CONFIG } from '../utils/data/terminalData';
 import { BaseRepository } from './core/base.repository';
 
@@ -119,6 +120,7 @@ class PortfolioService {
       terminalConfig,
       dispatchers: {
         gmail: gmailService,
+        github: githubService,
       },
     };
   }

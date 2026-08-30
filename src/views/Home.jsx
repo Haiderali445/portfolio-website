@@ -18,12 +18,12 @@ const Home = ({ portfolioData }) => {
     const { personal, skills, experience, education, solutions, projects, services, testimonials, contacts, pricing, dispatchers } = portfolioData;
 
     return (
-        <main className="flex flex-col w-full overflow-hidden">
+        <main className="flex flex-col w-full overflow-x-clip">
             <MetaTags
                 title={`${personal?.name || 'Haider Ali'} | ${personal?.designation || 'Software Developer & System Architect'}`}
                 description="Visionary Full-Stack Software Engineer, system design specialist, and backend developer."
             />
-            <Header personalData={personal} />
+            <Header personalData={personal} experience={experience} />
             <About personalData={personal} />
             <Skills skills={skills} />
             <Experience experiences={experience} />

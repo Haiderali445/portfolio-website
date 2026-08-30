@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { FaBriefcase, FaCalendarAlt } from 'react-icons/fa';
+import { FaBriefcase, FaArrowUpRightFromSquare, FaClock } from 'react-icons/fa6';
 import { motion } from 'framer-motion';
+import { useExperience } from '../../hooks/useExperience';
 
 const Experience = ({ experiences = [] }) => {
     const [activeTechFilter, setActiveTechFilter] = useState(null);
+    const normalizedExperiences = useExperience(experiences);
 
     const handleTechClick = (tech) => {
         setActiveTechFilter(activeTechFilter === tech ? null : tech);
     };
 
     const filteredExperiences = activeTechFilter
-        ? experiences.filter((exp) => exp.tech && exp.tech.includes(activeTechFilter))
-        : experiences;
+        ? normalizedExperiences.filter((exp) => exp.tech && exp.tech.includes(activeTechFilter))
+        : normalizedExperiences;
 
     return (
         <section id="experience" className="py-24 relative z-10">
@@ -43,7 +45,7 @@ const Experience = ({ experiences = [] }) => {
                     </div>
                 )}
 
-                {!experiences || experiences.length === 0 ? (
+                {!normalizedExperiences || normalizedExperiences.length === 0 ? (
                     <div className="text-center text-text-muted py-12 glass-card rounded-3xl border border-glass-border">
                         <p className="font-mono text-sm">No professional history available.</p>
                     </div>
@@ -64,7 +66,7 @@ const Experience = ({ experiences = [] }) => {
                                 key={exp.id || index}
                                 initial={{ opacity: 0, x: -20 }}
                                 whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
+                                viewport={{ once: true, margin: '-40px' }}
                                 transition={{ delay: index * 0.1 }}
                                 className="relative pl-6 md:pl-12 group"
                             >
@@ -77,10 +79,22 @@ const Experience = ({ experiences = [] }) => {
                                             <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-primary transition-colors">
                                                 {exp.title}
                                             </h3>
-                                            <p className="text-lg text-white/80 font-medium">{exp.company}</p>
+                                            {exp.companyUrl ? (
+                                                <a
+                                                    href={exp.companyUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center gap-2 text-lg font-medium text-white/80 transition-colors hover:text-primary hover:underline"
+                                                >
+                                                    <span>{exp.company}</span>
+                                                    <FaArrowUpRightFromSquare className="h-3.5 w-3.5" />
+                                                </a>
+                                            ) : (
+                                                <p className="text-lg text-white/80 font-medium">{exp.company}</p>
+                                            )}
                                         </div>
                                         <div className="flex items-center gap-2 text-text-muted font-mono text-sm bg-black/40 px-4 py-2 rounded-full w-fit border border-white/5 shadow-inner">
-                                            <FaCalendarAlt size={12} className="text-primary/70" />
+                                            <FaClock size={12} className="text-primary/70" />
                                             <span>{exp.duration}</span>
                                         </div>
                                     </div>

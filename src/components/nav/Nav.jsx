@@ -67,28 +67,39 @@ const Nav = () => {
     }
 
     const sections = desktopNavItems.map((item) => item.sectionId);
+    let ticking = false;
+
     const handleScroll = () => {
-      if (window.scrollY < 200) {
-        setActiveNav("#");
-        return;
-      }
+      if (ticking) return;
 
-      const scrollPosition = window.scrollY + window.innerHeight / 3;
+      ticking = true;
+      requestAnimationFrame(() => {
+        if (window.scrollY < 200) {
+          setActiveNav("#");
+          ticking = false;
+          return;
+        }
 
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const sectionId = sections[i];
-        if (sectionId === "home") continue;
+        const scrollPosition = window.scrollY + window.innerHeight / 3;
 
-        const element = document.getElementById(sectionId);
-        if (element) {
-          const top = element.offsetTop;
-          const height = element.offsetHeight;
-          if (scrollPosition >= top && scrollPosition < top + height) {
-            setActiveNav(`#${sectionId}`);
-            return;
+        for (let i = sections.length - 1; i >= 0; i--) {
+          const sectionId = sections[i];
+          if (sectionId === "home") continue;
+
+          const element = document.getElementById(sectionId);
+          if (element) {
+            const top = element.offsetTop;
+            const height = element.offsetHeight;
+            if (scrollPosition >= top && scrollPosition < top + height) {
+              setActiveNav(`#${sectionId}`);
+              ticking = false;
+              return;
+            }
           }
         }
-      }
+
+        ticking = false;
+      });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });

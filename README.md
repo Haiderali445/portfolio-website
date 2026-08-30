@@ -35,6 +35,26 @@ Key engineering decisions driving the project:
 - **Interactive command terminal** — Guest/root session model, masked authentication, and protected system commands
 - **Performance monitoring & logger** — Custom Morgan-style colored logger tracking request response times and status codes
 
+### Recent Implementation Updates
+
+- **Live GitHub metrics** — Repository language totals are aggregated dynamically from GitHub data and converted into percentages; the banner also includes loading skeletons, activity fallbacks, refresh handling, and stable dimensions.
+- **Experience company links** — Experience records accept both `company_url` and `companyUrl`; the service and `useExperience` hook normalize the field before the timeline and hero use it.
+- **Scroll performance** — Scroll progress and navigation highlighting use passive listeners with `requestAnimationFrame` throttling. Lenis includes reduced-motion and touch-device safeguards.
+- **Viewport animation stability** — Section reveal animations use once-only viewport triggers with entry margins to prevent repeated animation work while scrolling.
+- **Responsive command terminal** — The terminal is left-anchored, compact on small screens, width-constrained on larger screens, and height-constrained for short viewports.
+- **Data-fetching feedback** — The initial loading screen now renders layout-aware glass skeleton sections for the hero, about, skills, experience, solutions, projects, services, and supporting content. A subtle fade transition is used when the loaded application replaces the skeleton state.
+
+### Change Summary
+
+This implementation pass also includes:
+
+- **Backend integration hardening** — Portfolio aggregation, domain services, fallback datasets, Supabase access, request logging, and terminal configuration remain centralized behind the service and repository layers.
+- **Experience presentation** — Work entries support clickable company destinations with external-link semantics while retaining a plain-text fallback when no URL is configured.
+- **GitHub presentation** — The banner displays live repository, commit, code-volume, push, star, activity-grid, and top-language information without fixed language percentages.
+- **Scroll and motion polish** — Scroll progress and navigation updates are batched per animation frame; reveal animations are buffered and run once; Lenis avoids unnecessary work on touch and reduced-motion devices.
+- **Responsive overlays** — The command terminal is left-oriented and dynamically constrained for narrow, short, and wide viewports.
+- **Resilient UI states** — Initial portfolio loading, GitHub refreshes, image loading, errors, and content replacement provide visible feedback without collapsing layout space.
+
 ---
 
 ## 🎯 Core Experiences
@@ -112,7 +132,7 @@ flowchart TD
 | **Code Playground** | `CodePlayground.jsx` | Isolated iframe JavaScript runner with console interception and `developerData` binding |
 | **Magnetic Button** | `MagneticButton.jsx` | Framer Motion spring physics cursor attraction with radial ambient glow |
 | **Scroll Progress** | `ScrollProgress.jsx` | Fixed top viewport progress tracker calculating dynamic document scroll depth |
-| **Loading Screen** | `LoadingScreen.jsx` | Initial app hydration and database query state indicator |
+| **Loading Screen** | `LoadingScreen.jsx` | Initial app hydration indicator with layout-aware glass skeleton sections and shimmer feedback |
 | **Error Screen** | `ErrorScreen.jsx` | System-wide failure boundary if portfolio resolution fails |
 
 ---
@@ -358,6 +378,7 @@ erDiagram
         int sortOrder
         varchar title
         varchar company
+        text company_url
         varchar duration
         text description
         timestamptz created_at
@@ -606,6 +627,7 @@ A floating `CommandTerminal.jsx` provides a Linux-inspired developer interface, 
 | 🔐 Session Auth | Masked password input with guest/root state management |
 | ⌨️ Keyboard-first | Fully navigable via keyboard, no mouse required |
 | 📱 Mobile-safe | Usable on small screens without layout breakage |
+| 📐 Responsive sizing | Left-anchored panel with viewport-constrained width and height across devices |
 
 ### Protected Commands
 
@@ -719,7 +741,7 @@ flowchart LR
 apps/
 └── ego-web/
     ├── src/
-    │   ├── App.jsx                        ← Application root with scroll reset & layout
+    │   ├── App.jsx                        ← Application root, loading state & view transitions
     │   ├── main.jsx                       ← React DOM bootstrap
     │   │
     │   ├── api/                           ← Centralized API & Service Layer
@@ -742,7 +764,8 @@ apps/
     │   │   └── services/                  ← Domain services (Strict Read-Only access for AI)
     │   │       ├── contact.service.js
     │   │       ├── education.service.js
-    │   │       ├── experience.service.js
+    │   │       ├── experience.service.js  ← Experience data with company URL normalization
+    │   │       ├── github.service.js      ← Live GitHub metrics, language totals & activity aggregator
     │   │       ├── gmail.service.js       ← Direct mail dispatch handler
     │   │       ├── offerings.service.js
     │   │       ├── pricing.service.js
@@ -760,18 +783,19 @@ apps/
     │   │   │   ├── CodePlayground.jsx     ← In-browser sandboxed JS mini-IDE
     │   │   │   ├── CommandTerminal.jsx    ← Interactive developer terminal
     │   │   │   ├── ErrorScreen.jsx        ← Graceful error boundary screen
-    │   │   │   ├── LoadingScreen.jsx      ← Glassmorphic app loading state
+    │   │   │   ├── LoadingScreen.jsx      ← Responsive glass skeleton page during data fetch
     │   │   │   ├── MagneticButton.jsx     ← Spring-physics magnetic hover button
-    │   │   │   └── ScrollProgress.jsx     ← Fixed top scroll progress tracker
+    │   │   │   └── ScrollProgress.jsx     ← RAF-throttled fixed scroll progress tracker
     │   │   │
-    │   │   ├── about/                     ← About section & dual-mode editor
+    │   │   ├── about/                     ← About section, mini IDE & GitHubStatsBanner
+    │   │   │   ├── About.jsx
+    │   │   │   └── GitHubStatsBanner.jsx  ← Live GitHub stats glassmorphic banner
     │   │   ├── common/                    ← Shared components (MetaTags, etc.)
     │   │   ├── contact/                   ← Contact form with EmailJS integration
     │   │   ├── education/                 ← Academic timeline
-    │   │   ├── experience/                ← Work history timeline
+    │   │   ├── experience/                ← Work history timeline & company links
     │   │   ├── footer/                    ← Footer and social links
     │   │   ├── header/                    ← Hero section with typewriter effect
-    │   │   ├── layout/                    ← AppLayout & route containers
     │   │   ├── nav/                       ← Floating navigation dock
     │   │   ├── projects/                  ← Asymmetrical bento grid & GitHub avatars
     │   │   ├── services/                  ← Service cards & investment tiers
@@ -780,10 +804,15 @@ apps/
     │   │   ├── solutions/                 ← Engineering solutions showcase
     │   │   └── testimonials/              ← Client & peer testimonials
     │   │
+    │   ├── layout/
+    │   │   └── AppLayout.jsx              ← Shared shell, routes & global helpers
+    │   │
     │   ├── hooks/
     │   │   ├── useAIChat.js               ← AI Copilot conversation state, unread badges & tokens
-    │   │   ├── useLenis.js                ← Lenis smooth momentum scroll initialization
-    │   │   └── usePortfolioData.js        ← Central portfolio fetcher with unmount guards
+    │   │   ├── useExperience.js           ← Normalizes company_url/companyUrl fields
+    │   │   ├── useGitHubStats.js           ← GitHub metrics state, refresh & unmount safety
+    │   │   ├── useLenis.js                ← Lenis scroll with device/reduced-motion guards
+    │   │   └── usePortfolioData.js         ← Central portfolio fetcher with unmount guards
     │   │
     │   ├── styles/
     │   │   ├── index.css                  ← Global Tailwind styles & CSS variables
@@ -811,8 +840,6 @@ apps/
     │       ├── Home.jsx                   ← Main single-page portfolio view
     │       └── ServiceDetail.jsx          ← Detailed service route
     │
-    ├── docs/
-    │   └── portfolio-admin.html           ← Supabase visual admin interface helper
     ├── public/
     ├── package.json
     ├── vite.config.js
@@ -855,6 +882,10 @@ All external services and heavy utility libraries are cleanly isolated behind th
 Design language: dark modern · glassmorphism surfaces · strong typography · cinematic transitions · layered visual depth.
 
 ### Performance Principles
+
+- **Stable loading geometry** — Skeleton placeholders reserve section space while asynchronous portfolio and GitHub data is fetched, reducing cumulative layout shift.
+- **Low-overhead scrolling** — Passive scroll listeners batch state updates into animation frames, while viewport reveals run once with buffered margins.
+- **Smooth state replacement** — The initial skeleton-to-application transition uses a short opacity fade rather than an abrupt DOM swap.
 
 | Approach | Detail |
 |----------|--------|

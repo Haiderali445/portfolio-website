@@ -92,7 +92,7 @@ const Services = ({ services = [], pricing = [] }) => {
                                     key={plan.id || pIndex}
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
+                                    viewport={{ once: true, margin: '-30px' }}
                                     transition={{ delay: pIndex * 0.1 }}
                                     className={`relative p-8 rounded-[2rem] border transition-all duration-300 flex flex-col justify-between ${
                                         plan.isPopular || plan.popular 
