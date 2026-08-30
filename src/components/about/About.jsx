@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import "../../styles/prism-vsc-dark-plus.css"; 
 import CodePlayground from "../helper/CodePlayground";
+import GitHubStatsBanner from "./GitHubStatsBanner";
 
 import {
   FaCircle,
@@ -363,6 +364,9 @@ const About = ({ personalData }) => {
             )}
           </div>
         </div>
+
+        {/* LIVE GITHUB STATS BANNER */}
+        <GitHubStatsBanner username={personalData?.github || "Haiderali445"} />
       </div>
     </section>
   );

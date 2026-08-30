@@ -270,7 +270,7 @@ const ServiceDetail = ({ services = [], projects = [] }) => {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: '-40px' }}
             className="p-8 rounded-3xl glass-card border border-red-500/30 bg-gradient-to-br from-red-500/[0.08] via-red-500/[0.02] to-transparent relative overflow-hidden shadow-xl"
           >
             <div className="absolute top-0 right-0 p-8 opacity-10 text-red-400 pointer-events-none">
@@ -290,7 +290,7 @@ const ServiceDetail = ({ services = [], projects = [] }) => {
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: '-40px' }}
             className="p-8 rounded-3xl glass-card border border-green-500/30 bg-gradient-to-br from-green-500/[0.08] via-green-500/[0.02] to-transparent relative overflow-hidden shadow-xl"
           >
             <div className="absolute top-0 right-0 p-8 opacity-10 text-green-400 pointer-events-none">
@@ -327,7 +327,7 @@ const ServiceDetail = ({ services = [], projects = [] }) => {
                 key={i}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: '-30px' }}
                 transition={{ delay: i * 0.1 }}
                 className="relative pl-8 md:pl-12 group"
               >
@@ -380,7 +380,7 @@ const ServiceDetail = ({ services = [], projects = [] }) => {
                 key={project.id}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: '-30px' }}
                 transition={{ delay: index * 0.1 }}
                 className="group rounded-3xl overflow-hidden border border-white/10 bg-white/[0.03] hover:bg-white/[0.07] hover:border-primary/40 transition-all duration-500 flex flex-col justify-between shadow-xl"
               >

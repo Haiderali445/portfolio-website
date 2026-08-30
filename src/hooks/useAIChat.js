@@ -10,25 +10,39 @@ const INITIAL_MESSAGE = {
   timestamp: Date.now(),
 };
 
+const SESSION_STORAGE_KEY = 'ego_ai_chat_session_v1';
+
 /**
  * Presentation hook for AI chat state.
  * Controls message lifecycle, loading flags, open/close drawer states, token guard, and unmount safety.
  * Communicates exclusively with the Service Layer (aiService).
  */
 export const useAIChat = () => {
-  const [messages, setMessages] = useState([INITIAL_MESSAGE]);
+  const [messages, setMessages] = useState(() => [INITIAL_MESSAGE]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [hasUnread, setHasUnread] = useState(false);
   const [usage, setUsage] = useState(() => tokenUsageGuard.getUsage());
+  const [sessionContext, setSessionContext] = useState({});
   const isMountedRef = useRef(true);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.sessionStorage) {
+      window.sessionStorage.removeItem(SESSION_STORAGE_KEY);
+    }
+  }, []);
 
   useEffect(() => {
     isMountedRef.current = true;
     return () => {
       isMountedRef.current = false;
     };
+  }, []);
+
+  const rememberContext = useCallback((nextContext) => {
+    if (!nextContext || typeof nextContext !== 'object') return;
+    setSessionContext((prev) => ({ ...prev, ...nextContext }));
   }, []);
 
   const toggleOpen = useCallback(() => {
@@ -49,14 +63,22 @@ export const useAIChat = () => {
   }, []);
 
   const clearChat = useCallback(() => {
-    setMessages([
+    const freshMessages = [
       {
         ...INITIAL_MESSAGE,
         id: `msg-init-${Date.now()}`,
         timestamp: Date.now(),
       },
-    ]);
+    ];
+
+    setMessages(freshMessages);
+    setSessionContext({});
     setError(null);
+
+    if (typeof window !== 'undefined' && window.sessionStorage) {
+      window.sessionStorage.removeItem(SESSION_STORAGE_KEY);
+    }
+
     const freshUsage = tokenUsageGuard.reset();
     setUsage(freshUsage);
     logger.info('USE_AI_CHAT', 'Chat history and token session reset');
@@ -128,6 +150,8 @@ export const useAIChat = () => {
     isOpen,
     hasUnread,
     usage,
+    sessionContext,
+    rememberContext,
     sendMessage,
     toggleOpen,
     openChat,

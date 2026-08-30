@@ -11,6 +11,10 @@ export const logger = {
     console.log(`\x1b[32m[SUCCESS]\x1b[0m \x1b[90m[${getTimestamp()}]\x1b[0m \x1b[33m[${tag}]\x1b[0m → ${message}`, details);
   },
 
+  warn(tag, message, details = '') {
+    console.warn(`\x1b[33m[WARN]\x1b[0m \x1b[90m[${getTimestamp()}]\x1b[0m \x1b[33m[${tag}]\x1b[0m → ${message}`, details);
+  },
+
   error(tag, message, error = '') {
     const errorOutput = error instanceof Error ? (error.stack || error.message) : error;
     console.error(`\x1b[31m[ERROR]\x1b[0m \x1b[90m[${getTimestamp()}]\x1b[0m \x1b[33m[${tag}]\x1b[0m → ${message}`, errorOutput);

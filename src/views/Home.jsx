@@ -18,18 +18,18 @@ const Home = ({ portfolioData }) => {
     const { personal, skills, experience, education, solutions, projects, services, testimonials, contacts, pricing, dispatchers } = portfolioData;
 
     return (
-        <main className="flex flex-col w-full overflow-hidden">
+        <main className="flex flex-col w-full overflow-x-clip">
             <MetaTags
                 title={`${personal?.name || 'Haider Ali'} | ${personal?.designation || 'Software Developer & System Architect'}`}
                 description="Visionary Full-Stack Software Engineer, system design specialist, and backend developer."
             />
-            <Header personalData={personal} />
+            <Header personalData={personal} experience={experience} />
             <About personalData={personal} />
-            <Skills skills={skills} />
-            <Experience experiences={experience} />
+            <Skills skills={skills} isLoading={!Array.isArray(skills) || skills.length === 0} />
+            <Experience experiences={experience} isLoading={!Array.isArray(experience) || experience.length === 0} />
             <Education educations={education} />
-            <Solutions solutions={solutions} personalData={personal} />
-            <Projects projects={projects} personalData={personal} />
+            <Solutions solutions={solutions} personalData={personal} isLoading={!Array.isArray(solutions) || solutions.length === 0} />
+            <Projects projects={projects} personalData={personal} isLoading={!Array.isArray(projects) || projects.length === 0} />
             {/* Pass pricing down as a prop so the Services component can render your investment tiers */}
             <Services services={services} pricing={pricing} />
             <Testimonials testimonials={testimonials} />

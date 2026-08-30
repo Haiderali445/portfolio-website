@@ -10,8 +10,51 @@ function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
 
-const Projects = ({ projects = [], personalData = {} }) => {
+const ProjectsSkeleton = () => (
+  <section id="projects" className="py-32 relative z-10">
+    <div className="container mx-auto px-4 md:px-8 max-w-7xl">
+      <div className="mb-8 h-10 w-64 mx-auto rounded-full skeleton-shimmer bg-white/[0.06]" />
+      <div className="mb-16 h-4 w-80 mx-auto rounded-full skeleton-shimmer bg-white/[0.05]" />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[400px] grid-flow-dense">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div
+            key={index}
+            className={cn(
+              "rounded-3xl border border-white/[0.08] bg-white/[0.03] p-8",
+              index % 3 === 0 ? "md:col-span-2 lg:col-span-2" : "col-span-1"
+            )}
+          >
+            <div className="h-full flex flex-col justify-end">
+              <div className="mb-4 h-4 w-24 rounded-full skeleton-shimmer bg-white/[0.06]" />
+              <div className="mb-4 h-8 w-3/4 rounded-xl skeleton-shimmer bg-white/[0.07]" />
+              <div className="mb-6 space-y-3">
+                <div className="h-4 w-full rounded-full skeleton-shimmer bg-white/[0.05]" />
+                <div className="h-4 w-11/12 rounded-full skeleton-shimmer bg-white/[0.05]" />
+                <div className="h-4 w-1/2 rounded-full skeleton-shimmer bg-white/[0.05]" />
+              </div>
+              <div className="mb-8 flex flex-wrap gap-2">
+                {Array.from({ length: 4 }).map((__, tagIndex) => (
+                  <div key={tagIndex} className="h-8 w-20 rounded-full skeleton-shimmer bg-white/[0.06]" />
+                ))}
+              </div>
+              <div className="h-12 w-full rounded-full skeleton-shimmer bg-white/[0.05]" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+const Projects = ({ projects = [], personalData = {}, isLoading = false }) => {
   const [expanded, setExpanded] = useState(false);
+
+  if (isLoading) {
+    return <ProjectsSkeleton />;
+  }
+
+  if (!projects || projects.length === 0) return null;
 
   const visibleProjects = expanded ? projects : projects.slice(0, 4);
 
@@ -25,13 +68,15 @@ const Projects = ({ projects = [], personalData = {} }) => {
           {personalData.projectsSectionSubtitle}
         </p>
 
-        {/* Dynamic Balanced Bento Grid with grid-flow-dense to prevent layout holes */}
-        <motion.div
-          layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[400px] grid-flow-dense"
-        >
-          <AnimatePresence>
-            {visibleProjects.map((project, index) => {
+        {isLoading ? (
+          <ProjectsSkeleton />
+        ) : (
+          <motion.div
+            layout
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[400px] grid-flow-dense"
+          >
+            <AnimatePresence>
+              {visibleProjects.map((project, index) => {
               // Every 3rd item (0, 3, 6...) spans 2 columns
               const isFeatured = index % 3 === 0;
 
@@ -148,13 +193,14 @@ const Projects = ({ projects = [], personalData = {} }) => {
                     </div>
                   </div>
                 </motion.div>
-              );
-            })}
-          </AnimatePresence>
-        </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </motion.div>
+        )}
 
         {/* View All Button */}
-        {projects.length > 4 && (
+        {!isLoading && projects.length > 4 && (
           <div className="mt-16 flex justify-center">
             <MagneticButton onClick={() => setExpanded(!expanded)}>
               <div className="relative px-8 py-4 bg-transparent text-white font-mono text-sm tracking-widest uppercase rounded-full border border-primary/30 hover:bg-primary/10 transition-all duration-300 shadow-[0_0_20px_rgba(0,234,255,0.1)] hover:shadow-[0_0_30px_rgba(0,234,255,0.2)]">

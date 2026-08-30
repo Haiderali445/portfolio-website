@@ -305,11 +305,11 @@ export default function CommandTerminal({ portfolioData }) {
     <>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-4 right-4 z-50 flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-black/70 border border-cyan-500/20 text-cyan-400 font-mono text-xs backdrop-blur-xl shadow-lg shadow-cyan-500/5 hover:bg-cyan-500/15 hover:border-cyan-500/40 transition-all cursor-pointer group"
+        className="fixed top-4 left-3 sm:left-4 z-50 flex items-center gap-2 px-2.5 sm:px-3.5 py-2 rounded-xl bg-black/70 border border-cyan-500/20 text-cyan-400 font-mono text-xs backdrop-blur-xl shadow-lg shadow-cyan-500/5 hover:bg-cyan-500/15 hover:border-cyan-500/40 transition-all cursor-pointer group"
         title="Toggle Terminal (Ctrl + `)"
       >
         <Terminal size={14} className="group-hover:rotate-12 transition-transform duration-300" />
-        <span className="tracking-wide">~/terminal</span>
+        <span className="hidden sm:inline tracking-wide">~/terminal</span>
         <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
       </button>
 
@@ -320,9 +320,9 @@ export default function CommandTerminal({ portfolioData }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -16, scale: 0.96 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="fixed top-16 right-4 left-4 md:left-auto md:w-[600px] z-50 rounded-2xl bg-[#0c0d12]/95 border border-cyan-500/30 backdrop-blur-2xl shadow-2xl shadow-cyan-500/10 overflow-hidden font-mono text-sm"
+            className="fixed top-[4.25rem] left-3 right-3 sm:left-4 sm:right-4 md:right-auto md:w-[min(24rem,calc(100vw-2rem))] max-h-[calc(100vh-5.25rem)] z-50 rounded-xl bg-[#0c0d12]/95 border border-cyan-500/30 backdrop-blur-2xl shadow-2xl shadow-cyan-500/10 overflow-hidden font-mono text-sm"
           >
-            <div className="flex items-center justify-between px-4 py-3 bg-white/[0.02] border-b border-white/10">
+            <div className="flex items-center justify-between px-3 py-2 bg-white/[0.02] border-b border-white/10">
               <div className="flex items-center gap-3">
                 <div className="flex gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-red-500/85 hover:bg-red-600 cursor-pointer transition-colors" onClick={() => setIsOpen(false)} title="Close" />
@@ -345,7 +345,7 @@ export default function CommandTerminal({ portfolioData }) {
               </button>
             </div>
 
-            <div className="p-4 h-72 overflow-y-auto overflow-x-auto flex flex-col gap-2 text-xs scrollbar-thin scrollbar-thumb-cyan-500/20 scrollbar-track-transparent">
+            <div className="p-3 h-44 sm:h-52 md:h-56 max-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-auto flex flex-col gap-1.5 text-[10px] sm:text-[11px] scrollbar-thin scrollbar-thumb-cyan-500/20 scrollbar-track-transparent">
               {logs.map((log, index) => (
                 <div
                   key={index}
@@ -367,7 +367,7 @@ export default function CommandTerminal({ portfolioData }) {
 
             <form
               onSubmit={handleCommand}
-              className="flex items-center px-4 py-3 bg-black/60 border-t border-white/10 gap-2.5"
+              className="flex items-center px-3 py-2 bg-black/60 border-t border-white/10 gap-2"
             >
               <ChevronRight size={14} className="text-cyan-400 shrink-0 animate-pulse" />
               <input

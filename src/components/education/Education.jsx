@@ -66,7 +66,7 @@ const Education = ({ educations = [] }) => {
                 key={edu.id || index}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: '-40px' }}
                 transition={{ delay: index * 0.1 }}
                 className="relative pl-6 md:pl-12 group"
               >

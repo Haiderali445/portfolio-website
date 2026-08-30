@@ -8,14 +8,17 @@ import { solutionsService } from '../services/solutions.service';
 import { pricingService } from '../services/pricing.service';
 import { testimonialsService } from '../services/testimonials.service';
 import { siteService } from '../services/site.service';
+import { gmailService, isValidEmail } from '../services/gmail.service';
+import { personalData } from '../../utils/data/personal-data';
 import { logger } from '../core/logger';
 
 /**
- * AI Tool Declarations & Read-Only Domain Service Mappings.
- * 
+ * AI Tool Declarations & Domain Service Mappings.
+ *
  * STRICT ARCHITECTURAL RULES:
- * 1. Read-only retrieval methods only.
- * 2. Never expose create, update, delete, or mutation methods to the AI agent.
+ * 1. Retrieval tools are read-only.
+ * 2. The only write-capable tool is send_email, which always delivers to the
+ *    portfolio owner via gmailService and never arbitrary third-party inboxes.
  * 3. All executions flow strictly through the Service Layer.
  */
 export const aiTools = {
@@ -368,6 +371,103 @@ export const aiTools = {
       };
     },
   },
+
+  send_email: {
+    name: 'send_email',
+    description:
+      'Draft and send a professional email to Haider Ali (portfolio owner) via gmailService.sendDirectMail. The user may provide sender/recipient details and context in any order. Accept flexible aliases such as sender_email, email, from_email, recipient_email, recipient_name, sender_name, name, context, subject, and message. If the sender email is missing or invalid, return needs_sender_email: true and ask the user for it. If the message is missing, infer a professional draft from the provided context or ask for the missing content. The tool must send to the owner and also email a confirmation copy back to the sender.',
+    parameters: {
+      type: 'object',
+      properties: {
+        sender_email: {
+          type: 'string',
+          description: 'Sender or visitor email used as reply-to and confirmation copy destination. Required before sending.',
+        },
+        recipient_email: {
+          type: 'string',
+          description: 'Alias for sender_email when the user describes their own email as the destination for confirmation copy.',
+        },
+        email: {
+          type: 'string',
+          description: 'Alias for sender_email in case the user provided a generic email field.',
+        },
+        sender_name: {
+          type: 'string',
+          description: 'Name of the sender. Optional but helpful for the email body and confirmation copy.',
+        },
+        recipient_name: {
+          type: 'string',
+          description: 'Optional name of the recipient, usually Haider Ali or a contact alias.',
+        },
+        name: {
+          type: 'string',
+          description: 'Alias for sender_name when the user provides a general name field.',
+        },
+        subject: {
+          type: 'string',
+          description: 'Short professional subject line. If omitted, generate one from the context.',
+        },
+        message: {
+          type: 'string',
+          description: 'Full email body or detailed note to send to Haider.',
+        },
+        context: {
+          type: 'string',
+          description: 'Project context, reason for reaching out, or a short brief to turn into a polished email.',
+        },
+      },
+      required: [],
+    },
+    execute: async ({
+      sender_email,
+      recipient_email,
+      email,
+      sender_name,
+      recipient_name,
+      name,
+      subject,
+      message,
+      context,
+    } = {}) => {
+      const resolvedSenderEmail = String(sender_email || recipient_email || email || '').trim();
+      const resolvedSenderName = String(sender_name || name || '').trim();
+      const resolvedRecipientName = String(recipient_name || 'Haider Ali').trim();
+      const resolvedMessage = String(message || context || '').trim();
+
+      if (!isValidEmail(resolvedSenderEmail)) {
+        return {
+          sent: false,
+          needs_sender_email: true,
+          instruction:
+            'Ask the user for their email address before sending. Do not guess or fabricate it. Then call send_email again with sender_email or email, sender_name, subject, and message or context.',
+        };
+      }
+
+      const subjectLine = String(subject || 'Portfolio inquiry').trim() || 'Portfolio inquiry';
+      const finalBody = resolvedMessage.length >= 12
+        ? resolvedMessage
+        : `Hello ${resolvedRecipientName},\n\nI would like to connect regarding a potential collaboration or opportunity.\n\nPlease let me know the best way to proceed.\n\nBest regards,\n${resolvedSenderName || 'Portfolio Visitor'}`;
+
+      const ownerEmail = import.meta.env.VITE_PORTFOLIO_OWNER_EMAIL || personalData.email;
+
+      await gmailService.sendDirectMail(null, {
+        name: resolvedSenderName || 'Portfolio Visitor',
+        email: resolvedSenderEmail,
+        subject: subjectLine,
+        message: finalBody,
+        toEmail: ownerEmail,
+        origin_mode: 'Ego AI Copilot Draft & Send',
+        sendConfirmation: true,
+      });
+
+      return {
+        sent: true,
+        delivered_to_owner: true,
+        confirmation_sent_to: resolvedSenderEmail,
+        note: 'Tell the user the email was delivered to Haider and a confirmation copy was sent to their inbox. Keep the response polished and concise without dumping raw JSON.',
+      };
+    },
+  },
 };
 
 /**
@@ -397,7 +497,7 @@ export async function executeAITool(toolName, args = {}) {
 
   const start = performance.now();
   try {
-    logger.info('AI_TOOLS', `Executing read-only tool [${toolName}]`, args);
+    logger.info('AI_TOOLS', `Executing tool [${toolName}]`, args);
     const result = await tool.execute(args);
     const duration = (performance.now() - start).toFixed(2);
     logger.morgan('EXEC_TOOL', `/ai/tools/${toolName}`, 200, duration);

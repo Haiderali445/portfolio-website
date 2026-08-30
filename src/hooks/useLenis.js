@@ -4,20 +4,36 @@ import Lenis from "lenis";
 
 export const useLenis = () => {
   useEffect(() => {
+    const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+    const isTouchDevice = window.matchMedia?.("(pointer: coarse)")?.matches;
+
+    if (prefersReducedMotion || isTouchDevice) {
+      return undefined;
+    }
+
     const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smooth: true,
-      touchMultiplier: 2,
+      duration: 0.9,
+      easing: (t) => 1 - Math.pow(1 - t, 3),
+      smoothWheel: true,
+      wheelMultiplier: 0.9,
+      touchMultiplier: 1.1,
+      gestureOrientation: "vertical",
+      lerp: 0.08,
+      syncTouch: false,
+      autoResize: true,
     });
 
-    function raf(time) {
+    let rafId = null;
+
+    const loop = (time) => {
       lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
+      rafId = requestAnimationFrame(loop);
+    };
+
+    rafId = requestAnimationFrame(loop);
 
     return () => {
+      if (rafId) cancelAnimationFrame(rafId);
       lenis.destroy();
     };
   }, []);

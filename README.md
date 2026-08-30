@@ -8,7 +8,7 @@
 ![Vite](https://img.shields.io/badge/Vite-Production-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![Supabase](https://img.shields.io/badge/Supabase-Database-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38BDF8?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Groq AI](https://img.shields.io/badge/Groq-Llama_3.3_70B-F05A28?style=for-the-badge&logo=openai&logoColor=white)
+![Groq AI](https://img.shields.io/badge/Groq-Llama_3.1_8B_+_Fallbacks-F05A28?style=for-the-badge&logo=openai&logoColor=white)
 ![AI Copilot](https://img.shields.io/badge/AI_Copilot-Tool_Calling-8B5CF6?style=for-the-badge&logo=probot&logoColor=white)
 ![Architecture](https://img.shields.io/badge/Architecture-3--Tier-10B981?style=for-the-badge&logo=codeforces&logoColor=white)
 ![Terminal](https://img.shields.io/badge/Terminal-Interactive-22C55E?style=for-the-badge&logo=linux&logoColor=white)
@@ -30,10 +30,36 @@ Key engineering decisions driving the project:
 - **3-tier frontend architecture** — Presentation → Service → Data, strictly enforced with no layer bypassing
 - **Supabase-backed data layer with graceful fallback** — Live cloud database querying via `BaseRepository` with seamless offline/mock data fallback
 - **Normalized domain services** — 11 content domains, each isolated, independently composable, and queryable
-- **AI architectural copilot & tool calling** — Groq-powered multi-model fallback pipeline with read-only domain service tools, session token guardrails, and typo resilience
+- **AI architectural copilot & tool calling** — Groq-powered multi-model fallback pipeline with a centralized read-only tool registry, dedicated intent router, session token guardrails, and typo resilience
 - **Sandboxed code playground & mini-IDE** — In-browser JavaScript runtime inside an isolated iframe sandbox with live console interception
 - **Interactive command terminal** — Guest/root session model, masked authentication, and protected system commands
 - **Performance monitoring & logger** — Custom Morgan-style colored logger tracking request response times and status codes
+
+### Recent Implementation Updates
+
+- **AI Copilot UX pass** — The floating chat widget now has a cleaner top-level layout, more compact quick prompts, better mobile spacing, keyboard-safe viewport handling, and a fresh reset flow that clears history on refresh.
+- **Professional AI messaging and email generation** — The copilot prompt layer and tool registry were refined to handle portfolio inquiries, collaboration outreach, and professional email drafting with stricter structured context and clearer user intent handling.
+- **Gmail/email delivery hardening** — The contact and Gmail service flow were tightened to validate environment variables, normalize form mapping, and better handle direct sends for portfolio inquiries and outreach requests.
+- **Subtle loading system** — The global loading overlay was reduced to a refined dev-style loader with soft glow and minimal visual noise, while region skeletons remain in place to maintain layout stability without jank.
+- **Live GitHub metrics** — Repository language totals are aggregated dynamically from GitHub data and converted into percentages; the banner also includes loading skeletons, activity fallbacks, refresh handling, and stable dimensions.
+- **Experience company links** — Experience records accept both `company_url` and `companyUrl`; the service and `useExperience` hook normalize the field before the timeline and hero use it.
+- **Scroll performance** — Scroll progress and navigation highlighting use passive listeners with `requestAnimationFrame` throttling. Lenis includes reduced-motion and touch-device safeguards.
+- **Viewport animation stability** — Section reveal animations use once-only viewport triggers with entry margins to prevent repeated animation work while scrolling.
+- **Responsive command terminal** — The terminal is left-anchored, compact on small screens, width-constrained on larger screens, and height-constrained for short viewports.
+- **Data-fetching feedback** — The initial loading screen now renders layout-aware glass skeleton sections for the hero, about, skills, experience, solutions, projects, services, and supporting content. A subtle fade transition is used when the loaded application replaces the skeleton state.
+
+### Change Summary
+
+This implementation pass also includes:
+
+- **Backend integration hardening** — Portfolio aggregation, domain services, fallback datasets, Supabase access, request logging, and terminal configuration remain centralized behind the service and repository layers.
+- **AI + contact workflow integration** — Portfolio chat, email drafting, and direct message execution are aligned to the same product identity and business context, giving the site a more cohesive client-facing assistant experience.
+- **Experience presentation** — Work entries support clickable company destinations with external-link semantics while retaining a plain-text fallback when no URL is configured.
+- **GitHub presentation** — The banner displays live repository, commit, code-volume, push, star, activity-grid, and top-language information without fixed language percentages.
+- **Scroll and motion polish** — Scroll progress and navigation updates are batched per animation frame; reveal animations are buffered and run once; Lenis avoids unnecessary work on touch and reduced-motion devices.
+- **Responsive overlays** — The command terminal is left-oriented and dynamically constrained for narrow, short, and wide viewports.
+- **Resilient UI states** — Initial portfolio loading, GitHub refreshes, image loading, errors, and content replacement provide visible feedback without collapsing layout space.
+- **Resettable AI state** — The AI session intentionally clears on refresh to prevent stale conversation history and keep the interaction lightweight and reliable.
 
 ---
 
@@ -112,7 +138,7 @@ flowchart TD
 | **Code Playground** | `CodePlayground.jsx` | Isolated iframe JavaScript runner with console interception and `developerData` binding |
 | **Magnetic Button** | `MagneticButton.jsx` | Framer Motion spring physics cursor attraction with radial ambient glow |
 | **Scroll Progress** | `ScrollProgress.jsx` | Fixed top viewport progress tracker calculating dynamic document scroll depth |
-| **Loading Screen** | `LoadingScreen.jsx` | Initial app hydration and database query state indicator |
+| **Loading Screen** | `LoadingScreen.jsx` | Initial app hydration indicator with layout-aware glass skeleton sections and shimmer feedback |
 | **Error Screen** | `ErrorScreen.jsx` | System-wide failure boundary if portfolio resolution fails |
 
 ---
@@ -141,7 +167,7 @@ flowchart TD
 
     subgraph L4 ["⚙️ 4. DOMAIN & AI SERVICE LAYER"]
         direction TB
-        AISVC["ai.service.js · ai.tools.js (Read-Only) · intentNormalizer.js · tokenUsageGuard.js"]
+        AISVC["ai.service.js · ai.tools.js · ai.router.js · intentNormalizer.js · tokenUsageGuard.js"]
         DS["projects · profile · skills · experience · services · solutions · pricing · terminal ..."]
     end
 
@@ -150,7 +176,7 @@ flowchart TD
         REPO["BaseRepository (Generic CRUD + Automatic Error Fallback)"]
         LOG["logger.js (Morgan Benchmark & Duration ms)"]
         CLIENT["supabase.client.js (@supabase/supabase-js)"]
-        GROQ["Groq Cloud API (Llama 3.3 70B & Fallback Rotation)"]
+        GROQ["Groq Cloud API (Llama 3.1 8B Instant + Model Rotation)"]
     end
 
     subgraph L6 ["📦 6. PERSISTENCE & STORAGE LAYER"]
@@ -358,6 +384,7 @@ erDiagram
         int sortOrder
         varchar title
         varchar company
+        text company_url
         varchar duration
         text description
         timestamptz created_at
@@ -606,6 +633,7 @@ A floating `CommandTerminal.jsx` provides a Linux-inspired developer interface, 
 | 🔐 Session Auth | Masked password input with guest/root state management |
 | ⌨️ Keyboard-first | Fully navigable via keyboard, no mouse required |
 | 📱 Mobile-safe | Usable on small screens without layout breakage |
+| 📐 Responsive sizing | Left-anchored panel with viewport-constrained width and height across devices |
 
 ### Protected Commands
 
@@ -716,106 +744,133 @@ flowchart LR
 ## 📁 Project Structure
 
 ```
-apps/
-└── ego-web/
-    ├── src/
-    │   ├── App.jsx                        ← Application root with scroll reset & layout
-    │   ├── main.jsx                       ← React DOM bootstrap
+📂 apps/
+└── 📂 ego-web/
+    ├── 📂 src/
+    │   ├── 📄 App.jsx                    # Application root, loading state & view transitions
+    │   ├── 📄 main.jsx                   # React DOM bootstrap
     │   │
-    │   ├── api/                           ← Centralized API & Service Layer
-    │   │   ├── portfolio.service.js       ← Promise.allSettled domain aggregator
+    │   ├── 📂 api/                       # Centralized API & Service Layer
+    │   │   ├── 📄 portfolio.service.js   # Promise.allSettled domain aggregator
     │   │   │
-    │   │   ├── ai/                        ← AI Copilot & Multi-Turn Tool Calling Engine
-    │   │   │   ├── ai.config.js           ← Groq model configs & jolly copilot system prompt
-    │   │   │   ├── ai.service.js          ← Groq execution loop with auto-selecting fallback models
-    │   │   │   ├── ai.tools.js            ← Read-only function tool schemas mapped to domain services
-    │   │   │   ├── intentNormalizer.js    ← Typo tolerance & keyword intent detector
-    │   │   │   └── tokenUsageGuard.js     ← Session token guardrail & capacity tracker
+    │   │   ├── 📂 ai/                    # AI Copilot & Multi-Turn Tool Calling Engine
+    │   │   │   ├── 📄 ai.config.js       # Groq model configs & jolly copilot system prompt
+    │   │   │   ├── 📄 ai.service.js      # Groq loop, backend proxy, local fallback synthesis
+    │   │   │   ├── 📄 ai.tools.js        # Centralized read-only tool registry (11 domain mappings)
+    │   │   │   ├── 📄 ai.router.js       # Intent detection & heuristic local-fallback tool routing
+    │   │   │   ├── 📄 intentNormalizer.js # Typo / slang normalizer (re-exports detectIntentTool)
+    │   │   │   └── 📄 tokenUsageGuard.js # Session token guardrail & capacity tracker
     │   │   │
-    │   │   ├── core/                      ← Infrastructure & data clients
-    │   │   │   ├── apiClient.js           ← Axios HTTP client instance
-    │   │   │   ├── base.repository.js     ← Supabase generic CRUD with fallback
-    │   │   │   ├── logger.js              ← Custom Morgan-style colored dev logger
-    │   │   │   └── supabase.client.js     ← @supabase/supabase-js client
+    │   │   ├── 📂 core/                  # Infrastructure & data clients
+    │   │   │   ├── 📄 apiClient.js       # Axios HTTP client instance
+    │   │   │   ├── 📄 base.repository.js # Supabase generic CRUD with fallback
+    │   │   │   ├── 📄 logger.js          # Custom Morgan-style colored dev logger
+    │   │   │   └── 📄 supabase.client.js # @supabase/supabase-js client
     │   │   │
-    │   │   └── services/                  ← Domain services (Strict Read-Only access for AI)
-    │   │       ├── contact.service.js
-    │   │       ├── education.service.js
-    │   │       ├── experience.service.js
-    │   │       ├── gmail.service.js       ← Direct mail dispatch handler
-    │   │       ├── offerings.service.js
-    │   │       ├── pricing.service.js
-    │   │       ├── profile.service.js
-    │   │       ├── projects.service.js    ← Relational joins (tools, images, contributors)
-    │   │       ├── site.service.js
-    │   │       ├── skills.service.js
-    │   │       ├── solutions.service.js
-    │   │       ├── terminal.service.js
-    │   │       └── testimonials.service.js
+    │   │   └── 📂 services/              # Domain services (Strict Read-Only access for AI)
+    │   │       ├── 📄 contact.service.js
+    │   │       ├── 📄 education.service.js
+    │   │       ├── 📄 experience.service.js # Experience data with company URL normalization
+    │   │       ├── 📄 github.service.js    # Live GitHub metrics, language totals & activity aggregator
+    │   │       ├── 📄 gmail.service.js     # Direct mail dispatch handler
+    │   │       ├── 📄 offerings.service.js
+    │   │       ├── 📄 pricing.service.js
+    │   │       ├── 📄 profile.service.js
+    │   │       ├── 📄 projects.service.js  # Relational joins (tools, images, contributors)
+    │   │       ├── 📄 site.service.js
+    │   │       ├── 📄 skills.service.js
+    │   │       ├── 📄 solutions.service.js
+    │   │       ├── 📄 terminal.service.js
+    │   │       └── 📄 testimonials.service.js
     │   │
-    │   ├── components/
-    │   │   ├── helper/                    ← Interactive helper subsystem
-    │   │   │   ├── AIChatWidget.jsx       ← Responsive full-screen mobile sheet & desktop AI popup
-    │   │   │   ├── CodePlayground.jsx     ← In-browser sandboxed JS mini-IDE
-    │   │   │   ├── CommandTerminal.jsx    ← Interactive developer terminal
-    │   │   │   ├── ErrorScreen.jsx        ← Graceful error boundary screen
-    │   │   │   ├── LoadingScreen.jsx      ← Glassmorphic app loading state
-    │   │   │   ├── MagneticButton.jsx     ← Spring-physics magnetic hover button
-    │   │   │   └── ScrollProgress.jsx     ← Fixed top scroll progress tracker
+    │   ├── 📂 components/                # Presentation UI Components
+    │   │   ├── 📂 helper/                # Interactive helper subsystem
+    │   │   │   ├── 💻 AIChatWidget.jsx   # Responsive full-screen mobile sheet & desktop AI popup
+    │   │   │   ├── 💻 CodePlayground.jsx # In-browser sandboxed JS mini-IDE
+    │   │   │   ├── 💻 CommandTerminal.jsx # Interactive developer terminal
+    │   │   │   ├── 💻 ErrorScreen.jsx    # Graceful error boundary screen
+    │   │   │   ├── 💻 LoadingScreen.jsx  # Responsive glass skeleton page during data fetch
+    │   │   │   ├── 💻 MagneticButton.jsx # Spring-physics magnetic hover button
+    │   │   │   └── 💻 ScrollProgress.jsx # RAF-throttled fixed scroll progress tracker
     │   │   │
-    │   │   ├── about/                     ← About section & dual-mode editor
-    │   │   ├── common/                    ← Shared components (MetaTags, etc.)
-    │   │   ├── contact/                   ← Contact form with EmailJS integration
-    │   │   ├── education/                 ← Academic timeline
-    │   │   ├── experience/                ← Work history timeline
-    │   │   ├── footer/                    ← Footer and social links
-    │   │   ├── header/                    ← Hero section with typewriter effect
-    │   │   ├── layout/                    ← AppLayout & route containers
-    │   │   ├── nav/                       ← Floating navigation dock
-    │   │   ├── projects/                  ← Asymmetrical bento grid & GitHub avatars
-    │   │   ├── services/                  ← Service cards & investment tiers
-    │   │   ├── sidebar/                   ← Social floating sidebar icons
-    │   │   ├── skills/                    ← Categorized tech stack matrix
-    │   │   ├── solutions/                 ← Engineering solutions showcase
-    │   │   └── testimonials/              ← Client & peer testimonials
+    │   │   ├── 📂 about/                 # About section, mini IDE & GitHubStatsBanner
+    │   │   │   ├── 💻 About.jsx
+    │   │   │   └── 💻 GitHubStatsBanner.jsx # Live GitHub stats glassmorphic banner
+    │   │   ├── 📂 common/                # Shared components
+    │   │   │   └── 💻 MetaTags.jsx
+    │   │   ├── 📂 contact/               # Contact form with EmailJS integration
+    │   │   │   └── 💻 Contact.jsx
+    │   │   ├── 📂 education/             # Academic timeline
+    │   │   │   └── 💻 Education.jsx
+    │   │   ├── 📂 experience/            # Work history timeline & company links
+    │   │   │   └── 💻 Experience.jsx
+    │   │   ├── 📂 footer/                # Footer and social links
+    │   │   │   └── 💻 Footer.jsx
+    │   │   ├── 📂 header/                # Hero section with typewriter effect
+    │   │   │   └── 💻 Header.jsx
+    │   │   ├── 📂 nav/                   # Floating navigation dock
+    │   │   │   └── 💻 Nav.jsx
+    │   │   ├── 📂 projects/              # Asymmetrical bento grid & GitHub avatars
+    │   │   │   └── 💻 Projects.jsx
+    │   │   ├── 📂 services/              # Service cards & investment tiers
+    │   │   │   └── 💻 Services.jsx
+    │   │   ├── 📂 sidebar/               # Social floating sidebar icons
+    │   │   │   └── 💻 socialcons.jsx
+    │   │   ├── 📂 skills/                # Categorized tech stack matrix
+    │   │   │   └── 💻 Skills.jsx
+    │   │   ├── 📂 solutions/             # Engineering solutions showcase
+    │   │   │   └── 💻 Solutions.jsx
+    │   │   └── 📂 testimonials/          # Client & peer testimonials
+    │   │       └── 💻 Testimonials.jsx
     │   │
-    │   ├── hooks/
-    │   │   ├── useAIChat.js               ← AI Copilot conversation state, unread badges & tokens
-    │   │   ├── useLenis.js                ← Lenis smooth momentum scroll initialization
-    │   │   └── usePortfolioData.js        ← Central portfolio fetcher with unmount guards
+    │   ├── 📂 layout/                    # Shared layouts & shell routing
+    │   │   └── 💻 AppLayout.jsx          # Shared shell, routes & global helpers
     │   │
-    │   ├── styles/
-    │   │   ├── index.css                  ← Global Tailwind styles & CSS variables
-    │   │   └── prism-vsc-dark-plus.css    ← VS Code Dark+ theme for PrismJS
+    │   ├── 📂 hooks/                     # Custom React Application Hooks
+    │   │   ├── 🪝 useAIChat.js           # AI Copilot conversation state, unread badges & tokens
+    │   │   ├── 🪝 useExperience.js       # Normalizes company_url/companyUrl fields
+    │   │   ├── 🪝 useGitHubStats.js      # GitHub metrics state, refresh & unmount safety
+    │   │   ├── 🪝 useLenis.js            # Lenis scroll with device/reduced-motion guards
+    │   │   └── 🪝 usePortfolioData.js    # Central portfolio fetcher with unmount guards
     │   │
-    │   ├── utils/
-    │   │   ├── github.js                  ← GitHub avatar CDN URL builder
-    │   │   ├── images/                    ← Skill icon resolvers
-    │   │   └── data/                      ← Normalized local mock & fallback datasets
-    │   │       ├── contactsData.js
-    │   │       ├── educations.js
-    │   │       ├── experience-data.js
-    │   │       ├── personal-data.js
-    │   │       ├── plan-data.js
-    │   │       ├── projects-data.js
-    │   │       ├── services-data.js
-    │   │       ├── site-config.js
-    │   │       ├── skill-catagories.js
-    │   │       ├── skills.js
-    │   │       ├── solutionsData.js
-    │   │       ├── terminalData.js
-    │   │       └── testem-data.js
+    │   ├── 📂 styles/                    # Application Stylesheets
+    │   │   ├── 🎨 index.css              # Global Tailwind styles & CSS variables
+    │   │   └── 🎨 prism-vsc-dark-plus.css # VS Code Dark+ theme for PrismJS
     │   │
-    │   └── views/
-    │       ├── Home.jsx                   ← Main single-page portfolio view
-    │       └── ServiceDetail.jsx          ← Detailed service route
+    │   ├── 📂 utils/                     # Helpers, Assets, and Mock Data
+    │   │   ├── 📄 github.js              # GitHub avatar CDN URL builder
+    │   │   ├── 📂 images/                # Skill icon resolvers
+    │   │   └── 📂 data/                  # Normalized local mock & fallback datasets
+    │   │       ├── 📄 contactsData.js
+    │   │       ├── 📄 educations.js
+    │   │       ├── 📄 experience-data.js
+    │   │       ├── 📄 personal-data.js
+    │   │       ├── 📄 plan-data.js
+    │   │       ├── 📄 projects-data.js
+    │   │       ├── 📄 services-data.js
+    │   │       ├── 📄 site-config.js
+    │   │       ├── 📄 skill-catagories.js
+    │   │       ├── 📄 skills.js
+    │   │       ├── 📄 solutionsData.js
+    │   │       ├── 📄 terminalData.js
+    │   │       └── 📄 testem-data.js
+    │   │
+    │   ├── 📂 Assets/                    # Visual assets used by portfolio sections
+    │   │   ├── 📂 images/                # Profile and content images
+    │   │   ├── 📂 lottie/                # JSON animation assets
+    │   │   └── 📂 svg/skills/             # Technology skill icons
+    │   │
+    │   └── 📂 views/                     # Page Views & Routes
+    │       ├── 💻 Home.jsx               # Main single-page portfolio view
+    │       └── 💻 ServiceDetail.jsx      # Detailed service route
     │
-    ├── docs/
-    │   └── portfolio-admin.html           ← Supabase visual admin interface helper
-    ├── public/
-    ├── package.json
-    ├── vite.config.js
-    └── netlify.toml
+    ├── 📦 public/                        # Static web assets directory
+    ├── 🌐 index.html                     # Vite HTML entry point
+    ├── 📜 package.json                   # Node package configuration manifest
+    ├── 🎨 postcss.config.js              # PostCSS plugin configuration
+    ├── 🎨 tailwind.config.js             # Tailwind theme and content configuration
+    ├── ⚡ vite.config.js                 # Vite compiler and bundler setup
+    └── 🚀 netlify.toml                   # Netlify hosting deployment configuration
 ```
 
 ---
@@ -827,7 +882,7 @@ All external services and heavy utility libraries are cleanly isolated behind th
 | Integration | Abstracted Through | Purpose |
 |-------------|-------------------|---------|
 | ⚡ Supabase | `api/core/supabase.client.js` & `base.repository.js` | Cloud PostgreSQL database queries & live portfolio persistence |
-| 🤖 Groq Cloud AI | `api/ai/ai.service.js` & `ai.tools.js` | Multi-model Llama 3.3/3.1 LLM tool-calling inference & conversational copilot |
+| 🤖 Groq Cloud AI | `api/ai/ai.service.js`, `ai.tools.js`, `ai.router.js` | Multi-model Groq tool-calling, centralized domain tools, and offline heuristic routing |
 | 🌐 Axios | `api/core/apiClient.js` | Generic HTTP client for custom endpoints |
 | 📧 EmailJS | `contact.service.js` | Serverless contact form submission |
 | 💻 PrismJS & Code Editor | `CodePlayground.jsx` & `About.jsx` | In-browser syntax highlighting and code editing |
@@ -854,6 +909,10 @@ All external services and heavy utility libraries are cleanly isolated behind th
 Design language: dark modern · glassmorphism surfaces · strong typography · cinematic transitions · layered visual depth.
 
 ### Performance Principles
+
+- **Stable loading geometry** — Skeleton placeholders reserve section space while asynchronous portfolio and GitHub data is fetched, reducing cumulative layout shift.
+- **Low-overhead scrolling** — Passive scroll listeners batch state updates into animation frames, while viewport reveals run once with buffered margins.
+- **Smooth state replacement** — The initial skeleton-to-application transition uses a short opacity fade rather than an abrupt DOM swap.
 
 | Approach | Detail |
 |----------|--------|
@@ -911,6 +970,19 @@ EmailJS logic is fully contained in `contact.service.js`. The React component on
 
 Ego Web features an interactive, production-grade AI architectural assistant (**Ego Copilot**) integrated into the presentation and service layers. Rather than a static mock chatbot, Ego Copilot executes **live multi-turn function/tool calling** against the portfolio's domain services, allowing visitors and technical recruiters to converse directly with an AI copilot about Haider's engineering background, .NET stack, projects, and system architectures.
 
+The AI folder is split by responsibility so orchestration, routing, and domain retrieval stay independent:
+
+| Concern | Module | Does not own |
+| :--- | :--- | :--- |
+| Conversation I/O & Groq / proxy / synthesis | `ai.service.js` | Intent regex, domain queries |
+| Typo / slang mapping | `intentNormalizer.js` | Tool selection, LLM calls |
+| Intent + local heuristic tool routing | `ai.router.js` | Markdown persona, Groq HTTP |
+| Read-only domain adapters + Groq schemas | `ai.tools.js` (single registry) | Chat UI, intent regex |
+| Persona, model list, anti-table / anti-JSON-dump rules | `ai.config.js` | Tool execution |
+| Session capacity circuit breaker | `tokenUsageGuard.js` | Tool payloads |
+
+`ai.tools.js` remains a **centralized registry** (not split per domain). Domain data still flows only through existing services. Groq and the local fallback both consume `executeAITool()` JSON; Ego’s upbeat card layout is produced by the system prompt (live path) or `executeLocalAgentFallback` (offline path)—never by dumping raw JSON or markdown tables.
+
 ---
 
 ### 🔄 Multi-Turn Tool Execution & Sequence Flow
@@ -924,14 +996,15 @@ sequenceDiagram
     participant G as 🛡️ tokenUsageGuard
     participant N as 🔤 intentNormalizer
     participant S as ⚙️ ai.service.js
-    participant M as 🔄 Groq Multi-Model (Llama 3.3 / 3.1)
-    participant T as 🛠️ ai.tools.js (Read-Only)
+    participant R as 🧭 ai.router.js
+    participant M as 🔄 Groq Multi-Model Rotation
+    participant T as 🛠️ ai.tools.js (Registry)
     participant DS as 📦 Domain Services (Supabase / Mock)
 
     U->>W: Types query (e.g., "tell me about his dotnet projects")
     W->>H: sendMessage(content)
     H->>S: aiService.sendMessage({ messages, content })
-    
+
     Note over S,G: Step 1: Guardrail Check
     S->>G: isLimitReached()?
     alt 🛑 Token Capacity Reached (100%)
@@ -941,24 +1014,35 @@ sequenceDiagram
         Note over S,N: Step 2: Typo Tolerance & Preprocessing
         S->>N: normalizeUserQuery(content)
         N-->>S: { normalizedText: "tell me about his .NET projects" }
-        
-        Note over S,M: Step 3: Fetch & Multi-Turn Tool Calling
-        S->>M: POST /chat/completions with aiToolDefinitions
-        alt 🔄 Model 404 / Unavailable
-            S->>S: Auto-rotate to backup model (llama-3.1-8b-instant)
+
+        alt ☁️ Groq API key present
+            Note over S,M: Step 3: Fetch & Multi-Turn Tool Calling
+            S->>M: POST /chat/completions with aiToolDefinitions
+            alt 🔄 Model 404 / Unavailable
+                S->>S: Auto-rotate next candidate in AI_CONFIG.fallbackModels
+            end
+            M-->>S: tool_calls: [get_projects({ query: ".NET" })]
+
+            Note over S,T: Step 4: Process via Service Layer
+            S->>T: executeAITool("get_projects", args)
+            T->>DS: projectsService.getProjects()
+            DS-->>T: Filtered Project Records
+            T-->>S: Sanitized JSON payload (No bulk bloat)
+
+            Note over S,M: Step 5: Conversational Synthesis
+            S->>M: POST /chat/completions with tool output
+            M-->>S: Synthesized Markdown Cards (Jolly Persona, no tables)
+        else 📁 No key / Groq failure
+            Note over S,R: Local heuristic agent fallback
+            S->>R: resolveLocalFallbackTool(normalizedText)
+            R-->>S: targetTool (e.g. get_projects)
+            S->>T: executeAITool(targetTool)
+            T->>DS: Matching domain service
+            DS-->>T: Records
+            T-->>S: JSON
+            S->>S: Format markdown cards in executeLocalAgentFallback
         end
-        M-->>S: tool_calls: [get_projects({ query: ".NET" })]
-        
-        Note over S,T: Step 4: Process via Service Layer
-        S->>T: executeAITool("get_projects", args)
-        T->>DS: projectsService.getProjects()
-        DS-->>T: Filtered Project Records
-        T-->>S: Sanitized JSON payload (No bulk bloat)
-        
-        Note over S,M: Step 5: Conversational Synthesis
-        S->>M: POST /chat/completions with tool output
-        M-->>S: Synthesized Markdown Response (Jolly Persona)
-        
+
         Note over S,G: Step 6: Telemetry & Token Tracking
         S->>G: trackUsage(prompt, response)
         G-->>H: { currentTokens, maxTokens, isWarning }
@@ -974,42 +1058,47 @@ sequenceDiagram
 flowchart TD
     subgraph UI_LAYER ["🖥️ PRESENTATION & HOOKS LAYER"]
         WIDGET["📱 AIChatWidget.jsx\n• Responsive Viewport (Mobile Sheet / Desktop Box)\n• Scroll Containment (overscroll-contain)\n• Live Token Capacity & Status Badges"]
-        HOOK["🪝 useAIChat.js\n• Reactive Message Stream\n• Token Telemetry State\n• Session Reset Synchronization"]
+        HOOK["🪝 useAIChat.js\n• Reactive Message Stream\n• Token Telemetry State\n• Unmount-safe sendMessage"]
         WIDGET <--> HOOK
     end
 
     subgraph PRE_PROCESS ["🛡️ PREPROCESSING & GUARD LAYER"]
         GUARD{"🛡️ tokenUsageGuard.js\nisLimitReached()?"}
-        NORM["🔤 intentNormalizer.js\n• Typo Tolerance ('dotnet' → '.NET')\n• Keyword Intent Router"]
+        NORM["🔤 intentNormalizer.js\nTypo / slang map\n('dotnet' → '.NET')"]
+        ROUTER["🧭 ai.router.js\ndetectIntentTool\nresolveLocalFallbackTool"]
     end
 
     subgraph ENGINE ["⚙️ AI ORCHESTRATION ENGINE"]
-        SVC["⚙️ ai.service.js\nFetch → Process → Format → Send Pipeline"]
-        ROTATOR["🔄 Model Fallback Controller\nAuto-detects 404 / Decommissioned Models"]
+        SVC["⚙️ ai.service.js\nFetch → Process → Format → Send\nDelegates routing; does not own regex"]
+        ROTATOR["🔄 Model Fallback Controller\nAI_CONFIG.fallbackModels rotation"]
+        CFG["📜 ai.config.js\nPersona · no tables · no raw JSON dumps"]
     end
 
     subgraph LLM_CLOUD ["☁️ GROQ INFERENCE LAYER"]
-        GROQ1["🧠 Llama 3.3 70B (Primary)"]
-        GROQ2["⚡ Llama 3.1 8B Instant (Backup)"]
-        GROQ3["🛠️ Llama 3.1 70B / Mixtral"]
+        GROQ1["⚡ llama-3.1-8b-instant (Primary)"]
+        GROQ2["🧩 openai/gpt-oss-120b"]
+        GROQ3["🧩 openai/gpt-oss-20b"]
+        GROQ4["🧠 llama-3.3-70b-versatile"]
     end
 
     subgraph TOOLS_DATA ["📦 READ-ONLY DOMAIN TOOLS LAYER"]
-        REGISTRY["🛠️ ai.tools.js\n11 OpenAI Function Tool Schemas"]
+        REGISTRY["🛠️ ai.tools.js\nCentralized registry\n11 Groq function schemas"]
         DOMAIN["📦 Domain Services\nprojects · profile · skills · experience · services ..."]
-        OFFLINE["📁 Local Heuristic Synthesis Agent\nZero-Key / Offline Fallback"]
+        OFFLINE["📁 Local Heuristic Synthesis\nCard markdown in ai.service.js"]
     end
 
     HOOK --> GUARD
     GUARD -- "Allowed (< 100%)" --> NORM --> SVC
     GUARD -- "Blocked (100%)" --> WIDGET
+    SVC --> CFG
     SVC --> ROTATOR
     ROTATOR --> GROQ1
-    GROQ1 -. "404 / Fail" .-> GROQ2 -. "Fail" .-> GROQ3 -. "All Fail" .-> OFFLINE
-    GROQ1 & GROQ2 & GROQ3 -- "Tool Call Request" --> REGISTRY
+    GROQ1 -. "404 / Fail" .-> GROQ2 -. "Fail" .-> GROQ3 -. "Fail" .-> GROQ4 -. "All Fail" .-> OFFLINE
+    GROQ1 & GROQ2 & GROQ3 & GROQ4 -- "Tool Call Request" --> REGISTRY
+    OFFLINE --> ROUTER
+    ROUTER --> REGISTRY
     REGISTRY --> DOMAIN
     DOMAIN --> REGISTRY --> SVC
-    OFFLINE --> SVC
     SVC --> HOOK
 
     style UI_LAYER fill:#0f172a,stroke:#61DAFB,color:#e2e8f0
@@ -1021,17 +1110,44 @@ flowchart TD
 
 ---
 
-### 🔄 Auto-Selecting Multi-Model Fallback Hierarchy
-
-To guarantee zero downtime and resilient uptime during cloud outages or model deprecation, `ai.service.js` manages an automated self-healing fallback pipeline:
+### 🧭 Intent Router vs Centralized Tool Registry
 
 ```mermaid
 flowchart LR
-    M1["🧠 Primary Model\nllama-3.3-70b-versatile"]
-    M2["⚡ Fast Backup\nllama-3.1-8b-instant"]
-    M3["🌐 Secondary Backup\nllama-3.1-70b-versatile"]
-    M4["🧩 Multi-Expert\nmixtral-8x7b-32768"]
-    M5["📁 Offline Agent\nLocal Heuristic Fallback"]
+    Q["Normalized user query"]
+    R["🧭 ai.router.js"]
+    S["⚙️ ai.service.js"]
+    T["🛠️ ai.tools.js"]
+    D["📦 Domain services"]
+
+    Q --> R
+    R -->|"resolveLocalFallbackTool()"| S
+    S -->|"executeAITool(name, args)"| T
+    T -->|"read-only execute()"| D
+    D -->|"projected JSON"| T
+    T -->|"stringified payload"| S
+    S -->|"markdown cards / Groq synthesis"| UI["AIChatWidget"]
+
+    style R fill:#1e1b4b,stroke:#818cf8,color:#e2e8f0
+    style T fill:#3b0764,stroke:#c084fc,color:#e2e8f0
+    style S fill:#064e3b,stroke:#10B981,color:#e2e8f0
+```
+
+**Boundary:** `ai.router.js` only decides *which* tool to run on the offline path. `ai.tools.js` is the single registry Groq uses (`aiToolDefinitions`) and the only place domain executors are mapped. Do not split executors into per-domain files unless the registry still remains the sole Groq/schema source.
+
+---
+
+### 🔄 Auto-Selecting Multi-Model Fallback Hierarchy
+
+To guarantee zero downtime and resilient uptime during cloud outages or model deprecation, `ai.service.js` rotates through `AI_CONFIG.fallbackModels` and then the local heuristic agent:
+
+```mermaid
+flowchart LR
+    M1["⚡ Primary\nllama-3.1-8b-instant"]
+    M2["🧩 Backup 1\nopenai/gpt-oss-120b"]
+    M3["🧩 Backup 2\nopenai/gpt-oss-20b"]
+    M4["🧠 Backup 3\nllama-3.3-70b-versatile"]
+    M5["📁 Offline Agent\nai.router + executeAITool\n+ card synthesis"]
 
     M1 -->|"404 / Model Error"| M2
     M2 -->|"404 / Model Error"| M3
@@ -1076,12 +1192,13 @@ flowchart TD
 | Module | File Path | Architectural Responsibility |
 | :--- | :--- | :--- |
 | **Presentation Widget** | `src/components/helper/AIChatWidget.jsx` | Full-screen mobile sheet & desktop floating card with strict scroll isolation (`overscroll-contain`) and safe-area padding |
-| **State Orchestrator** | `src/hooks/useAIChat.js` | Message lifecycle, unread badges, open/close toggles, token usage state synchronization, and session reset |
-| **Service Pipeline** | `src/api/ai/ai.service.js` | `Fetch -> Process -> Format -> Send` execution engine with backend proxy and local heuristic agent fallbacks |
-| **Tool Registry** | `src/api/ai/ai.tools.js` | OpenAI/Groq compatible read-only function schemas mapped strictly to domain service layer retrieval methods |
-| **Persona & Config** | `src/api/ai/ai.config.js` | System instructions enforcing the jolly, technical architecture copilot persona with strict anti-data-dump rules |
-| **Fuzzy Normalizer** | `src/api/ai/intentNormalizer.js` | Normalizes developer typos (`dotnet`, `projejcts`, `expierence`, `specilties`) and provides heuristic intent detection |
-| **Token Guardrail** | `src/api/ai/tokenUsageGuard.js` | Session-based token tracker with subtle 80% warning badges and 100% capacity circuit breaker |
+| **State Orchestrator** | `src/hooks/useAIChat.js` | Message lifecycle, unread badges, open/close toggles, token usage state, unmount safety, and session reset |
+| **Service Pipeline** | `src/api/ai/ai.service.js` | `Fetch → Process → Format → Send` engine: Groq tool loop, backend proxy, local card synthesis. Delegates routing to `ai.router.js` |
+| **Intent Router** | `src/api/ai/ai.router.js` | `detectIntentTool` + `resolveLocalFallbackTool` heuristic routing. Owns the regex that used to live in `AIService` |
+| **Tool Registry** | `src/api/ai/ai.tools.js` | Single centralized registry: 11 OpenAI/Groq function schemas, `aiToolDefinitions`, and `executeAITool()`. Domain executors stay here |
+| **Persona & Config** | `src/api/ai/ai.config.js` | Model list, Groq URL, and system prompt (jolly copilot, no tables, no raw JSON/code dumps, truth-to-tools) |
+| **Fuzzy Normalizer** | `src/api/ai/intentNormalizer.js` | Typo / slang map (`dotnet`, `projejcts`, `expierence`, `specilties`). Re-exports `detectIntentTool` for compatibility |
+| **Token Guardrail** | `src/api/ai/tokenUsageGuard.js` | Session-based token tracker with 80% warning badges and 100% capacity circuit breaker |
 
 ---
 
@@ -1091,6 +1208,7 @@ The AI copilot adheres strictly to read-only retrieval operations. It has zero a
 
 - **11 Mapped Content Domains:** `get_profile`, `get_projects`, `get_project_by_id`, `get_skills`, `get_experience`, `get_education`, `get_services`, `get_solutions`, `get_pricing`, `get_testimonials`, `get_site_config`.
 - **Sanitized Tool Payloads:** Tools automatically strip internal database columns, stop-words, and bloated nested relations before passing payloads to the LLM context window.
+- **Layout-safe outputs:** Tools return compact JSON only. The Groq system prompt and local fallback formatter emit markdown **cards / bullets** — never HTML/markdown tables and never raw object dumps into `AIChatWidget`.
 
 ---
 
@@ -1219,8 +1337,11 @@ VITE_SUPABASE_PUBLISHABLE_KEY=your-supabase-publishable-anon-key
 # Data Mode Switch (true: Live Supabase DB queries | false: Offline local data)
 VITE_USE_BACKEND=true
 
-# Groq Cloud AI Integration (Llama 3.3 70B Multi-Turn Tool Calling)
+# Groq Cloud AI Integration (multi-model tool calling + local fallback)
 VITE_GROQ_API_KEY=gsk_your_groq_api_key_here
+
+# Optional AI / REST proxy base URL (used when Groq key is absent)
+VITE_AI_API_URL=http://localhost:5000/api
 
 # EmailJS Contact Delivery
 VITE_EMAILJS_SERVICE_ID=service_id
@@ -1361,7 +1482,10 @@ Every change to the codebase must follow these rules:
 | 12 | 📱 Preserve responsive behavior and accessibility on every change. |
 | 13 | 💀 Maintain loading and error states throughout — no blank screens. |
 | 14 | ✅ Verify `npm run build` passes cleanly after significant changes. |
-| 15 | 📝 Update `docs/SYSTEM_FLOW.md` when architecture changes. |
+| 15 | 📝 Update `README.md` architecture graphs when the AI, helper, or service layers change. |
+| 16 | 🤖 Keep AI I/O in `ai.service.js`. Intent routing stays in `ai.router.js`. Typo maps stay in `intentNormalizer.js`. |
+| 17 | 🛠️ Keep `ai.tools.js` as the single read-only Groq registry. Do not let the widget or router query domain services directly. |
+| 18 | 🎨 Preserve Ego’s card markdown (no tables, no raw JSON dumps) via `ai.config.js` and local fallback formatters. |
 
 ---
 
