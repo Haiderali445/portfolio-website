@@ -738,112 +738,133 @@ flowchart LR
 ## 📁 Project Structure
 
 ```
-apps/
-└── ego-web/
-    ├── src/
-    │   ├── App.jsx                        ← Application root, loading state & view transitions
-    │   ├── main.jsx                       ← React DOM bootstrap
+📂 apps/
+└── 📂 ego-web/
+    ├── 📂 src/
+    │   ├── 📄 App.jsx                    # Application root, loading state & view transitions
+    │   ├── 📄 main.jsx                   # React DOM bootstrap
     │   │
-    │   ├── api/                           ← Centralized API & Service Layer
-    │   │   ├── portfolio.service.js       ← Promise.allSettled domain aggregator
+    │   ├── 📂 api/                       # Centralized API & Service Layer
+    │   │   ├── 📄 portfolio.service.js   # Promise.allSettled domain aggregator
     │   │   │
-    │   │   ├── ai/                        ← AI Copilot & Multi-Turn Tool Calling Engine
-    │   │   │   ├── ai.config.js           ← Groq model configs & jolly copilot system prompt
-    │   │   │   ├── ai.service.js          ← Groq loop, backend proxy, local fallback synthesis
-    │   │   │   ├── ai.tools.js            ← Centralized read-only tool registry (11 domain mappings)
-    │   │   │   ├── ai.router.js           ← Intent detection & heuristic local-fallback tool routing
-    │   │   │   ├── intentNormalizer.js    ← Typo / slang normalizer (re-exports detectIntentTool)
-    │   │   │   └── tokenUsageGuard.js     ← Session token guardrail & capacity tracker
+    │   │   ├── 📂 ai/                    # AI Copilot & Multi-Turn Tool Calling Engine
+    │   │   │   ├── 📄 ai.config.js       # Groq model configs & jolly copilot system prompt
+    │   │   │   ├── 📄 ai.service.js      # Groq loop, backend proxy, local fallback synthesis
+    │   │   │   ├── 📄 ai.tools.js        # Centralized read-only tool registry (11 domain mappings)
+    │   │   │   ├── 📄 ai.router.js       # Intent detection & heuristic local-fallback tool routing
+    │   │   │   ├── 📄 intentNormalizer.js # Typo / slang normalizer (re-exports detectIntentTool)
+    │   │   │   └── 📄 tokenUsageGuard.js # Session token guardrail & capacity tracker
     │   │   │
-    │   │   ├── core/                      ← Infrastructure & data clients
-    │   │   │   ├── apiClient.js           ← Axios HTTP client instance
-    │   │   │   ├── base.repository.js     ← Supabase generic CRUD with fallback
-    │   │   │   ├── logger.js              ← Custom Morgan-style colored dev logger
-    │   │   │   └── supabase.client.js     ← @supabase/supabase-js client
+    │   │   ├── 📂 core/                  # Infrastructure & data clients
+    │   │   │   ├── 📄 apiClient.js       # Axios HTTP client instance
+    │   │   │   ├── 📄 base.repository.js # Supabase generic CRUD with fallback
+    │   │   │   ├── 📄 logger.js          # Custom Morgan-style colored dev logger
+    │   │   │   └── 📄 supabase.client.js # @supabase/supabase-js client
     │   │   │
-    │   │   └── services/                  ← Domain services (Strict Read-Only access for AI)
-    │   │       ├── contact.service.js
-    │   │       ├── education.service.js
-    │   │       ├── experience.service.js  ← Experience data with company URL normalization
-    │   │       ├── github.service.js      ← Live GitHub metrics, language totals & activity aggregator
-    │   │       ├── gmail.service.js       ← Direct mail dispatch handler
-    │   │       ├── offerings.service.js
-    │   │       ├── pricing.service.js
-    │   │       ├── profile.service.js
-    │   │       ├── projects.service.js    ← Relational joins (tools, images, contributors)
-    │   │       ├── site.service.js
-    │   │       ├── skills.service.js
-    │   │       ├── solutions.service.js
-    │   │       ├── terminal.service.js
-    │   │       └── testimonials.service.js
+    │   │   └── 📂 services/              # Domain services (Strict Read-Only access for AI)
+    │   │       ├── 📄 contact.service.js
+    │   │       ├── 📄 education.service.js
+    │   │       ├── 📄 experience.service.js # Experience data with company URL normalization
+    │   │       ├── 📄 github.service.js    # Live GitHub metrics, language totals & activity aggregator
+    │   │       ├── 📄 gmail.service.js     # Direct mail dispatch handler
+    │   │       ├── 📄 offerings.service.js
+    │   │       ├── 📄 pricing.service.js
+    │   │       ├── 📄 profile.service.js
+    │   │       ├── 📄 projects.service.js  # Relational joins (tools, images, contributors)
+    │   │       ├── 📄 site.service.js
+    │   │       ├── 📄 skills.service.js
+    │   │       ├── 📄 solutions.service.js
+    │   │       ├── 📄 terminal.service.js
+    │   │       └── 📄 testimonials.service.js
     │   │
-    │   ├── components/
-    │   │   ├── helper/                    ← Interactive helper subsystem
-    │   │   │   ├── AIChatWidget.jsx       ← Responsive full-screen mobile sheet & desktop AI popup
-    │   │   │   ├── CodePlayground.jsx     ← In-browser sandboxed JS mini-IDE
-    │   │   │   ├── CommandTerminal.jsx    ← Interactive developer terminal
-    │   │   │   ├── ErrorScreen.jsx        ← Graceful error boundary screen
-    │   │   │   ├── LoadingScreen.jsx      ← Responsive glass skeleton page during data fetch
-    │   │   │   ├── MagneticButton.jsx     ← Spring-physics magnetic hover button
-    │   │   │   └── ScrollProgress.jsx     ← RAF-throttled fixed scroll progress tracker
+    │   ├── 📂 components/                # Presentation UI Components
+    │   │   ├── 📂 helper/                # Interactive helper subsystem
+    │   │   │   ├── 💻 AIChatWidget.jsx   # Responsive full-screen mobile sheet & desktop AI popup
+    │   │   │   ├── 💻 CodePlayground.jsx # In-browser sandboxed JS mini-IDE
+    │   │   │   ├── 💻 CommandTerminal.jsx # Interactive developer terminal
+    │   │   │   ├── 💻 ErrorScreen.jsx    # Graceful error boundary screen
+    │   │   │   ├── 💻 LoadingScreen.jsx  # Responsive glass skeleton page during data fetch
+    │   │   │   ├── 💻 MagneticButton.jsx # Spring-physics magnetic hover button
+    │   │   │   └── 💻 ScrollProgress.jsx # RAF-throttled fixed scroll progress tracker
     │   │   │
-    │   │   ├── about/                     ← About section, mini IDE & GitHubStatsBanner
-    │   │   │   ├── About.jsx
-    │   │   │   └── GitHubStatsBanner.jsx  ← Live GitHub stats glassmorphic banner
-    │   │   ├── common/                    ← Shared components (MetaTags, etc.)
-    │   │   ├── contact/                   ← Contact form with EmailJS integration
-    │   │   ├── education/                 ← Academic timeline
-    │   │   ├── experience/                ← Work history timeline & company links
-    │   │   ├── footer/                    ← Footer and social links
-    │   │   ├── header/                    ← Hero section with typewriter effect
-    │   │   ├── nav/                       ← Floating navigation dock
-    │   │   ├── projects/                  ← Asymmetrical bento grid & GitHub avatars
-    │   │   ├── services/                  ← Service cards & investment tiers
-    │   │   ├── sidebar/                   ← Social floating sidebar icons
-    │   │   ├── skills/                    ← Categorized tech stack matrix
-    │   │   ├── solutions/                 ← Engineering solutions showcase
-    │   │   └── testimonials/              ← Client & peer testimonials
+    │   │   ├── 📂 about/                 # About section, mini IDE & GitHubStatsBanner
+    │   │   │   ├── 💻 About.jsx
+    │   │   │   └── 💻 GitHubStatsBanner.jsx # Live GitHub stats glassmorphic banner
+    │   │   ├── 📂 common/                # Shared components
+    │   │   │   └── 💻 MetaTags.jsx
+    │   │   ├── 📂 contact/               # Contact form with EmailJS integration
+    │   │   │   └── 💻 Contact.jsx
+    │   │   ├── 📂 education/             # Academic timeline
+    │   │   │   └── 💻 Education.jsx
+    │   │   ├── 📂 experience/            # Work history timeline & company links
+    │   │   │   └── 💻 Experience.jsx
+    │   │   ├── 📂 footer/                # Footer and social links
+    │   │   │   └── 💻 Footer.jsx
+    │   │   ├── 📂 header/                # Hero section with typewriter effect
+    │   │   │   └── 💻 Header.jsx
+    │   │   ├── 📂 nav/                   # Floating navigation dock
+    │   │   │   └── 💻 Nav.jsx
+    │   │   ├── 📂 projects/              # Asymmetrical bento grid & GitHub avatars
+    │   │   │   └── 💻 Projects.jsx
+    │   │   ├── 📂 services/              # Service cards & investment tiers
+    │   │   │   └── 💻 Services.jsx
+    │   │   ├── 📂 sidebar/               # Social floating sidebar icons
+    │   │   │   └── 💻 socialcons.jsx
+    │   │   ├── 📂 skills/                # Categorized tech stack matrix
+    │   │   │   └── 💻 Skills.jsx
+    │   │   ├── 📂 solutions/             # Engineering solutions showcase
+    │   │   │   └── 💻 Solutions.jsx
+    │   │   └── 📂 testimonials/          # Client & peer testimonials
+    │   │       └── 💻 Testimonials.jsx
     │   │
-    │   ├── layout/
-    │   │   └── AppLayout.jsx              ← Shared shell, routes & global helpers
+    │   ├── 📂 layout/                    # Shared layouts & shell routing
+    │   │   └── 💻 AppLayout.jsx          # Shared shell, routes & global helpers
     │   │
-    │   ├── hooks/
-    │   │   ├── useAIChat.js               ← AI Copilot conversation state, unread badges & tokens
-    │   │   ├── useExperience.js           ← Normalizes company_url/companyUrl fields
-    │   │   ├── useGitHubStats.js           ← GitHub metrics state, refresh & unmount safety
-    │   │   ├── useLenis.js                ← Lenis scroll with device/reduced-motion guards
-    │   │   └── usePortfolioData.js         ← Central portfolio fetcher with unmount guards
+    │   ├── 📂 hooks/                     # Custom React Application Hooks
+    │   │   ├── 🪝 useAIChat.js           # AI Copilot conversation state, unread badges & tokens
+    │   │   ├── 🪝 useExperience.js       # Normalizes company_url/companyUrl fields
+    │   │   ├── 🪝 useGitHubStats.js      # GitHub metrics state, refresh & unmount safety
+    │   │   ├── 🪝 useLenis.js            # Lenis scroll with device/reduced-motion guards
+    │   │   └── 🪝 usePortfolioData.js    # Central portfolio fetcher with unmount guards
     │   │
-    │   ├── styles/
-    │   │   ├── index.css                  ← Global Tailwind styles & CSS variables
-    │   │   └── prism-vsc-dark-plus.css    ← VS Code Dark+ theme for PrismJS
+    │   ├── 📂 styles/                    # Application Stylesheets
+    │   │   ├── 🎨 index.css              # Global Tailwind styles & CSS variables
+    │   │   └── 🎨 prism-vsc-dark-plus.css # VS Code Dark+ theme for PrismJS
     │   │
-    │   ├── utils/
-    │   │   ├── github.js                  ← GitHub avatar CDN URL builder
-    │   │   ├── images/                    ← Skill icon resolvers
-    │   │   └── data/                      ← Normalized local mock & fallback datasets
-    │   │       ├── contactsData.js
-    │   │       ├── educations.js
-    │   │       ├── experience-data.js
-    │   │       ├── personal-data.js
-    │   │       ├── plan-data.js
-    │   │       ├── projects-data.js
-    │   │       ├── services-data.js
-    │   │       ├── site-config.js
-    │   │       ├── skill-catagories.js
-    │   │       ├── skills.js
-    │   │       ├── solutionsData.js
-    │   │       ├── terminalData.js
-    │   │       └── testem-data.js
+    │   ├── 📂 utils/                     # Helpers, Assets, and Mock Data
+    │   │   ├── 📄 github.js              # GitHub avatar CDN URL builder
+    │   │   ├── 📂 images/                # Skill icon resolvers
+    │   │   └── 📂 data/                  # Normalized local mock & fallback datasets
+    │   │       ├── 📄 contactsData.js
+    │   │       ├── 📄 educations.js
+    │   │       ├── 📄 experience-data.js
+    │   │       ├── 📄 personal-data.js
+    │   │       ├── 📄 plan-data.js
+    │   │       ├── 📄 projects-data.js
+    │   │       ├── 📄 services-data.js
+    │   │       ├── 📄 site-config.js
+    │   │       ├── 📄 skill-catagories.js
+    │   │       ├── 📄 skills.js
+    │   │       ├── 📄 solutionsData.js
+    │   │       ├── 📄 terminalData.js
+    │   │       └── 📄 testem-data.js
     │   │
-    │   └── views/
-    │       ├── Home.jsx                   ← Main single-page portfolio view
-    │       └── ServiceDetail.jsx          ← Detailed service route
+    │   ├── 📂 Assets/                    # Visual assets used by portfolio sections
+    │   │   ├── 📂 images/                # Profile and content images
+    │   │   ├── 📂 lottie/                # JSON animation assets
+    │   │   └── 📂 svg/skills/             # Technology skill icons
+    │   │
+    │   └── 📂 views/                     # Page Views & Routes
+    │       ├── 💻 Home.jsx               # Main single-page portfolio view
+    │       └── 💻 ServiceDetail.jsx      # Detailed service route
     │
-    ├── public/
-    ├── package.json
-    ├── vite.config.js
-    └── netlify.toml
+    ├── 📦 public/                        # Static web assets directory
+    ├── 🌐 index.html                     # Vite HTML entry point
+    ├── 📜 package.json                   # Node package configuration manifest
+    ├── 🎨 postcss.config.js              # PostCSS plugin configuration
+    ├── 🎨 tailwind.config.js             # Tailwind theme and content configuration
+    ├── ⚡ vite.config.js                 # Vite compiler and bundler setup
+    └── 🚀 netlify.toml                   # Netlify hosting deployment configuration
 ```
 
 ---
