@@ -17,7 +17,7 @@
 </div>
 
 > [!IMPORTANT]
-> This repository is **closed for public contributions**. You may fork, clone, customize, and self-host for personal use or inspiration.
+> This repository is **closed for public contributions**. See the [contribution policy](CONTRIBUTING.md) and [license](LICENSE) for details.
 
 ---
 
@@ -268,52 +268,52 @@ erDiagram
     PROFILE ||--o{ ABOUT_FOCUS : "defines focus areas"
 
     PROFILE {
-        serial id PK
-        varchar name
-        varchar designation
-        text description
-        text profile
-        text heroImage
-        text resumeUrl
-        varchar terminalUser
-        varchar terminalPass
-        varchar email
-        varchar phone
-        text address
-        varchar github
-        varchar instagram
-        varchar linkedIn
-        varchar aboutEyebrow
-        varchar developerFileName
-        varchar aboutFocusLabel
-        timestamptz created_at
-        timestamptz updated_at
+        int id PK
+        string name
+        string designation
+        string description
+        string profile
+        string heroImage
+        string resumeUrl
+        string terminalUser
+        string terminalPass
+        string email
+        string phone
+        string address
+        string github
+        string instagram
+        string linkedIn
+        string aboutEyebrow
+        string developerFileName
+        string aboutFocusLabel
+        datetime created_at
+        datetime updated_at
     }
 
     PROFILE_TYPEWRITER_TITLES {
-        serial id PK
+        int id PK
         int profile_id FK
-        varchar title
-        timestamptz created_at
-        timestamptz updated_at
+        string title
+        datetime created_at
+        datetime updated_at
     }
 
     PROFILE_INTERESTS {
-        serial id PK
+        int id PK
         int profile_id FK
-        varchar interest
-        timestamptz created_at
-        timestamptz updated_at
+        string interest
+        datetime created_at
+        datetime updated_at
     }
 
     ABOUT_FOCUS {
-        varchar id PK
+        string id PK
         int profile_id FK
-        varchar label
-        varchar title
-        text description
-        timestamptz created_at
-        timestamptz updated_at
+        string label
+        string title
+        string description
+        datetime created_at
+        datetime updated_at
     }
 ```
 
@@ -330,41 +330,41 @@ erDiagram
     PROJECTS {
         int id PK
         int sortOrder
-        varchar name
-        text description
-        varchar role
-        text code
-        text demo
+        string name
+        string description
+        string role
+        string code
+        string demo
         boolean inProgress
-        text websiteUrl
-        timestamptz created_at
-        timestamptz updated_at
+        string websiteUrl
+        datetime created_at
+        datetime updated_at
     }
 
     PROJECT_TOOLS {
-        serial id PK
+        int id PK
         int project_id FK
-        varchar tool
-        timestamptz created_at
-        timestamptz updated_at
+        string tool
+        datetime created_at
+        datetime updated_at
     }
 
     PROJECT_IMAGES {
-        serial id PK
+        int id PK
         int project_id FK
-        text image_url
-        timestamptz created_at
-        timestamptz updated_at
+        string image_url
+        datetime created_at
+        datetime updated_at
     }
 
     PROJECT_CONTRIBUTORS {
-        serial id PK
+        int id PK
         int project_id FK
-        varchar name
-        varchar github
-        text profileUrl
-        timestamptz created_at
-        timestamptz updated_at
+        string name
+        string github
+        string profileUrl
+        datetime created_at
+        datetime updated_at
     }
 ```
 
@@ -382,68 +382,68 @@ erDiagram
     EXPERIENCE {
         int id PK
         int sortOrder
-        varchar title
-        varchar company
-        text company_url
-        varchar duration
-        text description
-        timestamptz created_at
-        timestamptz updated_at
+        string title
+        string company
+        string company_url
+        string duration
+        string description
+        datetime created_at
+        datetime updated_at
     }
 
     EXPERIENCE_TECH {
-        serial id PK
+        int id PK
         int experience_id FK
-        varchar tech
-        timestamptz created_at
-        timestamptz updated_at
+        string tech
+        datetime created_at
+        datetime updated_at
     }
 
     SERVICES {
         int id PK
         int sortOrder
-        varchar name
-        varchar iconType
-        text description
-        text problem
-        text solution
-        timestamptz created_at
-        timestamptz updated_at
+        string name
+        string iconType
+        string description
+        string problem
+        string solution
+        datetime created_at
+        datetime updated_at
     }
 
     SERVICE_FULL_TECH_STACK {
-        serial id PK
+        int id PK
         int service_id FK
-        varchar tech
-        timestamptz created_at
-        timestamptz updated_at
+        string tech
+        datetime created_at
+        datetime updated_at
     }
 
     SERVICE_IMPLEMENTATION_STEPS {
-        serial id PK
+        int id PK
         int service_id FK
-        varchar title
-        text description
-        timestamptz created_at
-        timestamptz updated_at
+        string title
+        string description
+        datetime created_at
+        datetime updated_at
     }
 
     SOLUTIONS {
         int id PK
         int sortOrder
-        varchar title
-        varchar category
-        text description
-        timestamptz created_at
-        timestamptz updated_at
+        string title
+        string category
+        string description
+        datetime created_at
+        datetime updated_at
     }
 
     SOLUTION_TECH {
-        serial id PK
+        int id PK
         int solution_id FK
-        varchar tech
-        timestamptz created_at
-        timestamptz updated_at
+        string tech
+        datetime created_at
+        datetime updated_at
     }
 ```
 
@@ -459,53 +459,53 @@ erDiagram
 
     SKILL_CATEGORIES {
         int id PK
-        varchar title
-        text description
-        timestamptz created_at
-        timestamptz updated_at
+        string title
+        string description
+        datetime created_at
+        datetime updated_at
     }
 
     SKILL_CATEGORY_ITEMS {
-        serial id PK
+        int id PK
         int skill_category_id FK
-        varchar skill_name
-        timestamptz created_at
-        timestamptz updated_at
+        string skill_name
+        datetime created_at
+        datetime updated_at
     }
 
     SKILLS {
-        serial id PK
-        varchar name
-        varchar category
-        varchar glowColor
-        timestamptz created_at
-        timestamptz updated_at
+        int id PK
+        string name
+        string category
+        string glowColor
+        datetime created_at
+        datetime updated_at
     }
 
     TERMINAL_CONFIG {
-        serial id PK
-        varchar version
-        varchar defaultUser
-        varchar defaultPass
-        timestamptz created_at
-        timestamptz updated_at
+        int id PK
+        string version
+        string defaultUser
+        string defaultPass
+        datetime created_at
+        datetime updated_at
     }
 
     TERMINAL_PROTECTED_COMMANDS {
-        serial id PK
+        int id PK
         int terminal_config_id FK
-        varchar command
-        timestamptz created_at
-        timestamptz updated_at
+        string command
+        datetime created_at
+        datetime updated_at
     }
 
     TERMINAL_SECTION_MAP {
-        serial id PK
+        int id PK
         int terminal_config_id FK
-        varchar map_key
-        varchar map_value
-        timestamptz created_at
-        timestamptz updated_at
+        string map_key
+        string map_value
+        datetime created_at
+        datetime updated_at
     }
 ```
 
@@ -518,63 +518,63 @@ erDiagram
     EDUCATION {
         int id PK
         int sortOrder
-        varchar title
-        varchar duration
-        varchar institution
-        timestamptz created_at
-        timestamptz updated_at
+        string title
+        string duration
+        string institution
+        datetime created_at
+        datetime updated_at
     }
 
     PRICING {
         int id PK
         int sortOrder
-        varchar name
-        varchar price
-        varchar pages
+        string name
+        string price
+        string pages
         boolean hasAws
         boolean hasDatabase
         boolean hasAuth
         boolean aws
         boolean database
         boolean auth
-        varchar databaseSize
+        string databaseSize
         boolean isPopular
-        timestamptz created_at
-        timestamptz updated_at
+        datetime created_at
+        datetime updated_at
     }
 
     SITE_CONFIG {
-        serial id PK
-        varchar availabilityStatus
-        varchar availabilityLabel
-        text footerTagline
-        varchar devStack_os
-        varchar devStack_editor
-        varchar devStack_shell
-        varchar devStack_framework
-        varchar devStack_style
-        varchar chaiBoxTitle
-        text chaiBoxDescription
-        text contactSectionIntro
-        text projectsSectionSubtitle
-        text solutionsSectionSubtitle
-        timestamptz created_at
-        timestamptz updated_at
+        int id PK
+        string availabilityStatus
+        string availabilityLabel
+        string footerTagline
+        string devStack_os
+        string devStack_editor
+        string devStack_shell
+        string devStack_framework
+        string devStack_style
+        string chaiBoxTitle
+        string chaiBoxDescription
+        string contactSectionIntro
+        string projectsSectionSubtitle
+        string solutionsSectionSubtitle
+        datetime created_at
+        datetime updated_at
     }
 
     TESTIMONIALS {
         int id PK
-        varchar name
-        varchar title
-        varchar company
-        text imageUrl
-        text image
+        string name
+        string title
+        string company
+        string imageUrl
+        string image
         int likes
         int stars
         boolean isVisible
-        text testimonial
-        timestamptz created_at
-        timestamptz updated_at
+        string testimonial
+        datetime created_at
+        datetime updated_at
     }
 ```
 
