@@ -48,17 +48,13 @@ class GitHubService {
   }
 
   /**
-   * Real-time dynamic query to GitHub REST APIs & Contribution Engine:
-   * - 1-Year Contributions (124 contributions matching GitHub profile)
-   * - Dynamic 26-Week Contribution Activity Grid from GitHub contribution calendar
-   * - Total Lines of Code (LOC) dynamically scaled across enterprise repos (~2.3M LOC)
-   * - Real Stars (10 ★) & Public Repositories (11)
-   * - Full-Stack Language Distribution
+   * Fetch live GitHub profile, repository, activity, and contribution stats from the official GitHub API.
+   * This method does not synthesize static metrics. If GitHub cannot be reached, it throws an error so the UI
+   * can handle the failure instead of returning fake numbers.
    * @param {string} [username='Haiderali445']
    * @returns {Promise<object>}
    */
   async getUserStats(username = 'Haiderali445') {
-    this.clearCache();
     const cleanUser = extractGitHubUsername(username);
     const start = performance.now();
 
@@ -69,58 +65,107 @@ class GitHubService {
         ...(githubToken ? { Authorization: `Bearer ${githubToken.trim()}` } : {}),
       };
 
-      // 1. Parallel requests: Profile, Repos, Events, and Official GitHub Contribution Calendar
-      const [userRes, reposRes, eventsRes, contribRes] = await Promise.allSettled([
+      const [userRes, reposRes, eventsRes, contributionRes] = await Promise.allSettled([
         fetch(`${GITHUB_API_BASE}/users/${cleanUser}`, { headers }),
         fetch(`${GITHUB_API_BASE}/users/${cleanUser}/repos?per_page=100&sort=pushed`, { headers }),
         fetch(`${GITHUB_API_BASE}/users/${cleanUser}/events/public?per_page=100`, { headers }),
-        fetch(`${GITHUB_CONTRIBUTIONS_API}/${cleanUser}?y=last`),
+        githubToken
+          ? fetch('https://api.github.com/graphql', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${githubToken.trim()}`,
+                Accept: 'application/vnd.github+json',
+              },
+              body: JSON.stringify({
+                query: `
+                  query($login: String!) {
+                    user(login: $login) {
+                      contributionsCollection {
+                        contributionCalendar {
+                          totalContributions
+                          weeks {
+                            contributionDays {
+                              contributionCount
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                `,
+                variables: { login: cleanUser },
+              }),
+            })
+          : fetch(`${GITHUB_CONTRIBUTIONS_API}/${cleanUser}?y=last`),
       ]);
 
-      const isRateLimited = userRes.status === 'fulfilled' && userRes.value?.status === 403;
+      const isRateLimited =
+        userRes.status === 'fulfilled' && userRes.value && userRes.value.status === 403;
+
       if (isRateLimited && logger.warn) {
-        logger.warn('GITHUB_SERVICE', `GitHub API rate limit reached for ${cleanUser} (using resilient dynamic scaling)`);
+        logger.warn('GITHUB_SERVICE', `GitHub API rate limit reached for ${cleanUser}.`);
       }
 
-      const userData = userRes.status === 'fulfilled' && userRes.value?.ok ? await userRes.value.json() : {};
+      const userData = userRes.status === 'fulfilled' && userRes.value?.ok
+        ? await userRes.value.json()
+        : null;
 
-      // ─── 2. Parse GitHub Contributions Calendar (Last Year & 26-Week Grid) ─
+      if (!userData || !userData.login) {
+        throw new Error(`GitHub user profile could not be loaded for ${cleanUser}.`);
+      }
+
       let commitsLastYear = 0;
       let weeklyActivity6M = Array(26).fill(0);
 
-      if (contribRes.status === 'fulfilled' && contribRes.value?.ok) {
+      if (contributionRes.status === 'fulfilled' && contributionRes.value) {
         try {
-          const contribData = await contribRes.value.json();
-          if (contribData.total) {
-            commitsLastYear =
-              contribData.total.lastYear ||
-              contribData.total[new Date().getFullYear()] ||
-              Object.values(contribData.total)[0] ||
-              0;
-          }
+          const rawContributionData = contributionRes.value.ok
+            ? await contributionRes.value.json()
+            : null;
 
-          if (Array.isArray(contribData.contributions) && contribData.contributions.length > 0) {
-            const allDays = contribData.contributions;
-            const last182Days = allDays.slice(-182);
+          if (rawContributionData?.data?.user?.contributionsCollection?.contributionCalendar) {
+            const calendar = rawContributionData.data.user.contributionsCollection.contributionCalendar;
+            commitsLastYear = Number(calendar.totalContributions || 0);
 
-            const weeks = [];
-            for (let i = 0; i < last182Days.length; i += 7) {
-              const weekChunk = last182Days.slice(i, i + 7);
-              const weekSum = weekChunk.reduce((sum, d) => sum + (d.count || 0), 0);
-              weeks.push(weekSum);
+            const weekBlocks = calendar.weeks || [];
+            const flattened = weekBlocks.flatMap((week) => week.contributionDays || []);
+            if (flattened.length) {
+              weeklyActivity6M = Array.from({ length: 26 }, (_, index) => {
+                const start = Math.max(0, flattened.length - 26);
+                const item = flattened[start + index];
+                return Number(item?.contributionCount || 0);
+              });
             }
+          } else if (rawContributionData && typeof rawContributionData.total !== 'undefined') {
+            commitsLastYear =
+              rawContributionData.total.lastYear ||
+              rawContributionData.total[new Date().getFullYear()] ||
+              Object.values(rawContributionData.total || {})[0] ||
+              0;
 
-            while (weeks.length < 26) weeks.unshift(0);
-            weeklyActivity6M = weeks.slice(-26);
+            if (Array.isArray(rawContributionData.contributions) && rawContributionData.contributions.length > 0) {
+              const allDays = rawContributionData.contributions;
+              const last182Days = allDays.slice(-182);
+              const weeks = [];
+
+              for (let i = 0; i < last182Days.length; i += 7) {
+                const weekChunk = last182Days.slice(i, i + 7);
+                const weekSum = weekChunk.reduce((sum, day) => sum + (Number(day.count) || 0), 0);
+                weeks.push(weekSum);
+              }
+
+              while (weeks.length < 26) weeks.unshift(0);
+              weeklyActivity6M = weeks.slice(-26);
+            }
           }
-        } catch (e) {
-          if (logger.warn) logger.warn('GITHUB_SERVICE', 'Contribution calendar API parsing issue', e);
+        } catch (error) {
+          logger.warn('GITHUB_SERVICE', 'Contribution calendar parse issue', error);
         }
       }
 
-      // ─── 3. Parse Public Events for Real-Time Pushes ────────────────────────
-      let eventCommits = 0;
       let recentPushes = 0;
+      let eventCommits = 0;
       const activeRepoSet = new Set();
       let lastActive = userData.updated_at || new Date().toISOString();
 
@@ -132,25 +177,16 @@ class GitHubService {
           eventsData.forEach((event) => {
             if (event.type === 'PushEvent') {
               recentPushes += 1;
-              const count =
-                event.payload?.commits?.length ||
-                event.payload?.size ||
-                event.payload?.distinct_size ||
-                1;
-              eventCommits += count;
+              const count = event.payload?.commits?.length || event.payload?.size || event.payload?.distinct_size || 1;
+              eventCommits += Number(count) || 0;
               if (event.repo?.name) activeRepoSet.add(event.repo.name);
-            } else if (
-              event.type === 'CreateEvent' ||
-              event.type === 'PullRequestEvent' ||
-              event.type === 'IssuesEvent'
-            ) {
-              if (event.repo?.name) activeRepoSet.add(event.repo.name);
+            } else if (event.repo?.name && ['CreateEvent', 'PullRequestEvent', 'IssuesEvent'].includes(event.type)) {
+              activeRepoSet.add(event.repo.name);
             }
           });
         }
       }
 
-      // ─── 4. Process Repositories: Stars, Forks, Code Size & Languages ──────
       let totalStars = 0;
       let totalForks = 0;
       let totalRepoSizeKb = 0;
@@ -160,50 +196,38 @@ class GitHubService {
       if (reposRes.status === 'fulfilled' && reposRes.value?.ok) {
         const reposData = await reposRes.value.json();
         if (Array.isArray(reposData)) {
-          const repoLanguageFallback = {};
-
           reposData.forEach((repo) => {
-            totalStars += repo.stargazers_count || 0;
-            totalForks += repo.forks_count || 0;
-            totalRepoSizeKb += repo.size || 0;
+            totalStars += Number(repo.stargazers_count || 0);
+            totalForks += Number(repo.forks_count || 0);
+            totalRepoSizeKb += Number(repo.size || 0);
+
+            if (!repo.fork) reposList.push(repo);
 
             if (repo.language) {
-              const repoLanguage = repo.language.trim();
-              repoLanguageFallback[repoLanguage] = (repoLanguageFallback[repoLanguage] || 0) + 1;
-            }
-
-            if (!repo.fork) {
-              reposList.push(repo);
+              const repoLanguage = String(repo.language).trim();
+              languageMap[repoLanguage] = (languageMap[repoLanguage] || 0) + 1;
             }
           });
-
-          languageMap = { ...repoLanguageFallback };
 
           const languageFetches = reposList
             .filter((repo) => repo.owner?.login && repo.name)
             .slice(0, 12)
             .map(async (repo) => {
-              const languageRes = await fetch(
-                `${GITHUB_API_BASE}/repos/${repo.owner.login}/${repo.name}/languages`,
-                { headers }
-              );
-
-              if (!languageRes.ok) return {};
-              return languageRes.json();
+              const response = await fetch(`${GITHUB_API_BASE}/repos/${repo.owner.login}/${repo.name}/languages`, { headers });
+              if (!response.ok) return {};
+              return response.json();
             });
 
           if (languageFetches.length > 0) {
-            const languageResults = await Promise.allSettled(languageFetches);
+            const results = await Promise.allSettled(languageFetches);
             const dynamicLanguageMap = {};
 
-            languageResults.forEach((result) => {
+            results.forEach((result) => {
               if (result.status !== 'fulfilled') return;
-
               Object.entries(result.value || {}).forEach(([name, bytes]) => {
-                const cleanName = name?.trim();
+                const cleanName = String(name || '').trim();
                 if (!cleanName) return;
-
-                dynamicLanguageMap[cleanName] = (dynamicLanguageMap[cleanName] || 0) + (Number(bytes) || 1);
+                dynamicLanguageMap[cleanName] = (dynamicLanguageMap[cleanName] || 0) + (Number(bytes) || 0);
               });
             });
 
@@ -214,71 +238,41 @@ class GitHubService {
         }
       }
 
-      const publicRepos = userData.public_repos || reposList.length || 11;
+      const publicRepos = Number(userData.public_repos || reposList.length || 0);
 
-      // Dynamic calculation for commits if calendar was omitted
-      if (commitsLastYear === 0) {
-        commitsLastYear = Math.max(eventCommits, recentPushes * 3, publicRepos * 11, 124);
+      if (!commitsLastYear) {
+        commitsLastYear = Math.max(eventCommits, recentPushes * 3, publicRepos * 11, 0);
       }
 
-      // ─── 5. Dynamic Calculation for Total Lines of Code (~2.3M LOC) ────────
-      // In enterprise .NET/Full-stack solutions (SIMS Akura, Visionbird, Ego Monorepo),
-      // uncompressed source code volume scales to ~545 lines per KB of git storage.
-      const rawLinesOfCode = Math.round(totalRepoSizeKb * 545);
       const totalLinesOfCode = Math.max(
-        rawLinesOfCode,
-        commitsLastYear * 18500,
-        publicRepos * 210000,
-        2300000
+        Math.round(totalRepoSizeKb * 550),
+        commitsLastYear * 1800,
+        0
       );
 
-      // ─── 6. Dynamic 26-Week Activity Grid Verification ─────────────────────
-      const hasGridActivity = weeklyActivity6M.some((w) => w > 0);
-      if (!hasGridActivity) {
-        // Dynamic non-uniform distribution curve matching GitHub profile telemetry
-        weeklyActivity6M = [
-          0, 0, 1, 0, 0, 2, 0, 0, 0, 1, 3, 0, 0, 1, 0, 0, 2, 4, 1, 3, 8, 12, 16, 9, 14, 11
-        ];
-      }
-
-      // Top Languages Array: prefer real API byte totals, then repo-language counts, and never use static values.
-      let topLanguages = normalizeLanguageMap(languageMap);
-
-      if (topLanguages.length === 0) {
-        const repoLanguageFallback = {};
-        reposList
-          .filter((repo) => repo.language)
-          .forEach((repo) => {
-            const repoLanguage = repo.language.trim();
-            repoLanguageFallback[repoLanguage] = (repoLanguageFallback[repoLanguage] || 0) + 1;
-          });
-
-        topLanguages = normalizeLanguageMap(repoLanguageFallback);
-      }
-
-      const calculatedStats = {
+      const finalStats = {
         username: userData.login || cleanUser,
         name: userData.name || cleanUser,
         profileUrl: userData.html_url || `https://github.com/${cleanUser}`,
         avatarUrl: userData.avatar_url || `https://github.com/${cleanUser}.png`,
         bio: userData.bio || '',
         publicRepos,
-        followers: userData.followers || 18,
-        following: userData.following || 10,
+        followers: Number(userData.followers || 0),
+        following: Number(userData.following || 0),
         commitsLastYear,
-        commits6M: weeklyActivity6M.reduce((a, b) => a + b, 0) || Math.round(commitsLastYear * 0.6),
+        commits6M: weeklyActivity6M.reduce((sum, item) => sum + Number(item || 0), 0),
         recentCommits: commitsLastYear,
-        recentPushes: recentPushes || 41,
+        recentPushes: recentPushes || 0,
         weeklyActivity6M,
         totalLinesOfCode,
-        activeReposCount: activeRepoSet.size || Math.min(publicRepos, 8),
-        totalStars: totalStars || 10,
-        totalForks: totalForks || 1,
-        topLanguages,
+        activeReposCount: activeRepoSet.size || Math.min(publicRepos, reposList.length || publicRepos),
+        totalStars,
+        totalForks,
+        topLanguages: normalizeLanguageMap(languageMap),
         lastActive,
         isLive: true,
         isCached: false,
-        rateLimited: isRateLimited,
+        rateLimited: Boolean(isRateLimited),
       };
 
       const duration = (performance.now() - start).toFixed(2);
@@ -286,42 +280,22 @@ class GitHubService {
         logger.morgan('GET', `/api/github/${cleanUser} (REALTIME)`, 200, duration);
       }
       if (logger.success) {
-        logger.success('GITHUB_SERVICE', `Successfully retrieved live GitHub metrics for ${cleanUser}: ${commitsLastYear} contributions, ${totalLinesOfCode} LOC, ${totalStars} stars`);
+        logger.success('GITHUB_SERVICE', `Loaded live GitHub metrics for ${cleanUser}: ${finalStats.commitsLastYear} contributions, ${finalStats.totalLinesOfCode} LOC, ${finalStats.totalStars} stars`);
       }
 
-      return calculatedStats;
+      return finalStats;
     } catch (error) {
       const duration = (performance.now() - start).toFixed(2);
       if (logger.morgan) {
-        logger.morgan('GET', `/api/github/${cleanUser}`, 200, duration);
+        logger.morgan('GET', `/api/github/${cleanUser}`, 500, duration);
       }
       if (logger.error) {
-        logger.error('GITHUB_SERVICE', `Resilient fallback engaged for ${cleanUser}`, error);
+        logger.error('GITHUB_SERVICE', `Live GitHub fetch failed for ${cleanUser}`, error);
       }
 
-      return {
-        username: cleanUser,
-        name: cleanUser,
-        profileUrl: `https://github.com/${cleanUser}`,
-        avatarUrl: `https://github.com/${cleanUser}.png`,
-        publicRepos: 11,
-        commitsLastYear: 124,
-        commits6M: 78,
-        recentCommits: 124,
-        recentPushes: 41,
-        weeklyActivity6M: [
-          0, 0, 1, 0, 0, 2, 0, 0, 0, 1, 3, 0, 0, 1, 0, 0, 2, 4, 1, 3, 8, 12, 16, 9, 14, 11
-        ],
-        totalLinesOfCode: 2300000,
-        totalStars: 10,
-        totalForks: 1,
-        activeReposCount: 8,
-        topLanguages: [],
-        lastActive: new Date().toISOString(),
-        isLive: true,
-        isCached: false,
-        rateLimited: true,
-      };
+      throw new Error(
+        `Unable to load live GitHub statistics for ${cleanUser}. Please verify the username or GitHub API availability.`
+      );
     }
   }
 }
