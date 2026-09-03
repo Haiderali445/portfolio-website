@@ -18,7 +18,8 @@ class ProjectsService extends BaseRepository {
     try {
       const { data: projects, error } = await this.supabase
         .from('projects')
-        .select('*');
+        .select('*')
+        .order('sortorder', { ascending: true }); // <-- Added explicit ordering here
 
       if (error) throw error;
       if (!projects || projects.length === 0) return this.localMockData;
