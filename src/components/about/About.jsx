@@ -83,12 +83,12 @@ const About = ({ personalData }) => {
 
   return (
     <section id="about" className="relative z-10 py-24">
-      <div className="container mx-auto max-w-7xl px-6">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6">
         <div className="mb-16 text-center">
           <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.35em] text-[#00ffff]/80">
             {personalData.aboutEyebrow || "Engineering Profile"}
           </p>
-          <h2 className="font-sans text-4xl font-bold tracking-tight text-white md:text-6xl">
+          <h2 className="font-sans text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-6xl">
             About <span className="text-[#858585]">Me</span>
           </h2>
         </div>
@@ -98,7 +98,7 @@ const About = ({ personalData }) => {
           <div className="group relative flex h-full">
             <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-r from-[#00ffff]/10 to-transparent opacity-20 blur-xl transition-all duration-700 group-hover:opacity-40" />
             <div className="relative flex w-full flex-col items-center justify-between rounded-[2rem] border border-white/[0.08] bg-[#121212]/80 p-6 text-center backdrop-blur-xl transition-all duration-500 hover:border-[#00ffff]/30 hover:shadow-2xl hover:shadow-[#00ffff]/5 md:p-8">
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center w-full">
                 <div className="relative mb-4 flex justify-center">
                   <div className="h-32 w-32 shrink-0 aspect-square overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-2xl transition-transform duration-500 group-hover:scale-[1.02] md:h-40 md:w-40 relative">
                     <div className="absolute inset-0 animate-pulse bg-white/10" id="image-skeleton" />
@@ -126,7 +126,7 @@ const About = ({ personalData }) => {
                   </p>
                   {personalData.availabilityLabel && (
                     <div className="mt-3 flex justify-center">
-                      <div className="inline-flex items-center gap-2 rounded-full border border-[#00ffff]/20 bg-[#00ffff]/[0.06] px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-white/70">
+                      <div className="inline-flex items-center gap-2 rounded-full border border-[#00ffff]/20 bg-[#00ffff]/[0.06] px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-white/75">
                         <span className="relative flex h-1.5 w-1.5">
                           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#00ffff] opacity-40" />
                           <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#00ffff]" />
@@ -138,7 +138,7 @@ const About = ({ personalData }) => {
                 </div>
 
                 <div
-                  className="max-w-md text-justify text-xs leading-relaxed text-[#858585] md:text-sm"
+                  className="w-full text-justify text-xs leading-relaxed text-[#858585] md:text-sm"
                   dangerouslySetInnerHTML={{
                     __html: personalData.description
                   }}
@@ -192,13 +192,17 @@ const About = ({ personalData }) => {
           {/* RIGHT SIDE: Mini IDE / Code Playground */}
           <div className="flex h-full flex-col gap-6">
             <div className="overflow-hidden rounded-2xl border border-[#2d2d2d] bg-[#121212] shadow-2xl shadow-black/40">
-              <div className="flex items-center justify-between border-b border-[#2d2d2d] bg-[#181818] px-4 py-3">
-                <div className="flex items-center gap-2">
-                  <FaCircle className="text-[9px] text-[#ff5f56]" />
-                  <FaCircle className="text-[9px] text-[#ffbd2e]" />
-                  <FaCircle className="text-[9px] text-[#27c93f]" />
+              
+              {/* Responsive Header Bar */}
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#2d2d2d] bg-[#181818] px-3 sm:px-4 py-3">
+                <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 scrollbar-none">
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <FaCircle className="text-[9px] text-[#ff5f56]" />
+                    <FaCircle className="text-[9px] text-[#ffbd2e]" />
+                    <FaCircle className="text-[9px] text-[#27c93f]" />
+                  </div>
                   
-                  <div className="ml-4 flex items-center gap-1 rounded-lg bg-[#1e1e1e] p-0.5 border border-[#2d2d2d]">
+                  <div className="ml-2 sm:ml-4 flex items-center gap-1 rounded-lg bg-[#1e1e1e] p-0.5 border border-[#2d2d2d] shrink-0">
                     <button
                       type="button"
                       onClick={() => setEditorMode("json")}
@@ -226,7 +230,7 @@ const About = ({ personalData }) => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 ml-auto">
                   {editorMode === "json" && (
                     <button
                       type="button"
