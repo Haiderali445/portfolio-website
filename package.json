@@ -25,6 +25,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-fast-marquee": "^1.6.5",
+    "react-github-calendar": "^5.0.9",
     "react-helmet-async": "^2.0.5",
     "react-hook-form": "^7.56.1",
     "react-hot-toast": "^2.6.0",
