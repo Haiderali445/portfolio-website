@@ -31,12 +31,13 @@ const Header = ({ personalData = {}, experience = [] }) => {
     : [];
 
   // Dynamic fallback for the badge title overlaying the image
-  const badgeTitle = 
-    typewriterTitles[0] || 
-    personalData.designation || 
-    personalData.title || 
-    personalData.location || 
-    "Software Engineer";
+ // Prioritize profile designation over typewriter titles
+const badgeTitle = 
+  personalData.designation || 
+  typewriterTitles[0] || 
+  personalData.title || 
+  personalData.location || 
+  "Software Engineer";
 
   /*
    * Pick the first experience item according to sortOrder.
