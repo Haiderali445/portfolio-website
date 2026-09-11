@@ -1,81 +1,416 @@
-import React, { useState } from 'react';
-import { FaCog, FaCode, FaGlobe, FaArrowRight, FaCheck, FaTag } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import React from "react";
+import {
+  FaBrain,
+  FaServer,
+  FaDatabase,
+  FaCode,
+  FaPalette,
+  FaShoppingCart,
+  FaGlobe,
+  FaArrowRight,
+} from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { motion, useReducedMotion } from "framer-motion";
 
-const iconMap = {
-    Business: FaCog,
-    Website: FaCode,
-    WebApps: FaGlobe,
-    Default: FaGlobe
+const resolveServiceMetadata = (service = {}) => {
+  const name =
+    typeof service.name === "string" ? service.name.toLowerCase() : "";
+
+  const iconType =
+    typeof service.icontype === "string" ? service.icontype.toLowerCase() : "";
+
+  // AI / intelligent systems
+  if (name.includes("llm") || name.includes("ai") || iconType.includes("ai")) {
+    return {
+      label: "AI & Automation",
+      icon: FaBrain,
+    };
+  }
+
+  // ERP / enterprise systems
+  if (
+    name.includes("erp") ||
+    name.includes("enterprise") ||
+    iconType.includes("erp")
+  ) {
+    return {
+      label: "APIs & Systems",
+      icon: FaServer,
+    };
+  }
+
+  // Commerce
+  if (
+    name.includes("commerce") ||
+    name.includes("store") ||
+    name.includes("shop")
+  ) {
+    return {
+      label: "Frontend & Web",
+      icon: FaShoppingCart,
+    };
+  }
+
+  // Management systems
+  if (
+    name.includes("management") ||
+    name.includes("ims") ||
+    name.includes("crm") ||
+    name.includes("fms") ||
+    name.includes("lms") ||
+    name.includes("cms")
+  ) {
+    return {
+      label: "System Design",
+      icon: FaDatabase,
+    };
+  }
+
+  // Web engineering
+  if (
+    name.includes("web") ||
+    name.includes("spa") ||
+    name.includes("development")
+  ) {
+    return {
+      label: "Engineering",
+      icon: FaCode,
+    };
+  }
+
+  // UI / UX
+  if (name.includes("ui") || name.includes("ux") || name.includes("design")) {
+    return {
+      label: "Product Design",
+      icon: FaPalette,
+    };
+  }
+
+  // Fallback
+  return {
+    label: "Capabilities",
+    icon: FaGlobe,
+  };
 };
 
-const Services = ({ services = [], pricing = [] }) => {
-    const [billingCycle, setBillingCycle] = useState('monthly'); // Dynamic interactive toggle if your data supports intervals
+const Services = ({ services = [] }) => {
+  const shouldReduceMotion = useReducedMotion();
 
-    return (
-        <section id="services" className="py-32 relative z-10">
-            <div className="container mx-auto px-6 max-w-7xl">
-                {/* Services Section Header */}
-                <div className="mb-20">
-                    <h2 className="text-4xl md:text-6xl font-sans font-bold mb-6 text-white leading-tight">
-                        Engineering <br />
-                        <span className="text-text-muted">Solutions & Services</span>
-                    </h2>
-                    <p className="text-text-muted max-w-2xl text-base">
-                        Explore specialized technical offerings tailored to architectural scaling, high-performance systems, and web execution.
-                    </p>
-                </div>
+  if (!services || services.length === 0) {
+    return null;
+  }
 
-                {/* Services Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-28">
-                    {services.map((service, index) => {
-                        const isFeatured = index === 0;
-                        const IconComponent = iconMap[service.iconType] || iconMap.Default;
+  return (
+    <section
+      id="services"
+      className="relative z-10 overflow-hidden py-24 md:py-32"
+    >
+      {/* =========================================================
+                Architectural Grid
+                ========================================================= */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.025]"
+      >
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+                            linear-gradient(
+                                to right,
+                                rgba(255,255,255,0.8) 1px,
+                                transparent 1px
+                            ),
+                            linear-gradient(
+                                to bottom,
+                                rgba(255,255,255,0.8) 1px,
+                                transparent 1px
+                            )
+                        `,
+            backgroundSize: "72px 72px",
+            maskImage:
+              "linear-gradient(to bottom, transparent, black 15%, black 80%, transparent)",
+            WebkitMaskImage:
+              "linear-gradient(to bottom, transparent, black 15%, black 80%, transparent)",
+          }}
+        />
+      </div>
 
-                        return (
-                            <Link
-                                to={`/services/${service.id}`}
-                                key={service.id || index}
-                                className={`group relative p-8 rounded-[2rem] border border-white/5 bg-glass backdrop-blur-xl overflow-hidden transition-all duration-500 hover:border-white/10 cursor-pointer ${isFeatured ? 'lg:col-span-2' : ''}`}
-                            >
-                                {isFeatured && (
-                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-12 translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000 ease-in-out" />
-                                )}
-
-                                <div className="absolute top-0 right-0 p-8 opacity-20 group-hover:opacity-100 transition-opacity duration-500 transform group-hover:rotate-12 group-hover:scale-110 ease-out">
-                                    <IconComponent size={120} />
-                                </div>
-
-                                <div className="relative z-10 flex flex-col justify-between h-full min-h-[280px]">
-                                    <div>
-                                        <div className="w-14 h-14 rounded-full bg-white/5 flex items-center justify-center mb-8 border border-white/10 group-hover:bg-white text-white group-hover:text-black transition-colors duration-300">
-                                            <IconComponent size={24} />
-                                        </div>
-
-                                        <h3 className="text-2xl md:text-3xl font-bold text-white mb-4 max-w-md">
-                                            {service.name}
-                                        </h3>
-
-                                        <p className="text-text-muted leading-relaxed max-w-sm text-sm">
-                                            {service.description}
-                                        </p>
-                                    </div>
-
-                                    <div className="mt-8 flex items-center gap-2 text-sm font-mono text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-4 group-hover:translate-y-0">
-                                        <span>View Deep Dive</span>
-                                        <FaArrowRight />
-                                    </div>
-                                </div>
-                            </Link>
-                        );
-                    })}
-                </div>
-
-             
+      <div className="container mx-auto max-w-7xl px-6">
+        {/* =====================================================
+                    Section Header
+                    ===================================================== */}
+        <div className="mb-16">
+          <motion.div
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+            whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+            viewport={{
+              once: true,
+              amount: 0.2,
+            }}
+            transition={
+              shouldReduceMotion
+                ? undefined
+                : {
+                    duration: 0.5,
+                    ease: [0.16, 1, 0.3, 1],
+                  }
+            }
+          >
+            <div className="mb-4 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-white/50">
+              <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
+              SERVICES / CAPABILITIES
             </div>
-        </section>
-    );
+
+            <h2 className="font-sans text-4xl font-extrabold leading-[1.08] tracking-tight text-white md:text-6xl">
+              Engineering <br />
+              <span className="text-text-muted">systems that scale.</span>
+            </h2>
+          </motion.div>
+        </div>
+
+        {/* =====================================================
+                    Services Grid
+                    ===================================================== */}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {services.map((service, index) => {
+            const meta = resolveServiceMetadata(service);
+            const IconComponent = meta.icon;
+
+            const indexFormatted = String(index + 1).padStart(2, "0");
+
+            return (
+              <motion.div
+                key={service.id || index}
+                initial={
+                  shouldReduceMotion
+                    ? false
+                    : {
+                        opacity: 0,
+                        y: 20,
+                      }
+                }
+                whileInView={
+                  shouldReduceMotion
+                    ? undefined
+                    : {
+                        opacity: 1,
+                        y: 0,
+                      }
+                }
+                whileHover={
+                  shouldReduceMotion
+                    ? undefined
+                    : {
+                        y: -4,
+                      }
+                }
+                viewport={{
+                  once: true,
+                  amount: 0.15,
+                }}
+                transition={{
+                  duration: shouldReduceMotion ? 0 : 0.4,
+                  delay: shouldReduceMotion ? 0 : index * 0.04,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className="h-full"
+              >
+                <Link
+                  to={`/services/${service.id}`}
+                  className="
+                                        card-physical
+                                        group
+                                        flex
+                                        h-full
+                                        min-h-[350px]
+                                        flex-col
+                                        justify-between
+                                        overflow-hidden
+                                        border
+                                        border-white/[0.08]
+                                        bg-surface-1
+                                        p-8
+                                        transition-[background-color,border-color,box-shadow]
+                                        duration-300
+
+                                       hover:border-cyan-500/25
+                                       hover:bg-surface-2
+                                       hover:shadow-[0_4px_18px_rgba(0,122,255,0.07)]
+
+                                        focus-visible:outline-none
+                                        focus-visible:ring-2
+                                        focus-visible:ring-cyan-400/70
+                                        focus-visible:ring-offset-2
+                                        focus-visible:ring-offset-surface-1
+                                    "
+                >
+                  {/* =================================================
+                                        Header
+                                        ================================================= */}
+                  <div className="mb-8 flex items-center justify-between">
+                    <span
+                      className="
+                                                rounded-md
+                                                border
+                                                border-cyan-500/20
+                                                bg-cyan-500/[0.08]
+                                                px-2.5
+                                                py-1
+                                                font-mono
+                                                text-[10px]
+                                                uppercase
+                                                tracking-wider
+                                                text-cyan-400
+                                            "
+                    >
+                      {meta.label}
+                    </span>
+
+                    <span
+                      className="
+                                                font-mono
+                                                text-xs
+                                                tracking-wider
+                                                text-white/25
+                                                transition-colors
+                                                duration-300
+                                                group-hover:text-white/50
+                                            "
+                    >
+                      [{indexFormatted}]
+                    </span>
+                  </div>
+
+                  {/* =================================================
+                                        Icon
+                                        ================================================= */}
+                  <div
+                    className="
+                                            mb-7
+                                            flex
+                                            h-14
+                                            w-14
+                                            items-center
+                                            justify-center
+                                            rounded-xl
+                                            border
+                                            border-white/10
+                                            bg-white/[0.035]
+                                            text-white
+                                            transition-all
+                                            duration-300
+
+                                            group-hover:border-cyan-500/30
+                                            group-hover:bg-cyan-500/[0.08]
+
+                                            md:group-hover:scale-105
+                                        "
+                  >
+                    <IconComponent
+                      className="
+                                                h-6
+                                                w-6
+                                                text-white/80
+                                                transition-colors
+                                                duration-300
+                                                group-hover:text-cyan-400
+                                            "
+                    />
+                  </div>
+
+                  {/* =================================================
+                                        Content
+                                        ================================================= */}
+                  <div className="flex-1">
+                    <h3
+                      className="
+                                                mb-3
+                                                font-sans
+                                                text-xl
+                                                font-bold
+                                                tracking-tight
+                                                text-white
+                                                transition-colors
+                                                duration-300
+                                                md:text-2xl
+                                            "
+                    >
+                      {service.name}
+                    </h3>
+
+                    <p
+                      className="
+                                                max-w-[34rem]
+                                                text-sm
+                                                leading-relaxed
+                                                text-text-muted
+                                            "
+                    >
+                      {service.description}
+                    </p>
+                  </div>
+
+                  {/* =================================================
+                                        Footer
+                                        ================================================= */}
+                  <div
+                    className="
+                                            mt-8
+                                            flex
+                                            items-center
+                                            justify-between
+                                            border-t
+                                            border-white/[0.07]
+                                            pt-5
+                                        "
+                  >
+                    <span
+                      className="
+                                                font-mono
+                                                text-[10px]
+                                                uppercase
+                                                tracking-[0.14em]
+                                                text-white/35
+                                                transition-colors
+                                                duration-300
+                                                group-hover:text-white/70
+                                            "
+                    >
+                      Explore Capabilities
+                    </span>
+
+                    <span
+                      className="
+                                                flex
+                                                h-8
+                                                w-8
+                                                items-center
+                                                justify-center
+                                                rounded-full
+                                                border
+                                                border-white/10
+                                                text-white/40
+                                                transition-all
+                                                duration-300
+
+                                                group-hover:translate-x-1
+                                                group-hover:border-cyan-400
+                                                group-hover:bg-cyan-400
+                                                group-hover:text-black
+                                            "
+                    >
+                      <FaArrowRight size={11} />
+                    </span>
+                  </div>
+                </Link>
+              </motion.div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
 };
 
 export default Services;
