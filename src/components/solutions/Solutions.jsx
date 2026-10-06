@@ -67,8 +67,12 @@ const SolutionCard = ({ solution, isOpen, onClick, onTagClick, activeTag }) => {
 };
 
 const SolutionsSkeleton = () => (
-    <section id="solutions" className="py-24 relative z-10">
-        <div className="container mx-auto px-6 max-w-6xl">
+    <section id="solutions" className="relative z-10 isolate overflow-hidden py-24">
+        <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 opacity-[0.012] [background-image:linear-gradient(to_right,rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:32px_32px]"
+        />
+        <div className="container relative z-10 mx-auto max-w-6xl px-6">
             <div className="mb-16 text-center">
                 <div className="mx-auto mb-4 h-12 w-72 rounded-full skeleton-shimmer bg-white/[0.06]" />
                 <div className="mx-auto h-4 w-96 max-w-full rounded-full skeleton-shimmer bg-white/[0.05]" />
@@ -120,8 +124,12 @@ const Solutions = ({ solutions = [], personalData = {}, isLoading = false }) => 
         : solutions;
 
     return (
-        <section id="solutions" className="py-24 relative z-10">
-            <div className="container mx-auto px-6 max-w-6xl">
+        <section id="solutions" className="relative z-10 isolate overflow-hidden py-24">
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 opacity-[0.012] [background-image:linear-gradient(to_right,rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:32px_32px]"
+            />
+            <div className="container relative z-10 mx-auto max-w-6xl px-6">
                 <div className="mb-16 text-center">
                     <h2 className="text-4xl md:text-6xl font-bold text-white mb-4">
                         Explored <span className="text-text-muted">Solutions</span>

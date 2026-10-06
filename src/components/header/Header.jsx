@@ -101,11 +101,11 @@ const badgeTitle =
         items-center
         overflow-hidden
         bg-background
-        pb-24
+        pb-32
         pt-24
-        sm:pb-28
+        sm:pb-36
         sm:pt-28
-        lg:pb-20
+        lg:pb-32
         lg:pt-24
       "
     >

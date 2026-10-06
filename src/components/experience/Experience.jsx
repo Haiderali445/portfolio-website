@@ -9,8 +9,12 @@ const Experience = ({ experiences = [], isLoading = false }) => {
 
     if (isLoading) {
         return (
-            <section id="experience" className="py-24 relative z-10">
-                <div className="container mx-auto px-6 max-w-6xl">
+            <section id="experience" className="relative z-10 isolate overflow-hidden py-24">
+                <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 opacity-[0.012] [background-image:linear-gradient(to_right,rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:32px_32px]"
+                />
+                <div className="container relative z-10 mx-auto max-w-6xl px-6">
                     <div className="mb-16 flex flex-col md:flex-row items-center md:items-start gap-4">
                         <div className="h-14 w-14 rounded-full skeleton-shimmer bg-white/[0.06]" />
                         <div className="w-full md:w-auto">
@@ -56,8 +60,12 @@ const Experience = ({ experiences = [], isLoading = false }) => {
         : normalizedExperiences;
 
     return (
-        <section id="experience" className="py-24 relative z-10">
-            <div className="container mx-auto px-6 max-w-6xl">
+        <section id="experience" className="relative z-10 isolate overflow-hidden py-24">
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 opacity-[0.012] [background-image:linear-gradient(to_right,rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:32px_32px]"
+            />
+            <div className="container relative z-10 mx-auto max-w-6xl px-6">
                 {/* Header */}
                 <div className="flex flex-col md:flex-row items-center md:items-start gap-4 mb-16">
                     <div className="p-3 rounded-full bg-primary/10 text-primary border border-primary/20">

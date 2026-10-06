@@ -103,40 +103,14 @@ const Services = ({ services = [] }) => {
   return (
     <section
       id="services"
-      className="relative z-10 overflow-hidden py-24 md:py-32"
+      className="relative z-10 isolate overflow-hidden py-24 md:py-32"
     >
-      {/* =========================================================
-                Architectural Grid
-                ========================================================= */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 opacity-[0.025]"
-      >
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `
-                            linear-gradient(
-                                to right,
-                                rgba(255,255,255,0.8) 1px,
-                                transparent 1px
-                            ),
-                            linear-gradient(
-                                to bottom,
-                                rgba(255,255,255,0.8) 1px,
-                                transparent 1px
-                            )
-                        `,
-            backgroundSize: "72px 72px",
-            maskImage:
-              "linear-gradient(to bottom, transparent, black 15%, black 80%, transparent)",
-            WebkitMaskImage:
-              "linear-gradient(to bottom, transparent, black 15%, black 80%, transparent)",
-          }}
-        />
-      </div>
+        className="pointer-events-none absolute inset-0 opacity-[0.012] [background-image:linear-gradient(to_right,rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:32px_32px]"
+      />
 
-      <div className="container mx-auto max-w-7xl px-6">
+      <div className="container relative z-10 mx-auto max-w-7xl px-6">
         {/* =====================================================
                     Section Header
                     ===================================================== */}

@@ -7,6 +7,7 @@ import {
   FaGithub,
   FaCodeBranch,
   FaCodeCommit,
+  FaCodeFork,
   FaRocket,
   FaFileCode,
   FaStar,
@@ -21,9 +22,11 @@ import {
 export const GitHubStatsBanner = ({ username = 'Haiderali445' }) => {
   const { stats, loading, error, refetch } = useGitHubStats(username);
   const [copiedKey, setCopiedKey] = useState('');
-  const [selectedYear, setSelectedYear] = useState('last'); // 'last' or specific year like 2025, 2024, 2023
+  const [selectedYear, setSelectedYear] = useState('last');
 
   const cleanUser = extractGitHubUsername(username);
+  const currentYear = new Date().getFullYear();
+  const calendarYears = ['last', ...Array.from({ length: 4 }, (_, index) => currentYear - index)];
 
   // Format large numbers with commas or K/M suffixes
   const formatNumber = (val) => {
@@ -35,11 +38,13 @@ export const GitHubStatsBanner = ({ username = 'Haiderali445' }) => {
     return String(num);
   };
 
-  const commitsCount = stats?.commitsLastYear ?? stats?.commits6M ?? stats?.recentCommits;
+  const commitsCount = stats?.commitsLastYear;
   const locCount = stats?.totalLinesOfCode;
   const reposCount = stats?.publicRepos;
-  const pushesCount = stats?.recentPushes ?? 0;
-  const starsCount = stats?.totalStars ?? 0;
+  const pushesCount = stats?.recentPushes;
+  const deploymentsCount = stats?.recentDeployments;
+  const starsCount = stats?.totalStars;
+  const forksCount = stats?.totalForks;
 
   // Dynamic copy handler with formatted clipboard payload
   const handleCopy = async (key, textToCopy) => {
@@ -55,7 +60,7 @@ export const GitHubStatsBanner = ({ username = 'Haiderali445' }) => {
 
   // Generate full live markdown/summary string for clipboard
   const getFullSummaryText = () => {
-    return `🐙 GitHub @${cleanUser} Stats: ${reposCount || 0} Public Repos | ${commitsCount || 0} Commits (Last Year) | ${formatNumber(locCount)} LOC | ${pushesCount} Pushes • ${starsCount} ★ | https://github.com/${cleanUser}`;
+    return `GitHub @${cleanUser} Stats: ${formatNumber(reposCount)} Public Repos | ${formatNumber(commitsCount)} Commits (Last Year) | ${formatNumber(locCount)} LOC | ${formatNumber(pushesCount)} Pushes | ${formatNumber(deploymentsCount)} Deployments | ${formatNumber(forksCount)} Forks | ${formatNumber(starsCount)} Stars | https://github.com/${cleanUser}`;
   };
 
   const statItems = [
@@ -63,8 +68,8 @@ export const GitHubStatsBanner = ({ username = 'Haiderali445' }) => {
       id: 'commits-year',
       label: 'Commits (Last Year)',
       value: commitsCount,
-      formatted: commitsCount !== undefined ? formatNumber(commitsCount) : '--',
-      copyValue: `${commitsCount || 0} Commits (Last Year) - @${cleanUser}`,
+      formatted: formatNumber(commitsCount),
+      copyValue: `${formatNumber(commitsCount)} Commits (Last Year) - @${cleanUser}`,
       subtext: 'Annual Repository Commits',
       icon: FaCodeCommit,
       glowColor: 'from-cyan-500/20 to-blue-500/10',
@@ -72,36 +77,60 @@ export const GitHubStatsBanner = ({ username = 'Haiderali445' }) => {
     },
     {
       id: 'loc',
-      label: 'Total Lines of Code',
+      label: 'Lines of Code (LOC)',
       value: locCount,
-      formatted: locCount !== undefined ? `${formatNumber(locCount)} LOC` : '--',
+      formatted: locCount == null ? '--' : `${formatNumber(locCount)} LOC`,
       copyValue: `${formatNumber(locCount)} Lines of Code - @${cleanUser}`,
-      subtext: 'Source Code Volume',
+      subtext: 'Estimated Source Code Volume',
       icon: FaFileCode,
-      glowColor: 'from-emerald-500/20 to-teal-500/10',
+      glowColor: 'from-emerald-500/10 to-teal-500/5',
       iconColor: 'text-emerald-400',
     },
     {
       id: 'repos',
       label: 'Public Repositories',
       value: reposCount,
-      formatted: reposCount !== undefined ? formatNumber(reposCount) : '--',
-      copyValue: `${reposCount || 0} Public Repositories - @${cleanUser}`,
+      formatted: formatNumber(reposCount),
+      copyValue: `${formatNumber(reposCount)} Public Repositories - @${cleanUser}`,
       subtext: 'Open-Source Projects',
       icon: FaCodeBranch,
-      glowColor: 'from-purple-500/20 to-indigo-500/10',
+      glowColor: 'from-blue-500/10 to-indigo-500/5',
+      iconColor: 'text-blue-400',
+    },
+    {
+      id: 'forks',
+      label: 'Forks Count',
+      value: forksCount,
+      formatted: formatNumber(forksCount),
+      copyValue: `${formatNumber(forksCount)} Forks - @${cleanUser}`,
+      subtext: 'Across Public Repositories',
+      icon: FaCodeFork,
+      glowColor: 'from-purple-500/10 to-indigo-500/5',
       iconColor: 'text-purple-400',
     },
     {
-      id: 'pushes',
-      label: 'Pushes & Stars',
-      value: pushesCount,
-      formatted: stats ? `${pushesCount} Pushes • ${starsCount} ★` : '--',
-      copyValue: `${pushesCount} Pushes • ${starsCount} Stars - @${cleanUser}`,
-      subtext: 'Recent Deploy Batches',
-      icon: starsCount > 0 ? FaStar : FaRocket,
-      glowColor: 'from-amber-500/20 to-orange-500/10',
+      id: 'stars',
+      label: 'Total Stars',
+      value: starsCount,
+      formatted: formatNumber(starsCount),
+      copyValue: `${formatNumber(starsCount)} Stars - @${cleanUser}`,
+      subtext: 'Earned Across Repositories',
+      icon: FaStar,
+      glowColor: 'from-amber-500/10 to-orange-500/5',
       iconColor: 'text-amber-400',
+    },
+    {
+      id: 'pushes-deployments',
+      label: 'Pushes & Deployments',
+      value: pushesCount,
+      formatted: stats
+        ? `${formatNumber(pushesCount)} pushes · ${formatNumber(deploymentsCount)} deploys`
+        : '--',
+      copyValue: `${formatNumber(pushesCount)} Pushes • ${formatNumber(deploymentsCount)} Deployments - @${cleanUser}`,
+      subtext: 'Recent Pushes and Deploy Batches',
+      icon: FaRocket,
+      glowColor: 'from-teal-500/10 to-cyan-500/5',
+      iconColor: 'text-teal-400',
     },
   ];
 
@@ -116,11 +145,11 @@ export const GitHubStatsBanner = ({ username = 'Haiderali445' }) => {
       className="group relative mt-10 w-full"
     >
       {/* Ambient background glow */}
-      <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-r from-[#00ffff]/15 via-purple-500/10 to-transparent opacity-20 blur-2xl transition-all duration-700 group-hover:opacity-40" />
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-500/10 via-purple-500/5 to-transparent opacity-20 blur-lg transition-opacity duration-500 group-hover:opacity-30" />
 
       {/* Main Glassmorphic Container */}
       <div
-        className="relative min-h-[240px] overflow-hidden rounded-[2rem] border border-white/[0.08] bg-[#121212]/80 p-6 backdrop-blur-xl transition-all duration-500 hover:border-[#00ffff]/30 hover:shadow-2xl hover:shadow-[#00ffff]/5 md:p-8"
+        className="relative min-h-[240px] overflow-hidden rounded-2xl border border-white/[0.08] bg-surface-2/80 p-6 backdrop-blur-xl transition-colors duration-300 hover:border-cyan-400/30 md:p-8"
         aria-busy={loading}
       >
         {isInitialLoading ? (
@@ -138,8 +167,8 @@ export const GitHubStatsBanner = ({ username = 'Haiderali445' }) => {
                 <div className="h-8 w-8 rounded-lg bg-white/10 skeleton-shimmer" />
               </div>
             </div>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {Array.from({ length: 4 }).map((_, idx) => (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, idx) => (
                 <div key={idx} className="h-28 rounded-xl bg-white/10 skeleton-shimmer" />
               ))}
             </div>
@@ -150,11 +179,11 @@ export const GitHubStatsBanner = ({ username = 'Haiderali445' }) => {
             {/* Top Header Bar */}
             <div className="mb-6 flex flex-col items-start justify-between gap-4 border-b border-white/[0.06] pb-5 sm:flex-row sm:items-center">
               <div className="flex items-center gap-3">
-                <div className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-[#161616] text-white shadow-inner">
-                  <FaGithub className="text-xl text-[#00ffff]" />
+                <div className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-surface-1 text-white shadow-inner">
+                <FaGithub className="text-xl text-cyan-400" />
                   <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#00ffff] opacity-75" />
-                    <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#00ffff]" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-75" />
+                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-cyan-400" />
                   </span>
                 </div>
                 <div>
@@ -169,7 +198,7 @@ export const GitHubStatsBanner = ({ username = 'Haiderali445' }) => {
                       </span>
                     )}
                   </div>
-                  <p className="font-mono text-xs text-[#858585]">
+                  <p className="font-mono text-xs text-slate-400">
                     Real-time open-source metrics for{' '}
                     <span className="text-gray-300">@{stats?.username || cleanUser}</span>
                   </p>
@@ -184,8 +213,9 @@ export const GitHubStatsBanner = ({ username = 'Haiderali445' }) => {
                   className={`flex items-center gap-1.5 rounded-xl border px-3 py-1.5 font-mono text-xs transition-all duration-300 ${
                     copiedKey === 'summary'
                       ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400'
-                      : 'border-white/10 bg-white/[0.03] text-gray-300 hover:border-[#00ffff]/40 hover:bg-[#00ffff]/10 hover:text-white'
+                      : 'border-white/10 bg-white/[0.03] text-gray-300 hover:border-cyan-400/40 hover:bg-cyan-400/10 hover:text-white'
                   }`}
+                  aria-label="Copy live GitHub metrics summary"
                 >
                   {copiedKey === 'summary' ? (
                     <>
@@ -204,16 +234,17 @@ export const GitHubStatsBanner = ({ username = 'Haiderali445' }) => {
                   type="button"
                   onClick={() => refetch()}
                   title="Fetch fresh real-time GitHub metrics"
-                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/[0.02] text-gray-400 transition-all hover:border-[#00ffff]/30 hover:bg-[#00ffff]/10 hover:text-white"
+                  className="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/[0.02] text-gray-400 transition-all hover:border-cyan-400/30 hover:bg-cyan-400/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2"
+                  aria-label="Refresh GitHub statistics"
                 >
-                  <FaRotateRight className={`text-xs ${loading ? 'animate-spin text-[#00ffff]' : ''}`} />
+                  <FaRotateRight className={`text-xs ${loading ? 'animate-spin text-cyan-400' : ''}`} />
                 </button>
 
                 <a
                   href={stats?.profileUrl || `https://github.com/${cleanUser}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-1.5 font-mono text-xs text-white/80 transition-all duration-300 hover:border-[#00ffff]/40 hover:bg-[#00ffff]/10 hover:text-[#00ffff]"
+                  className="flex items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-1.5 font-mono text-xs text-white/80 transition-all duration-300 hover:border-cyan-400/40 hover:bg-cyan-400/10 hover:text-cyan-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2"
                 >
                   <span>View Profile</span>
                   <FaArrowUpRightFromSquare className="text-[10px]" />
@@ -222,21 +253,21 @@ export const GitHubStatsBanner = ({ username = 'Haiderali445' }) => {
             </div>
 
             {/* Dynamic Metrics Grid */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {statItems.map((item) => {
                 const isCardCopied = copiedKey === item.id;
 
                 return (
                   <div
                     key={item.id}
-                    className="group/card relative overflow-hidden rounded-xl border border-white/[0.06] bg-[#161616]/60 p-4.5 transition-all duration-300 hover:border-white/20 hover:bg-[#1a1a1a]/80"
+                    className="group/card relative overflow-hidden rounded-xl border border-white/[0.06] bg-surface-1/70 p-4 transition-all duration-300 hover:border-white/20 hover:bg-surface-1"
                   >
                     <div
                       className={`absolute -right-6 -top-6 h-20 w-20 rounded-full bg-gradient-to-br ${item.glowColor} opacity-0 blur-xl transition-opacity duration-500 group-hover/card:opacity-100`}
                     />
 
                     <div className="relative flex items-center justify-between mb-2">
-                      <span className="font-mono text-[10.5px] uppercase tracking-wider text-gray-400">
+                      <span className="font-mono text-[10.5px] uppercase tracking-wider text-slate-400">
                         {item.label}
                       </span>
 
@@ -245,7 +276,8 @@ export const GitHubStatsBanner = ({ username = 'Haiderali445' }) => {
                           type="button"
                           onClick={() => handleCopy(item.id, item.copyValue)}
                           title={`Copy ${item.label}`}
-                          className="opacity-0 group-hover/card:opacity-100 rounded p-1 text-gray-400 hover:bg-white/10 hover:text-cyan-400 transition-all"
+                          className="rounded p-1 text-slate-400 opacity-0 transition-all hover:bg-white/10 hover:text-cyan-400 group-hover/card:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
+                          aria-label={`Copy ${item.label}`}
                         >
                           {isCardCopied ? (
                             <FaCheck className="text-emerald-400 text-xs" />
@@ -264,7 +296,7 @@ export const GitHubStatsBanner = ({ username = 'Haiderali445' }) => {
                       {loading ? (
                         <div className="h-8 w-24 animate-pulse rounded bg-white/10 my-1" />
                       ) : (
-                        <div className="font-sans text-xl font-bold tracking-tight text-white md:text-2xl lg:text-[22px]">
+                        <div className="font-sans text-lg font-bold tracking-tight text-white md:text-xl">
                           {item.formatted}
                         </div>
                       )}
@@ -278,24 +310,26 @@ export const GitHubStatsBanner = ({ username = 'Haiderali445' }) => {
             </div>
 
             {/* ─── AUTHENTIC GITHUB CONTRIBUTION CALENDAR MATRIX ────────────────── */}
-            <div className="mt-6 rounded-2xl border border-white/[0.06] bg-[#161616]/40 p-4 md:p-5">
+            <div className="mt-6 rounded-2xl border border-white/[0.06] bg-surface-2/50 p-4 md:p-5">
               <div className="mb-4 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
                 <div className="flex items-center gap-2">
-                  <FaChartSimple className="text-xs text-[#00ffff]" />
+                  <FaChartSimple className="text-xs text-cyan-400" />
                   <span className="font-mono text-xs font-medium text-gray-300">
                     Day-to-Day Contribution Matrix
                   </span>
                 </div>
 
                 {/* Year filter selector allowing up to 3 years back */}
-                <div className="flex items-center gap-1 bg-black/40 p-1 rounded-lg border border-white/10 font-mono text-[11px]">
-                  {['last', 2025, 2024, 2023].map((yr) => (
+                <div className="flex items-center gap-1 rounded-lg border border-white/10 bg-black/40 p-1 font-mono text-[11px]">
+                  {calendarYears.map((yr) => (
                     <button
+                      type="button"
                       key={yr}
                       onClick={() => setSelectedYear(yr)}
-                      className={`px-2.5 py-1 rounded transition-all ${
+                      aria-pressed={selectedYear === yr}
+                      className={`rounded px-2.5 py-1 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
                         selectedYear === yr 
-                          ? 'bg-[#00ffff]/20 text-[#00ffff] border border-[#00ffff]/30 font-bold' 
+                          ? 'border border-cyan-400/30 bg-cyan-400/20 font-bold text-cyan-400' 
                           : 'text-gray-400 hover:text-white'
                       }`}
                     >
@@ -306,41 +340,59 @@ export const GitHubStatsBanner = ({ username = 'Haiderali445' }) => {
               </div>
 
               {/* Native Contribution Calendar Grid with working SVG hover tooltips */}
-              <div className="overflow-x-auto py-2 flex justify-center">
-                <GitHubCalendar
-                  username={cleanUser}
-                  year={selectedYear}
-                  blockSize={11}
-                  blockMargin={4}
-                  fontSize={12}
-                  theme={{
-                    dark: ['#161616', '#0e3a40', '#007a8a', '#00bccc', '#00ffff'],
-                  }}
-                  renderBlock={(block, activity) => (
-                    <g key={activity.date}>
-                      {block}
-                      <title>{`${activity.date}: ${activity.count} contribution${activity.count === 1 ? '' : 's'}`}</title>
-                    </g>
-                  )}
-                />
+              <div className="relative">
+                <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 z-10 w-5 bg-gradient-to-r from-surface-2 to-transparent sm:w-8" />
+                <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 z-10 w-5 bg-gradient-to-l from-surface-2 to-transparent sm:w-8" />
+                <div className="overflow-x-auto py-2">
+                  <div className="min-w-max px-4">
+                    <GitHubCalendar
+                      username={cleanUser}
+                      year={selectedYear}
+                      blockSize={11}
+                      blockMargin={4}
+                      fontSize={12}
+                      theme={{
+                        dark: ['rgba(255,255,255,0.03)', '#0e3a40', '#007a8a', '#00bccc', '#00ffff'],
+                      }}
+                      renderBlock={(block, activity) => {
+                        const dateLabel = new Date(`${activity.date}T00:00:00`).toLocaleDateString(
+                          undefined,
+                          { year: 'numeric', month: 'short', day: 'numeric' }
+                        );
+
+                        return (
+                          <g key={activity.date}>
+                            {activity.level === 1
+                              ? React.cloneElement(block, {
+                                  stroke: 'rgba(34,211,238,0.35)',
+                                  strokeWidth: 1,
+                                })
+                              : block}
+                            <title>{`${activity.count} contributions on ${dateLabel}`}</title>
+                          </g>
+                        );
+                      }}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
 
             {/* Dynamic Top Languages Row */}
             {stats?.topLanguages && stats.topLanguages.length > 0 && !loading && (
               <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-white/[0.04] bg-white/[0.01] px-4 py-2.5">
-                <span className="font-mono text-[11px] text-[#858585]">
+                <span className="font-mono text-[11px] text-slate-400">
                   Primary Tech Stack:
                 </span>
                 <div className="flex flex-wrap items-center gap-2">
                   {stats.topLanguages.map((lang) => (
                     <span
                       key={lang.name}
-                      className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-[#161616] px-2.5 py-1 font-mono text-[10.5px] text-gray-300"
+                      className="flex items-center gap-1.5 rounded-lg border border-white/10 bg-surface-1 px-2.5 py-1 font-mono text-[10.5px] text-gray-300"
                     >
-                      <span className="h-1.5 w-1.5 rounded-full bg-[#00ffff]" />
+                      <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
                       <span>{lang.name}</span>
-                      <span className="text-[#858585]">{lang.percentage}%</span>
+                      <span className="text-slate-400">{lang.percentage}%</span>
                     </span>
                   ))}
                 </div>

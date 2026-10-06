@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import logoImg from "../../Assets/images/logo.png";
+import { motion, useReducedMotion } from "framer-motion";
 
 const SkeletonBlock = ({ className = "" }) => (
-  <div className={`skeleton-shimmer rounded-xl bg-white/[0.07] ${className}`} />
+  <div className={`skeleton-shimmer rounded-xl bg-white/[0.05] ${className}`} />
 );
 
 const SkeletonSection = ({ children, className = "" }) => (
@@ -10,170 +12,155 @@ const SkeletonSection = ({ children, className = "" }) => (
   </section>
 );
 
-export default function LoadingScreen() {
-  const [activeNode, setActiveNode] = useState(0);
-  const [chargeLevel, setChargeLevel] = useState(0);
+export default function LoadingScreen({ isReady = false, onComplete }) {
+  const [progress, setProgress] = useState(3);
+  const shouldReduceMotion = useReducedMotion();
+  const hasCompletedRef = useRef(false);
 
-  // Cycles through active boot states & simulates battery charging progress
   useEffect(() => {
-    const nodeTimer = setInterval(() => {
-      setActiveNode((prev) => (prev + 1) % 4);
-    }, 400);
-
-    const chargeTimer = setInterval(() => {
-      setChargeLevel((prev) => (prev >= 100 ? 0 : prev + 10));
-    }, 250);
+    const timer = window.setInterval(() => {
+      setProgress((current) => {
+        if (isReady) return Math.min(current + 4, 100);
+        if (current >= 88) return 88;
+        return Math.min(current + Math.max(0.3, (88 - current) * 0.025), 88);
+      });
+    }, 40);
 
     return () => {
-      clearInterval(nodeTimer);
-      clearInterval(chargeTimer);
+      window.clearInterval(timer);
     };
-  }, []);
+  }, [isReady]);
 
-  // Total number of discrete horizontal charging bars inside the battery
-  const totalBars = 7;
-  const activeBarsCount = Math.round((chargeLevel / 100) * totalBars);
+  useEffect(() => {
+    if (progress < 100 || hasCompletedRef.current) return;
+    hasCompletedRef.current = true;
+    onComplete?.();
+  }, [onComplete, progress]);
+
+  const displayProgress = Math.round(Number(progress) || 0);
+
+  // SVG Circle calculations for progress ring
+  const radius = 68;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (displayProgress / 100) * circumference;
 
   return (
-    <div className="min-h-screen w-full overflow-hidden bg-[#050505] text-white select-none" aria-busy="true" aria-label="Loading portfolio">
-      {/* Background Radial Glow */}
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_center,rgba(0,234,255,0.07),transparent_38rem)]" />
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-[#050608] text-white select-none"
+      aria-busy="true"
+      role="status"
+      aria-label="Loading portfolio"
+    >
+      {/* Background Grid */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.035] [background-image:linear-gradient(to_right,rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:32px_32px]"
+      />
 
-      {/* Interactive Central Vertical Battery Cell HUD */}
-      <div className="pointer-events-none fixed inset-0 z-30 flex items-center justify-center px-6">
-        <div className="relative flex flex-col items-center gap-6 p-8 rounded-3xl border border-cyan-500/25 bg-[#080a0d]/95 shadow-2xl shadow-cyan-500/15 backdrop-blur-2xl">
+      <div className="relative z-20 mx-4 flex w-full max-w-sm flex-col items-center gap-7 rounded-2xl border border-white/[0.08] bg-[#090c10]/90 px-8 py-9 backdrop-blur-xl shadow-2xl">
+        
+        {/* Progress-Linked SVG Spinner Ring Stage */}
+        <div className="relative flex h-40 w-40 items-center justify-center">
           
-          {/* Battery Top Terminal Cap - Wider to match new proportion */}
-          <div className="w-14 h-3 rounded-t-md bg-gradient-to-r from-cyan-500/40 via-cyan-300 to-cyan-500/40 border border-cyan-400/40 shadow-[0_0_12px_rgba(0,234,255,0.4)]" />
+          {/* Radial Ambient Backlight */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-4 rounded-full bg-[radial-gradient(circle,rgba(34,211,238,0.15)_0%,rgba(34,211,238,0)_75%)]"
+          />
 
-          {/* Main Vertical Battery Body - Significantly wider proportions */}
-          <div className="relative flex h-36 w-28 flex-col justify-between overflow-hidden rounded-2xl border-2 border-cyan-500/30 bg-[#030406] p-2 shadow-inner shadow-cyan-950">
-            
-            {/* Discrete Horizontal Charging Bars Container (Mapped bottom to top) */}
-            <div className="flex flex-col-reverse justify-between h-full w-full gap-1.5 z-10">
-              {Array.from({ length: totalBars }).map((_, index) => {
-                const isLit = index < activeBarsCount;
-                return (
-                  <div
-                    key={index}
-                    className={`w-full h-full rounded-md transition-all duration-300 ${
-                      isLit
-                        ? "bg-gradient-to-r from-cyan-400 via-cyan-300 to-emerald-400 shadow-[0_0_12px_rgba(0,234,255,0.6)] opacity-100 scale-100"
-                        : "bg-white/[0.04] border border-white/[0.02] opacity-30 scale-[0.98]"
-                    }`}
-                  />
-                );
-              })}
-            </div>
+          {/* DYNAMIC PROGRESS SVG RING */}
+          <motion.svg
+            className="absolute inset-0 h-full w-full -rotate-90"
+            viewBox="0 0 160 160"
+            animate={shouldReduceMotion ? undefined : { rotate: 360 }}
+            transition={{ duration: 12, ease: "linear", repeat: Infinity }}
+          >
+            <defs>
+              <linearGradient id="cyanEmeraldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#22d3ee" />
+                <stop offset="100%" stopColor="#34d399" />
+              </linearGradient>
+            </defs>
 
-            {/* Percentage Text Overlay inside Cell */}
-            <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
-              <span className="font-mono text-sm font-extrabold tracking-tighter text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] bg-black/60 px-2 py-0.5 rounded-md backdrop-blur-xs border border-white/10">
-                {chargeLevel}%
-              </span>
-            </div>
-          </div>
+            {/* Background Track Circle */}
+            <circle
+              cx="80"
+              cy="80"
+              r={radius}
+              className="stroke-white/[0.06]"
+              strokeWidth="4"
+              fill="transparent"
+            />
 
-          {/* Core System Telemetry Subtext */}
-          <div className="flex flex-col items-center gap-1">
-            <span className="font-mono text-xs tracking-widest text-cyan-400 font-semibold drop-shadow-[0_0_8px_rgba(0,234,255,0.4)]">
-              SYS_CHARGING
-            </span>
-            <span className="font-mono text-[10px] text-slate-400 tracking-wider">
-              VOLT: 5.0V // MESH_ACTIVE
-            </span>
-          </div>
+            {/* Progress Filled Circle Ring */}
+            <motion.circle
+              cx="80"
+              cy="80"
+              r={radius}
+              stroke="url(#cyanEmeraldGradient)"
+              strokeWidth="4"
+              strokeDasharray={circumference}
+              strokeDashoffset={strokeDashoffset}
+              strokeLinecap="round"
+              fill="transparent"
+              initial={{ strokeDashoffset: circumference }}
+              animate={{ strokeDashoffset }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+            />
+          </motion.svg>
 
-          {/* Micro Node Activity Indicator Pills */}
-          <div className="flex items-center gap-2 font-mono text-[10px] tracking-widest text-cyan-300 pt-2 border-t border-white/5">
-            {['API', 'MESH', 'DB', 'READY'].map((node, idx) => (
-              <span
-                key={node}
-                className={`px-2 py-0.5 rounded transition-all duration-300 border ${
-                  activeNode === idx 
-                    ? 'bg-cyan-500/20 border-cyan-400 text-cyan-200 shadow-[0_0_10px_rgba(0,234,255,0.3)] scale-105' 
-                    : 'bg-white/5 border-white/10 text-slate-500 opacity-60'
-                }`}
-              >
-                {node}
-              </span>
-            ))}
-          </div>
-
+          {/* Central Logo Box */}
+          <motion.div
+            className="relative z-10 flex h-24 w-24 items-center justify-center rounded-2xl border border-white/[0.08] bg-[#090c10]/95 shadow-xl shadow-black/40"
+            animate={shouldReduceMotion ? undefined : { y: [0, -2, 0] }}
+            transition={{ duration: 3.4, ease: "easeInOut", repeat: Infinity }}
+          >
+            <img
+              src={logoImg}
+              alt="Ego Web"
+              className="h-[4.5rem] w-[4.5rem] object-contain drop-shadow-[0_8px_12px_rgba(0,0,0,0.35)]"
+            />
+          </motion.div>
         </div>
+
+        {/* Subtext */}
+        <div className="w-full text-center">
+          <p className="font-sans text-base font-semibold tracking-tight text-white">
+            Haider Ali
+          </p>
+          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.22em] text-slate-400">
+            Software Engineer
+          </p>
+        </div>
+
+        {/* Clean Progress Meter */}
+        <div
+          className="w-full text-center"
+          role="progressbar"
+          aria-label="Loading portfolio content"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={displayProgress}
+        >
+          <p className="font-mono text-2xl font-bold tabular-nums tracking-tight text-white" aria-hidden="true">
+            {displayProgress}<span className="ml-0.5 text-base text-cyan-400">%</span>
+          </p>
+          <p className="mt-2 font-mono text-[10px] tracking-wide text-slate-400 uppercase">
+            Preparing portfolio
+          </p>
+        </div>
+        <span className="sr-only">Portfolio content is loading</span>
       </div>
 
-      {/* Underlying Layout Skeletons */}
-      <div className="relative z-0 opacity-95 blur-[0.5px]">
+      {/* Skeletons */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden opacity-20 blur-[0.5px]">
         <header className="min-h-[min(42rem,82vh)] border-b border-white/[0.06] bg-[#06080b]/70 px-6 py-28 backdrop-blur-sm md:py-36">
           <div className="container mx-auto max-w-7xl">
             <SkeletonBlock className="mb-6 h-4 w-36" />
             <SkeletonBlock className="h-14 w-[min(34rem,90vw)] md:h-20" />
             <SkeletonBlock className="mt-4 h-5 w-[min(28rem,80vw)]" />
-            <div className="mt-10 flex flex-wrap gap-3">
-              <SkeletonBlock className="h-11 w-32" />
-              <SkeletonBlock className="h-11 w-11 rounded-full" />
-              <SkeletonBlock className="h-11 w-11 rounded-full" />
-            </div>
           </div>
         </header>
-
-        <SkeletonSection>
-          <div className="grid min-h-[20rem] items-center gap-10 md:grid-cols-[1fr_1.3fr]">
-            <SkeletonBlock className="mx-auto h-56 w-56 rounded-full md:mx-0" />
-            <div>
-              <SkeletonBlock className="mb-6 h-10 w-64" />
-              <SkeletonBlock className="mb-3 h-4 w-full" />
-              <SkeletonBlock className="mb-3 h-4 w-11/12" />
-              <SkeletonBlock className="h-4 w-3/4" />
-              <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                {Array.from({ length: 4 }).map((_, index) => <SkeletonBlock key={index} className="h-20" />)}
-              </div>
-            </div>
-          </div>
-        </SkeletonSection>
-
-        <SkeletonSection className="border-y border-white/[0.04] bg-white/[0.02]">
-          <SkeletonBlock className="mx-auto mb-12 h-10 w-64" />
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <SkeletonBlock key={index} className="h-48" />
-            ))}
-          </div>
-        </SkeletonSection>
-
-        <SkeletonSection>
-          <SkeletonBlock className="mb-12 h-10 w-72" />
-          <div className="space-y-6">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <SkeletonBlock key={index} className="h-48 md:h-40" />
-            ))}
-          </div>
-        </SkeletonSection>
-
-        <SkeletonSection className="border-y border-white/[0.04] bg-white/[0.02]">
-          <SkeletonBlock className="mx-auto mb-12 h-10 w-72" />
-          <div className="grid gap-5 md:grid-cols-2">
-            {Array.from({ length: 4 }).map((_, index) => <SkeletonBlock key={index} className="h-32" />)}
-          </div>
-        </SkeletonSection>
-
-        <SkeletonSection>
-          <SkeletonBlock className="mx-auto mb-4 h-10 w-64" />
-          <SkeletonBlock className="mx-auto mb-12 h-4 w-80 max-w-full" />
-          <div className="grid auto-rows-[18rem] gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 4 }).map((_, index) => (
-              <SkeletonBlock key={index} className={index % 3 === 0 ? "md:col-span-2" : ""} />
-            ))}
-          </div>
-        </SkeletonSection>
-
-        <SkeletonSection className="border-t border-white/[0.04] bg-white/[0.02]">
-          <SkeletonBlock className="mx-auto mb-12 h-10 w-64" />
-          <div className="grid gap-5 md:grid-cols-3">
-            {Array.from({ length: 3 }).map((_, index) => <SkeletonBlock key={index} className="h-72" />)}
-          </div>
-        </SkeletonSection>
       </div>
     </div>
   );

@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { githubService } from '../api/services/github.service';
 
+const normalizeMetric = (value) => (
+  typeof value === 'number' && Number.isFinite(value) ? value : null
+);
+
 /**
  * Custom hook to dynamically retrieve and manage GitHub metrics.
  * @param {string} [username='Haiderali445']
@@ -19,7 +23,13 @@ export const useGitHubStats = (username = 'Haiderali445') => {
     try {
       const data = await githubService.getUserStats(targetUser);
       if (isMountedRef.current) {
-        setStats(data);
+        setStats({
+          ...data,
+          totalForks: normalizeMetric(data.totalForks),
+          totalStars: normalizeMetric(data.totalStars),
+          recentPushes: normalizeMetric(data.recentPushes),
+          recentDeployments: normalizeMetric(data.recentDeployments),
+        });
         setLoading(false);
       }
     } catch (err) {
