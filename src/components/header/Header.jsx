@@ -602,38 +602,7 @@ const badgeTitle =
                 "
               />
 
-              {/* Dynamic Bottom Badge Overlay */}
-              <div
-                className="
-                  absolute
-                  bottom-6
-                  left-6
-                  z-20
-                  flex
-                  items-center
-                  gap-2.5
-                  rounded-lg
-                  border
-                  border-cyan-500/20
-                  bg-black/80
-                  px-3.5
-                  py-1.5
-                  shadow-lg
-                  backdrop-blur-md
-                  transition-all
-                  duration-300
-                  group-hover:border-cyan-400/40
-                  group-hover:bg-black/90
-                "
-              >
-                <span className="relative flex h-2 w-2 shrink-0">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-75" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-cyan-500" />
-                </span>
-                <span className="font-mono text-xs font-semibold tracking-wide text-white/90">
-                  {badgeTitle}
-                </span>
-              </div>
+              
 
               {/* Image edge treatment */}
               <div
