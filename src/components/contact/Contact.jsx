@@ -71,8 +71,12 @@ const Contact = ({ contactInfo, personalData = {}, gmailDispatcher }) => {
   };
 
   return (
-    <section id="contact" className="py-24 relative z-10 bg-[#050505]">
-      <div className="container mx-auto px-6 max-w-7xl">
+    <section id="contact" className="relative z-10 isolate overflow-hidden bg-[#050505] py-24">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.012] [background-image:linear-gradient(to_right,rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:32px_32px]"
+      />
+      <div className="container relative z-10 mx-auto max-w-7xl px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
 
           {/* Info Side */}

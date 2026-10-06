@@ -31,12 +31,13 @@ const Header = ({ personalData = {}, experience = [] }) => {
     : [];
 
   // Dynamic fallback for the badge title overlaying the image
-  const badgeTitle = 
-    typewriterTitles[0] || 
-    personalData.designation || 
-    personalData.title || 
-    personalData.location || 
-    "Software Engineer";
+ // Prioritize profile designation over typewriter titles
+const badgeTitle = 
+  personalData.designation || 
+  typewriterTitles[0] || 
+  personalData.title || 
+  personalData.location || 
+  "Software Engineer";
 
   /*
    * Pick the first experience item according to sortOrder.
@@ -100,11 +101,11 @@ const Header = ({ personalData = {}, experience = [] }) => {
         items-center
         overflow-hidden
         bg-background
-        pb-24
+        pb-32
         pt-24
-        sm:pb-28
+        sm:pb-36
         sm:pt-28
-        lg:pb-20
+        lg:pb-32
         lg:pt-24
       "
     >

@@ -14,8 +14,12 @@ const Education = ({ educations = [] }) => {
   });
 
   return (
-    <section id="education" className="py-24 relative z-10 bg-black/20">
-      <div className="container mx-auto px-6 max-w-6xl">
+    <section id="education" className="relative z-10 isolate overflow-hidden bg-black/20 py-24">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.012] [background-image:linear-gradient(to_right,rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:32px_32px]"
+      />
+      <div className="container relative z-10 mx-auto max-w-6xl px-6">
         {/* Section Header with UI Search Toggle */}
         <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-6 mb-16">
           <div className="flex items-center gap-4">

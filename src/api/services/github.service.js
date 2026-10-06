@@ -4,6 +4,33 @@ import { extractGitHubUsername } from '../../utils/github';
 const GITHUB_API_BASE = 'https://api.github.com';
 const GITHUB_CONTRIBUTIONS_API = 'https://github-contributions-api.jogruber.de/v4';
 
+const fetchPublicRepositories = async (username, headers) => {
+  const repositories = [];
+  let page = 1;
+
+  while (true) {
+    const response = await fetch(
+      `${GITHUB_API_BASE}/users/${username}/repos?per_page=100&sort=pushed&page=${page}`,
+      { headers }
+    );
+
+    if (!response.ok) {
+      throw new Error(`GitHub repositories request failed with status ${response.status}.`);
+    }
+
+    const pageRepositories = await response.json();
+    if (!Array.isArray(pageRepositories)) {
+      throw new Error('GitHub repositories response was not an array.');
+    }
+
+    repositories.push(...pageRepositories);
+    if (pageRepositories.length < 100) break;
+    page += 1;
+  }
+
+  return repositories;
+};
+
 const normalizeLanguageMap = (languageMap = {}) => {
   const entries = Object.entries(languageMap || {})
     .filter(([, value]) => Number(value) > 0)
@@ -67,7 +94,7 @@ class GitHubService {
 
       const [userRes, reposRes, eventsRes, contributionRes] = await Promise.allSettled([
         fetch(`${GITHUB_API_BASE}/users/${cleanUser}`, { headers }),
-        fetch(`${GITHUB_API_BASE}/users/${cleanUser}/repos?per_page=100&sort=pushed`, { headers }),
+        fetchPublicRepositories(cleanUser, headers),
         fetch(`${GITHUB_API_BASE}/users/${cleanUser}/events/public?per_page=100`, { headers }),
         githubToken
           ? fetch('https://api.github.com/graphql', {
@@ -115,7 +142,7 @@ class GitHubService {
         throw new Error(`GitHub user profile could not be loaded for ${cleanUser}.`);
       }
 
-      let commitsLastYear = 0;
+      let commitsLastYear = null;
       let weeklyActivity6M = Array(26).fill(0);
 
       if (contributionRes.status === 'fulfilled' && contributionRes.value) {
@@ -138,11 +165,10 @@ class GitHubService {
               });
             }
           } else if (rawContributionData && typeof rawContributionData.total !== 'undefined') {
-            commitsLastYear =
-              rawContributionData.total.lastYear ||
-              rawContributionData.total[new Date().getFullYear()] ||
-              Object.values(rawContributionData.total || {})[0] ||
-              0;
+            const lastYearTotal = rawContributionData.total.lastYear;
+            commitsLastYear = Number.isFinite(Number(lastYearTotal))
+              ? Number(lastYearTotal)
+              : null;
 
             if (Array.isArray(rawContributionData.contributions) && rawContributionData.contributions.length > 0) {
               const allDays = rawContributionData.contributions;
@@ -164,21 +190,23 @@ class GitHubService {
         }
       }
 
-      let recentPushes = 0;
-      let eventCommits = 0;
+      let recentPushes = null;
+      let recentDeployments = null;
       const activeRepoSet = new Set();
       let lastActive = userData.updated_at || new Date().toISOString();
 
       if (eventsRes.status === 'fulfilled' && eventsRes.value?.ok) {
         const eventsData = await eventsRes.value.json();
-        if (Array.isArray(eventsData) && eventsData.length > 0) {
+        if (Array.isArray(eventsData)) {
+          recentPushes = 0;
+          recentDeployments = 0;
           lastActive = eventsData[0]?.created_at || lastActive;
-
           eventsData.forEach((event) => {
             if (event.type === 'PushEvent') {
               recentPushes += 1;
-              const count = event.payload?.commits?.length || event.payload?.size || event.payload?.distinct_size || 1;
-              eventCommits += Number(count) || 0;
+              if (event.repo?.name) activeRepoSet.add(event.repo.name);
+            } else if (event.type === 'DeploymentEvent') {
+              recentDeployments += 1;
               if (event.repo?.name) activeRepoSet.add(event.repo.name);
             } else if (event.repo?.name && ['CreateEvent', 'PullRequestEvent', 'IssuesEvent'].includes(event.type)) {
               activeRepoSet.add(event.repo.name);
@@ -187,16 +215,18 @@ class GitHubService {
         }
       }
 
-      let totalStars = 0;
-      let totalForks = 0;
+      let totalStars = null;
+      let totalForks = null;
       let totalRepoSizeKb = 0;
+      let repositoryMetricsAvailable = false;
       const reposList = [];
       let languageMap = {};
 
-      if (reposRes.status === 'fulfilled' && reposRes.value?.ok) {
-        const reposData = await reposRes.value.json();
-        if (Array.isArray(reposData)) {
-          reposData.forEach((repo) => {
+      if (reposRes.status === 'fulfilled') {
+        totalStars = 0;
+        totalForks = 0;
+        repositoryMetricsAvailable = true;
+        reposRes.value.forEach((repo) => {
             totalStars += Number(repo.stargazers_count || 0);
             totalForks += Number(repo.forks_count || 0);
             totalRepoSizeKb += Number(repo.size || 0);
@@ -207,48 +237,43 @@ class GitHubService {
               const repoLanguage = String(repo.language).trim();
               languageMap[repoLanguage] = (languageMap[repoLanguage] || 0) + 1;
             }
+        });
+
+        const languageFetches = reposList
+          .filter((repo) => repo.owner?.login && repo.name)
+          .slice(0, 12)
+          .map(async (repo) => {
+            const response = await fetch(`${GITHUB_API_BASE}/repos/${repo.owner.login}/${repo.name}/languages`, { headers });
+            if (!response.ok) return {};
+            return response.json();
           });
 
-          const languageFetches = reposList
-            .filter((repo) => repo.owner?.login && repo.name)
-            .slice(0, 12)
-            .map(async (repo) => {
-              const response = await fetch(`${GITHUB_API_BASE}/repos/${repo.owner.login}/${repo.name}/languages`, { headers });
-              if (!response.ok) return {};
-              return response.json();
+        if (languageFetches.length > 0) {
+          const results = await Promise.allSettled(languageFetches);
+          const dynamicLanguageMap = {};
+
+          results.forEach((result) => {
+            if (result.status !== 'fulfilled') return;
+            Object.entries(result.value || {}).forEach(([name, bytes]) => {
+              const cleanName = String(name || '').trim();
+              if (!cleanName) return;
+              dynamicLanguageMap[cleanName] = (dynamicLanguageMap[cleanName] || 0) + (Number(bytes) || 0);
             });
+          });
 
-          if (languageFetches.length > 0) {
-            const results = await Promise.allSettled(languageFetches);
-            const dynamicLanguageMap = {};
-
-            results.forEach((result) => {
-              if (result.status !== 'fulfilled') return;
-              Object.entries(result.value || {}).forEach(([name, bytes]) => {
-                const cleanName = String(name || '').trim();
-                if (!cleanName) return;
-                dynamicLanguageMap[cleanName] = (dynamicLanguageMap[cleanName] || 0) + (Number(bytes) || 0);
-              });
-            });
-
-            if (Object.keys(dynamicLanguageMap).length > 0) {
-              languageMap = dynamicLanguageMap;
-            }
+          if (Object.keys(dynamicLanguageMap).length > 0) {
+            languageMap = dynamicLanguageMap;
           }
         }
+      } else if (logger.warn) {
+        logger.warn('GITHUB_SERVICE', `Could not fetch all public repositories for ${cleanUser}; repository totals are unavailable.`, reposRes.reason);
       }
 
-      const publicRepos = Number(userData.public_repos || reposList.length || 0);
+      const publicRepos = Number(userData.public_repos ?? reposList.length ?? 0);
 
-      if (!commitsLastYear) {
-        commitsLastYear = Math.max(eventCommits, recentPushes * 3, publicRepos * 11, 0);
-      }
-
-      const totalLinesOfCode = Math.max(
-        Math.round(totalRepoSizeKb * 550),
-        commitsLastYear * 1800,
-        0
-      );
+      const totalLinesOfCode = repositoryMetricsAvailable
+        ? Math.round(totalRepoSizeKb * 550)
+        : null;
 
       const finalStats = {
         username: userData.login || cleanUser,
@@ -262,7 +287,8 @@ class GitHubService {
         commitsLastYear,
         commits6M: weeklyActivity6M.reduce((sum, item) => sum + Number(item || 0), 0),
         recentCommits: commitsLastYear,
-        recentPushes: recentPushes || 0,
+        recentPushes,
+        recentDeployments,
         weeklyActivity6M,
         totalLinesOfCode,
         activeReposCount: activeRepoSet.size || Math.min(publicRepos, reposList.length || publicRepos),

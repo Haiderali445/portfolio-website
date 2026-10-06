@@ -83,26 +83,30 @@ const About = ({ personalData }) => {
 
   return (
     <section id="about" className="relative z-10 py-24">
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.012] [background-image:linear-gradient(to_right,rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:32px_32px]"
+      />
+      <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6">
         <div className="mb-16 text-center">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.35em] text-[#00ffff]/80">
+          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.35em] text-cyan-400/80">
             {personalData.aboutEyebrow || "Engineering Profile"}
           </p>
           <h2 className="font-sans text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-6xl">
-            About <span className="text-[#858585]">Me</span>
+            About <span className="text-slate-400">Me</span>
           </h2>
         </div>
 
         <div className="grid grid-cols-1 items-stretch gap-8 lg:grid-cols-2">
           {/* PROFILE CARD */}
           <div className="group relative flex h-full">
-            <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-r from-[#00ffff]/10 to-transparent opacity-20 blur-xl transition-all duration-700 group-hover:opacity-40" />
-            <div className="relative flex w-full flex-col items-center justify-between rounded-[2rem] border border-white/[0.08] bg-[#121212]/80 p-6 text-center backdrop-blur-xl transition-all duration-500 hover:border-[#00ffff]/30 hover:shadow-2xl hover:shadow-[#00ffff]/5 md:p-8">
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-500/10 to-transparent opacity-15 blur-lg transition-opacity duration-500 group-hover:opacity-25" />
+            <div className="relative flex w-full flex-col items-center justify-between rounded-2xl border border-white/[0.08] bg-surface-2/80 p-6 text-center backdrop-blur-xl transition-colors duration-300 hover:border-cyan-400/30 md:p-8">
               <div className="flex flex-col items-center w-full">
                 <div className="relative mb-4 flex justify-center">
                   <div className="h-32 w-32 shrink-0 aspect-square overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-2xl transition-transform duration-500 group-hover:scale-[1.02] md:h-40 md:w-40 relative">
                     <div className="absolute inset-0 animate-pulse bg-white/10" id="image-skeleton" />
-                    <div className="absolute inset-0 z-10 rounded-2xl bg-gradient-to-tr from-[#00ffff]/10 to-transparent mix-blend-overlay pointer-events-none" />
+                    <div className="pointer-events-none absolute inset-0 z-10 rounded-2xl bg-gradient-to-tr from-cyan-400/10 to-transparent mix-blend-overlay" />
                     <img
                       src={personalData.profile || personalData.heroImage || personalData.heroimage || ""}
                       alt={personalData.name}
@@ -121,15 +125,15 @@ const About = ({ personalData }) => {
                   <h3 className="mb-1.5 text-xl font-bold tracking-tight text-white md:text-2xl">
                     {personalData.name}
                   </h3>
-                  <p className="font-mono text-xs uppercase tracking-[0.16em] text-[#00ffff]">
+                  <p className="font-mono text-xs uppercase tracking-[0.16em] text-cyan-400">
                     {personalData.designation}
                   </p>
                   {personalData.availabilityLabel && (
                     <div className="mt-3 flex justify-center">
-                      <div className="inline-flex items-center gap-2 rounded-full border border-[#00ffff]/20 bg-[#00ffff]/[0.06] px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-white/75">
+                      <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/[0.06] px-3 py-1 font-mono text-[10px] uppercase tracking-wider text-white/75">
                         <span className="relative flex h-1.5 w-1.5">
-                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#00ffff] opacity-40" />
-                          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#00ffff]" />
+                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-40" />
+                          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-cyan-400" />
                         </span>
                         {personalData.availabilityLabel}
                       </div>
@@ -138,7 +142,7 @@ const About = ({ personalData }) => {
                 </div>
 
                 <div
-                  className="w-full text-justify text-xs leading-relaxed text-[#858585] md:text-sm"
+                  className="w-full text-justify text-xs leading-relaxed text-slate-400 md:text-sm"
                   dangerouslySetInnerHTML={{
                     __html: personalData.description
                   }}
@@ -150,16 +154,16 @@ const About = ({ personalData }) => {
                   <button
                     type="button"
                     onClick={() => handleCopy(personalData.email, "email")}
-                    className="group flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.02] px-3.5 py-2 font-mono text-[10px] uppercase tracking-wider text-white/60 transition-all duration-300 hover:border-[#00ffff]/40 hover:bg-[#00ffff]/[0.08] hover:text-white"
+                    className="group flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.02] px-3.5 py-2 font-mono text-[10px] uppercase tracking-wider text-white/60 transition-all duration-300 hover:border-cyan-400/40 hover:bg-cyan-400/[0.08] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2"
                   >
                     {copied === "email" ? (
                       <>
-                        <FaCheck className="text-[#00ffff]" />
+                        <FaCheck className="text-cyan-400" />
                         <span>Copied</span>
                       </>
                     ) : (
                       <>
-                        <FaEnvelope className="text-[#858585] transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-[#00ffff]" />
+                        <FaEnvelope className="text-slate-400 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:text-cyan-400" />
                         <span>Copy Email</span>
                       </>
                     )}
@@ -170,16 +174,16 @@ const About = ({ personalData }) => {
                   <button
                     type="button"
                     onClick={() => handleCopy(personalData.phone, "phone")}
-                    className="group flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.02] px-3.5 py-2 font-mono text-[10px] uppercase tracking-wider text-white/60 transition-all duration-300 hover:border-[#00ffff]/40 hover:bg-[#00ffff]/[0.08] hover:text-white"
+                    className="group flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.02] px-3.5 py-2 font-mono text-[10px] uppercase tracking-wider text-white/60 transition-all duration-300 hover:border-cyan-400/40 hover:bg-cyan-400/[0.08] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2"
                   >
                     {copied === "phone" ? (
                       <>
-                        <FaCheck className="text-[#00ffff]" />
+                        <FaCheck className="text-cyan-400" />
                         <span>Copied</span>
                       </>
                     ) : (
                       <>
-                        <FaPhone className="text-[#858585] transition-transform duration-300 group-hover:-rotate-12 group-hover:text-[#00ffff]" />
+                        <FaPhone className="text-slate-400 transition-transform duration-300 group-hover:-rotate-12 group-hover:text-cyan-400" />
                         <span>Copy Contact</span>
                       </>
                     )}
@@ -191,7 +195,7 @@ const About = ({ personalData }) => {
 
           {/* RIGHT SIDE: Mini IDE / Code Playground */}
           <div className="flex h-full flex-col gap-6">
-            <div className="overflow-hidden rounded-2xl border border-[#2d2d2d] bg-[#121212] shadow-2xl shadow-black/40">
+            <div className="overflow-hidden rounded-2xl border border-[#2d2d2d] bg-surface-2 shadow-2xl shadow-black/40">
               
               {/* Responsive Header Bar */}
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#2d2d2d] bg-[#181818] px-3 sm:px-4 py-3">
@@ -206,11 +210,12 @@ const About = ({ personalData }) => {
                     <button
                       type="button"
                       onClick={() => setEditorMode("json")}
+                      aria-pressed={editorMode === "json"}
                       className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 font-mono text-[10px] transition-all ${
                         editorMode === "json"
-                          ? "bg-[#252526] text-[#00ffff] shadow-sm"
-                          : "text-[#858585] hover:text-[#d4d4d4]"
-                      }`}
+                          ? "bg-[#252526] text-cyan-400 shadow-sm"
+                          : "text-slate-400 hover:text-[#d4d4d4]"
+                      } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400`}
                     >
                       <FaCode size={10} />
                       <span>{personalData.developerFileName || "developer.json"}</span>
@@ -218,11 +223,12 @@ const About = ({ personalData }) => {
                     <button
                       type="button"
                       onClick={() => setEditorMode("ide")}
+                      aria-pressed={editorMode === "ide"}
                       className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 font-mono text-[10px] transition-all ${
                         editorMode === "ide"
-                          ? "bg-[#252526] text-[#00ffff] shadow-sm"
-                          : "text-[#858585] hover:text-[#d4d4d4]"
-                      }`}
+                          ? "bg-[#252526] text-cyan-400 shadow-sm"
+                          : "text-slate-400 hover:text-[#d4d4d4]"
+                      } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400`}
                     >
                       <FaTerminal size={10} />
                       <span>playground.js</span>
@@ -235,12 +241,12 @@ const About = ({ personalData }) => {
                     <button
                       type="button"
                       onClick={() => handleCopy(JSON.stringify(developerData, null, 2), "json")}
-                      className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-mono text-[10px] text-[#858585] transition-all duration-200 hover:bg-[#2a2d2e] hover:text-[#d4d4d4]"
+                      className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 font-mono text-[10px] text-slate-400 transition-all duration-200 hover:bg-[#2a2d2e] hover:text-[#d4d4d4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
                       aria-label="Copy developer profile JSON"
                     >
                       {copied === "json" ? (
                         <>
-                          <FaCheck className="text-[#00ffff]" />
+                          <FaCheck className="text-cyan-400" />
                           <span>Copied</span>
                         </>
                       ) : (
@@ -255,7 +261,8 @@ const About = ({ personalData }) => {
                   <button
                     type="button"
                     onClick={() => setJsonExpanded((value) => !value)}
-                    className="rounded-lg p-1.5 text-[#858585] transition-all duration-200 hover:bg-[#2a2d2e] hover:text-[#d4d4d4]"
+                    aria-expanded={jsonExpanded}
+                    className="rounded-lg p-1.5 text-slate-400 transition-all duration-200 hover:bg-[#2a2d2e] hover:text-[#d4d4d4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
                     aria-label={jsonExpanded ? "Collapse developer profile" : "Expand developer profile"}
                   >
                     {jsonExpanded ? <FaChevronUp /> : <FaChevronDown />}
@@ -294,10 +301,10 @@ const About = ({ personalData }) => {
 
             {/* ENGINEERING PERSPECTIVE */}
             {focusItems.length > 0 && (
-              <div className="rounded-2xl border border-white/[0.08] bg-[#121212]/80 p-5 backdrop-blur-xl md:p-6">
+              <div className="rounded-2xl border border-white/[0.08] bg-surface-2/80 p-5 backdrop-blur-xl md:p-6">
                 <div className="mb-5 flex items-center justify-between">
                   <div>
-                    <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.25em] text-[#00ffff]/80">
+                    <p className="mb-1 font-mono text-[10px] uppercase tracking-[0.25em] text-cyan-400/80">
                       {personalData.aboutFocusLabel || "Engineering Perspective"}
                     </p>
                     <h3 className="text-lg font-semibold tracking-tight text-white">
@@ -314,17 +321,18 @@ const About = ({ personalData }) => {
                       key={item.id || index}
                       type="button"
                       onClick={() => setActiveFocus(index)}
+                      aria-pressed={activeFocus === index}
                       className={`rounded-xl border px-3 py-2 font-mono text-[10px] uppercase tracking-wider transition-all duration-300 ${
                         activeFocus === index
-                          ? "border-[#00ffff]/40 bg-[#00ffff]/[0.1] text-[#00ffff] shadow-sm shadow-[#00ffff]/10"
+                          ? "border-cyan-400/40 bg-cyan-400/[0.1] text-cyan-400 shadow-sm shadow-cyan-400/10"
                           : "border-white/10 bg-white/[0.02] text-white/40 hover:border-white/20 hover:text-white/70"
-                      }`}
+                      } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2`}
                     >
                       {item.label || item.title}
                     </button>
                   ))}
                 </div>
-                <p className="text-sm leading-7 text-[#858585]">
+                <p className="text-sm leading-7 text-slate-400">
                   {activeFocusItem?.description}
                 </p>
               </div>
@@ -332,12 +340,12 @@ const About = ({ personalData }) => {
 
             {/* SUPPORT */}
             {personalData.chaiBoxTitle && (
-              <div className="flex flex-col items-center justify-between gap-4 rounded-2xl border border-white/[0.08] bg-[#121212]/80 p-5 text-center backdrop-blur-xl sm:flex-row sm:text-left">
+              <div className="flex flex-col items-center justify-between gap-4 rounded-2xl border border-white/[0.08] bg-surface-2/80 p-5 text-center backdrop-blur-xl sm:flex-row sm:text-left">
                 <div>
                   <h3 className="mb-1 text-sm font-semibold text-white">
                     {personalData.chaiBoxTitle}
                   </h3>
-                  <p className="max-w-md text-xs leading-relaxed text-[#858585]">
+                  <p className="max-w-md text-xs leading-relaxed text-slate-400">
                     {personalData.chaiBoxDescription}
                   </p>
                 </div>
@@ -347,9 +355,9 @@ const About = ({ personalData }) => {
                     onClick={() => handleCopy(personalData.phone, "easypaisa")}
                     className={`flex shrink-0 items-center gap-2 rounded-xl border px-4 py-2.5 font-mono text-[10px] uppercase tracking-wider transition-all duration-300 ${
                       copied === "easypaisa"
-                        ? "border-[#00ffff]/40 bg-[#00ffff]/[0.1] text-[#00ffff]"
-                        : "border-white/10 bg-white/[0.03] text-white/60 hover:border-[#00ffff]/30 hover:bg-[#00ffff]/[0.08] hover:text-white"
-                    }`}
+                        ? "border-cyan-400/40 bg-cyan-400/[0.1] text-cyan-400"
+                        : "border-white/10 bg-white/[0.03] text-white/60 hover:border-cyan-400/30 hover:bg-cyan-400/[0.08] hover:text-white"
+                    } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2`}
                   >
                     {copied === "easypaisa" ? (
                       <>

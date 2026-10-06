@@ -11,8 +11,12 @@ function cn(...inputs) {
 }
 
 const ProjectsSkeleton = () => (
-  <section id="projects" className="py-32 relative z-10">
-    <div className="container mx-auto px-4 md:px-8 max-w-7xl">
+  <section id="projects" className="relative z-10 isolate overflow-hidden py-32">
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 opacity-[0.012] [background-image:linear-gradient(to_right,rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:32px_32px]"
+    />
+    <div className="container relative z-10 mx-auto max-w-7xl px-4 md:px-8">
       <div className="mb-8 h-10 w-64 mx-auto rounded-full skeleton-shimmer bg-white/[0.06]" />
       <div className="mb-16 h-4 w-80 mx-auto rounded-full skeleton-shimmer bg-white/[0.05]" />
 
@@ -59,8 +63,12 @@ const Projects = ({ projects = [], personalData = {}, isLoading = false }) => {
   const visibleProjects = expanded ? projects : projects.slice(0, 4);
 
   return (
-    <section id="projects" className="py-32 relative z-10">
-      <div className="container mx-auto px-4 md:px-8 max-w-7xl">
+    <section id="projects" className="relative z-10 isolate overflow-hidden py-32">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.012] [background-image:linear-gradient(to_right,rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:32px_32px]"
+      />
+      <div className="container relative z-10 mx-auto max-w-7xl px-4 md:px-8">
         <h2 className="text-4xl md:text-5xl font-sans font-bold mb-4 text-center text-white">
           Selected <span className="text-text-muted">Works</span>
         </h2>
