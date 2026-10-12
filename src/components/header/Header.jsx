@@ -4,9 +4,11 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Tilt from "react-parallax-tilt";
 import SocialIcons from "../sidebar/socialcons";
 import MagneticButton from "../helper/MagneticButton";
+import { useExperience } from "../../hooks/useExperience";
 
 const Header = ({ personalData = {}, experience = [] }) => {
   const { scrollY } = useScroll();
+  const normalizedExperiences = useExperience(experience);
 
   // Subtle physical movement only.
   // Content remains readable and never fades during scroll.
@@ -41,27 +43,18 @@ const badgeTitle =
   "Software Engineer";
 
   /*
-   * Pick the first experience item according to sortOrder.
+   * The hook sorts roles by sortOrder before the current role is selected.
    */
-  const topExperience = Array.isArray(experience)
-    ? [...experience].sort((a, b) => {
-        const aOrder = Number(a?.sortOrder ?? Number.MAX_SAFE_INTEGER);
-
-        const bOrder = Number(b?.sortOrder ?? Number.MAX_SAFE_INTEGER);
-
-        return aOrder - bOrder;
-      })[0]
-    : null;
+  const currentExperience = normalizedExperiences.find((item) => item.isCurrent);
 
   const normalizedCompanyUrl = (() => {
-    if (!topExperience) return "";
-
-    const rawUrl = topExperience.companyUrl ?? topExperience.company_url ?? "";
+    if (!currentExperience) return "";
+    const rawUrl = currentExperience.companyUrl ?? "";
 
     return typeof rawUrl === "string" ? rawUrl.trim() : "";
   })();
 
-  const topCompanyName = topExperience?.company || "";
+  const currentCompanyName = currentExperience?.company || "";
 
   /*
    * Entrance animation.
@@ -314,7 +307,7 @@ const badgeTitle =
             {/* ---------------------------------------------------
                 Current Position
                 --------------------------------------------------- */}
-            {topCompanyName && (
+            {(currentCompanyName || !currentExperience) && (
               <motion.div variants={item} className="mt-7">
                 <div
                   className="
@@ -343,7 +336,7 @@ const badgeTitle =
                     @
                   </span>
 
-                  {normalizedCompanyUrl ? (
+                  {currentExperience && normalizedCompanyUrl ? (
                     <a
                       href={normalizedCompanyUrl}
                       target="_blank"
@@ -361,12 +354,14 @@ const badgeTitle =
                         focus-visible:ring-offset-background
                       "
                     >
-                      {topCompanyName}
+                      {currentCompanyName}
                     </a>
-                  ) : (
+                  ) : currentExperience ? (
                     <span className="truncate text-white">
-                      {topCompanyName}
+                      {currentCompanyName}
                     </span>
+                  ) : (
+                    <span className="text-white">Open to work</span>
                   )}
                 </div>
               </motion.div>

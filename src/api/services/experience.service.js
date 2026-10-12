@@ -18,7 +18,8 @@ class ExperienceService extends BaseRepository {
     try {
       const { data: experiences, error } = await this.supabase
         .from('experience')
-        .select('*');
+        .select('*')
+        .order('sortorder', { ascending: true });
 
       if (error) throw error;
       if (!experiences || experiences.length === 0) return this.localMockData;
@@ -33,6 +34,8 @@ class ExperienceService extends BaseRepository {
 
       const formattedExperiences = experiences.map(exp => ({
         ...exp,
+        sortOrder: exp.sortOrder ?? exp.sortorder,
+        isCurrent: (exp.isCurrent ?? exp.is_current) === true,
         companyUrl: exp.companyUrl ?? exp.company_url ?? '',
         tech: techData?.filter(t => t.experience_id === exp.id).map(t => t.tech) || []
       }));

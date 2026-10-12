@@ -2,15 +2,17 @@ export const experienceData = [
   {
     id: 1,
     sortOrder: 1,
+    isCurrent: false,
     title: "Back End Developer",
     company: "VisionBird Technologies",
-    duration: "Jul 2026 - Present",
+    duration: "Jul 2026 - Oct 2026",
     description: "Working as a Backend Developer Intern while leading backend development tasks across multiple features. Contributed to strengthening the company's website security by identifying and addressing vulnerabilities, improving API reliability, and implementing secure development practices. Actively developing and maintaining the company's website and CMS, collaborating with the team to deliver scalable, maintainable, and high-quality backend solutions.",
     tech: ["Node.js", "Express.js", "FastAPI", "PostgreSQL", "Firebase", "REST APIs", "Git"]
   },
   {
     id: 2,
     sortOrder: 2,
+    isCurrent: false,
     title: "Software Engineer",
     company: "Qsol_corps",
     duration: "Jul 2022 - Aug 2023",
@@ -20,6 +22,7 @@ export const experienceData = [
   {
     id: 3,
     sortOrder: 3,
+    isCurrent: false,
     title: "Fullstack .NET Developer",
     company: "Freelance / Enterprise Solutions",
     duration: "2021 - 2022",
@@ -29,6 +32,7 @@ export const experienceData = [
   {
     id: 4,
     sortOrder: 4,
+    isCurrent: false,
     title: "Full Stack MERN Developer",
     company: "Independent / Client Projects",
     duration: "2020 - 2021",

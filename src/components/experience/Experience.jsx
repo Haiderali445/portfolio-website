@@ -137,9 +137,16 @@ const Experience = ({ experiences = [], isLoading = false }) => {
                                                 <p className="text-lg text-white/80 font-medium">{exp.company}</p>
                                             )}
                                         </div>
-                                        <div className="flex items-center gap-2 text-white/70 font-mono text-xs bg-surface-2 px-4 py-2 rounded-full w-fit border border-white/[0.08]">
-                                            <FaClock size={12} className="text-cyan-400" />
-                                            <span>{exp.duration}</span>
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            {exp.isCurrent && (
+                                                <span className="rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-2 font-mono text-[10px] font-semibold uppercase tracking-wider text-emerald-300">
+                                                    Current
+                                                </span>
+                                            )}
+                                            <div className="flex items-center gap-2 text-white/70 font-mono text-xs bg-surface-2 px-4 py-2 rounded-full w-fit border border-white/[0.08]">
+                                                <FaClock size={12} className="text-cyan-400" />
+                                                <span>{exp.duration}</span>
+                                            </div>
                                         </div>
                                     </div>
 
