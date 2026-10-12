@@ -15,16 +15,21 @@ const SolutionCard = ({ solution, isOpen, onClick, onTagClick, activeTag }) => {
                     onClick();
                 }
             }}
-            className={`relative p-6 rounded-3xl glass-card border border-glass-border cursor-pointer transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-primary/50 ${
-                isOpen ? 'bg-white/5 border-primary/30' : 'hover:bg-white/5'
+            className={`relative p-6 rounded-3xl border border-white/[0.08] bg-surface-1/90 backdrop-blur-xl cursor-pointer transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] focus:outline-none focus:ring-2 focus:ring-cyan-400/50 ${
+                isOpen ? 'bg-surface-2 border-cyan-400/40' : 'hover:border-white/20 hover:bg-surface-2/80'
             }`}
         >
+            {/* Top Specular Edge */}
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/25 to-transparent"
+            />
             <div className="flex justify-between items-start">
                 <div>
-                    <span className="text-xs font-mono text-primary/80 mb-2 block">{solution.category}</span>
+                    <span className="text-xs font-mono text-cyan-400 mb-2 block">{solution.category}</span>
                     <h3 className="text-xl font-bold text-white mb-2">{solution.title}</h3>
                 </div>
-                <div className={`p-2 rounded-full border border-white/10 text-white transition-transform duration-300 ${isOpen ? 'rotate-180 bg-white text-black' : ''}`}>
+                <div className={`p-2 rounded-full border border-white/10 text-white transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${isOpen ? 'rotate-180 bg-cyan-400 text-black border-cyan-400' : ''}`}>
                     {isOpen ? <FaMinus size={12} /> : <FaPlus size={12} />}
                 </div>
             </div>
@@ -33,11 +38,11 @@ const SolutionCard = ({ solution, isOpen, onClick, onTagClick, activeTag }) => {
                 {isOpen && (
                     <motion.div
                         initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto', transition: { type: 'spring', stiffness: 300, damping: 25 } }}
+                        exit={{ opacity: 0, height: 0, transition: { duration: 0.25 } }}
                         className="overflow-hidden"
                     >
-                        <p className="text-text-muted mt-4 text-sm leading-relaxed border-t border-white/5 pt-4">
+                        <p className="text-text-muted mt-4 text-sm leading-relaxed border-t border-white/[0.08] pt-4">
                             {solution.description}
                         </p>
                         <div className="flex flex-wrap gap-2 mt-4" onClick={(e) => e.stopPropagation()}>
@@ -48,10 +53,10 @@ const SolutionCard = ({ solution, isOpen, onClick, onTagClick, activeTag }) => {
                                         key={i}
                                         type="button"
                                         onClick={() => onTagClick ? onTagClick(t) : null}
-                                        className={`text-[10px] uppercase tracking-wider font-mono px-2 py-1 rounded transition-all duration-200 ${
+                                        className={`text-xs font-mono px-2.5 py-1 rounded-lg transition-all duration-200 ${
                                             isSelected 
-                                                ? 'bg-primary text-black font-bold shadow-lg shadow-primary/20 scale-105' 
-                                                : 'text-white/50 bg-white/5 hover:bg-white/10 hover:text-white'
+                                                ? 'bg-cyan-400 text-black font-bold shadow-[0_0_12px_rgba(6,182,212,0.4)] scale-105' 
+                                                : 'text-white/60 bg-white/[0.04] border border-white/[0.08] hover:border-cyan-400/40 hover:text-white'
                                         }`}
                                     >
                                         {t}
@@ -68,10 +73,6 @@ const SolutionCard = ({ solution, isOpen, onClick, onTagClick, activeTag }) => {
 
 const SolutionsSkeleton = () => (
     <section id="solutions" className="relative z-10 isolate overflow-hidden py-24">
-        <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 opacity-[0.012] [background-image:linear-gradient(to_right,rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:32px_32px]"
-        />
         <div className="container relative z-10 mx-auto max-w-6xl px-6">
             <div className="mb-16 text-center">
                 <div className="mx-auto mb-4 h-12 w-72 rounded-full skeleton-shimmer bg-white/[0.06]" />
@@ -125,14 +126,10 @@ const Solutions = ({ solutions = [], personalData = {}, isLoading = false }) => 
 
     return (
         <section id="solutions" className="relative z-10 isolate overflow-hidden py-24">
-            <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0 opacity-[0.012] [background-image:linear-gradient(to_right,rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:32px_32px]"
-            />
             <div className="container relative z-10 mx-auto max-w-6xl px-6">
                 <div className="mb-16 text-center">
                     <h2 className="text-4xl md:text-6xl font-bold text-white mb-4">
-                        Explored <span className="text-text-muted">Solutions</span>
+                        Explored <span className="text-white/40">Solutions</span>
                     </h2>
                     <p className="text-text-muted max-w-2xl mx-auto">
                         {personalData.solutionsSectionSubtitle || "Explore customized system layouts, architectural approaches, and enterprise-grade solutions."}

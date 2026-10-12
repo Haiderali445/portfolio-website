@@ -105,14 +105,10 @@ const Testimonials = ({ testimonials = [] }) => {
       id="testimonials"
       className="relative isolate overflow-hidden border-y border-white/[0.06] bg-background py-24 sm:py-28"
     >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.012] [background-image:linear-gradient(to_right,rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:32px_32px]"
-      />
       <div className="relative z-10 container mx-auto max-w-7xl px-4 sm:px-6">
         <div className="mb-12 text-center sm:mb-14">
           <h2 className="font-sans text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl">
-            Client <span className="text-slate-400">Feedback</span>
+            Client <span className="text-white/40">Feedback</span>
           </h2>
         </div>
 
@@ -159,9 +155,14 @@ const Testimonials = ({ testimonials = [] }) => {
                 initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, x: 28, rotateY: -4 }}
                 animate={{ opacity: 1, x: 0, rotateY: 0 }}
                 exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, x: -28, rotateY: 4 }}
-                transition={{ duration: shouldReduceMotion ? 0 : 0.32, ease: "easeOut" }}
-                className="absolute inset-0 z-10 cursor-pointer rounded-2xl border border-white/[0.08] bg-surface-2/90 p-6 shadow-xl shadow-black/30 backdrop-blur-xl transition-colors hover:border-cyan-400/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:p-8"
+                transition={{ duration: shouldReduceMotion ? 0 : 0.4, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute inset-0 z-10 cursor-pointer rounded-2xl border border-white/[0.08] bg-surface-1/95 p-6 backdrop-blur-xl transition-all duration-300 hover:border-cyan-400/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:p-8"
               >
+                {/* Top Specular Edge */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/25 to-transparent"
+                />
                 {getCardContent(activeTestimonial, true)}
               </motion.article>
             </AnimatePresence>

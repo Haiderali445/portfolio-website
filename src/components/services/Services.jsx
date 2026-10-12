@@ -11,6 +11,7 @@ import {
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
+import Tilt from "react-parallax-tilt";
 
 const resolveServiceMetadata = (service = {}) => {
   const name =
@@ -105,16 +106,11 @@ const Services = ({ services = [] }) => {
       id="services"
       className="relative z-10 isolate overflow-hidden py-24 md:py-32"
     >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.012] [background-image:linear-gradient(to_right,rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:32px_32px]"
-      />
-
       <div className="container relative z-10 mx-auto max-w-7xl px-6">
         {/* =====================================================
                     Section Header
                     ===================================================== */}
-        <div className="mb-16">
+        <div className="mb-16 text-center">
           <motion.div
             initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
             whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
@@ -131,14 +127,10 @@ const Services = ({ services = [] }) => {
                   }
             }
           >
-            <div className="mb-4 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-white/50">
-              <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
-              SERVICES / CAPABILITIES
-            </div>
+            
 
-            <h2 className="font-sans text-4xl font-extrabold leading-[1.08] tracking-tight text-white md:text-6xl">
-              Engineering <br />
-              <span className="text-text-muted">systems that scale.</span>
+            <h2 className="font-sans text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl text-center">
+              Specialized <span className="text-white/40">Services</span>
             </h2>
           </motion.div>
         </div>
@@ -190,35 +182,52 @@ const Services = ({ services = [] }) => {
                 }}
                 className="h-full"
               >
-                <Link
-                  to={`/services/${service.id}`}
-                  className="
-                                        card-physical
-                                        group
-                                        flex
-                                        h-full
-                                        min-h-[350px]
-                                        flex-col
-                                        justify-between
-                                        overflow-hidden
-                                        border
-                                        border-white/[0.08]
-                                        bg-surface-1
-                                        p-8
-                                        transition-[background-color,border-color,box-shadow]
-                                        duration-300
-
-                                       hover:border-cyan-500/25
-                                       hover:bg-surface-2
-                                       hover:shadow-[0_4px_18px_rgba(0,122,255,0.07)]
-
-                                        focus-visible:outline-none
-                                        focus-visible:ring-2
-                                        focus-visible:ring-cyan-400/70
-                                        focus-visible:ring-offset-2
-                                        focus-visible:ring-offset-surface-1
-                                    "
+                <Tilt
+                  perspective={1200}
+                  tiltMaxAngleX={4}
+                  tiltMaxAngleY={4}
+                  scale={1.01}
+                  glareEnable={true}
+                  glareMaxOpacity={0.06}
+                  glareColor="#06b6d4"
+                  glarePosition="all"
+                  className="h-full rounded-3xl"
                 >
+                  <Link
+                    to={`/services/${service.id}`}
+                    className="
+                      card-physical
+                      group
+                      relative
+                      flex
+                      h-full
+                      min-h-[350px]
+                      flex-col
+                      justify-between
+                      overflow-hidden
+                      rounded-3xl
+                      border
+                      border-white/[0.08]
+                      bg-surface-1/90
+                      p-8
+                      backdrop-blur-xl
+                      transition-all
+                      duration-400
+                      ease-[cubic-bezier(0.16,1,0.3,1)]
+                      hover:border-cyan-400/35
+                      hover:bg-surface-2/90
+                      focus-visible:outline-none
+                      focus-visible:ring-2
+                      focus-visible:ring-cyan-400/70
+                      focus-visible:ring-offset-2
+                      focus-visible:ring-offset-surface-1
+                    "
+                  >
+                    {/* Top Specular Edge */}
+                    <div
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/25 to-transparent"
+                    />
                   {/* =================================================
                                         Header
                                         ================================================= */}
@@ -378,7 +387,8 @@ const Services = ({ services = [] }) => {
                     </span>
                   </div>
                 </Link>
-              </motion.div>
+              </Tilt>
+            </motion.div>
             );
           })}
         </div>

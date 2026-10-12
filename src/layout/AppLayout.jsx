@@ -21,7 +21,7 @@ export default function AppLayout({ data }) {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen overflow-x-clip bg-background text-white selection:bg-primary/30 font-sans">
+    <div className="relative min-h-screen overflow-x-clip bg-background text-white selection:bg-primary/30 font-sans">
       <ScrollProgress />
       <CommandTerminal portfolioData={data} />
       <AIChatWidget />

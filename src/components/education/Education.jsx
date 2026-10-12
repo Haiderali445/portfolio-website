@@ -15,35 +15,25 @@ const Education = ({ educations = [] }) => {
 
   return (
     <section id="education" className="relative z-10 isolate overflow-hidden bg-black/20 py-24">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.012] [background-image:linear-gradient(to_right,rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:32px_32px]"
-      />
       <div className="container relative z-10 mx-auto max-w-6xl px-6">
-        {/* Section Header with UI Search Toggle */}
-        <div className="flex flex-col md:flex-row items-center md:items-start justify-between gap-6 mb-16">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-full bg-primary/10 text-primary border border-primary/20">
-              <FaGraduationCap size={24} />
-            </div>
-            <div>
-              <h2 className="text-3xl md:text-5xl font-sans font-bold text-white">Academic Foundation</h2>
-              <p className="text-text-muted text-sm mt-1">Formal education milestones and institutional background.</p>
-            </div>
-          </div>
+        {/* Section Header */}
+        <div className="mb-14 text-center flex flex-col items-center">
+          <h2 className="text-3xl md:text-5xl font-sans font-bold text-white tracking-tight">
+            Academic <span className="text-white/40">Foundation</span>
+          </h2>
 
           {/* Non-destructive UI filter input */}
-          {educations.length > 1 && (
-            <div className="relative w-full md:w-72">
+          {educations.length > 2 && (
+            <div className="relative w-full max-w-xs mt-6">
               <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-text-muted">
                 <FaSearch size={12} />
               </span>
               <input
                 type="text"
-                placeholder="Filter milestones..."
+                placeholder="Search education..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-full pl-9 pr-4 py-2 text-xs text-white placeholder-text-muted focus:outline-none focus:border-primary/50 transition-colors"
+                className="w-full bg-[#181818] border border-white/10 rounded-full pl-9 pr-4 py-2 text-xs text-white placeholder-text-muted focus:outline-none focus:border-cyan-400/50 transition-colors"
               />
             </div>
           )}
@@ -75,21 +65,26 @@ const Education = ({ educations = [] }) => {
                 className="relative pl-6 md:pl-12 group"
               >
                 {/* Timeline Dot with Glow Effect */}
-                <span className="absolute -left-[9px] top-6 w-4 h-4 rounded-full bg-black border-2 border-primary group-hover:bg-primary group-hover:shadow-[0_0_12px_rgba(var(--primary-rgb),0.6)] transition-all duration-300" />
+                <span className="absolute -left-[9px] top-6 w-4 h-4 rounded-full bg-black border-2 border-cyan-400 group-hover:bg-cyan-400 group-hover:shadow-[0_0_16px_rgba(6,182,212,0.8)] transition-all duration-300" />
 
-                <div className="p-8 rounded-3xl glass-card border border-white/5 bg-white/5 hover:bg-white/10 transition-all duration-300 relative group-hover:border-primary/30 group-hover:translate-x-1">
+                <div className="relative overflow-hidden p-8 rounded-3xl border border-white/[0.08] bg-surface-1/90 backdrop-blur-xl hover:bg-surface-2/90 hover:border-cyan-400/35 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
+                  {/* Top Specular Edge */}
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/25 to-transparent"
+                  />
                   <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                     <div>
-                      <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-primary transition-colors">
+                      <h3 className="text-2xl font-bold text-white mb-2 group-hover:text-cyan-400 transition-colors">
                         {edu.title}
                       </h3>
                       <p className="text-lg text-white/80 font-medium flex items-center gap-2">
-                        <FaUniversity className="text-primary/70 text-sm" />
+                        <FaUniversity className="text-cyan-400 text-sm" />
                         {edu.institution}
                       </p>
                     </div>
-                    <div className="flex items-center gap-2 text-text-muted font-mono text-sm bg-black/40 px-4 py-2 rounded-full w-fit border border-white/5 shadow-inner">
-                      <FaCalendarAlt size={12} className="text-primary/70" />
+                    <div className="flex items-center gap-2 text-white/70 font-mono text-xs bg-surface-2 px-4 py-2 rounded-full w-fit border border-white/[0.08]">
+                      <FaCalendarAlt size={12} className="text-cyan-400" />
                       <span>{edu.duration}</span>
                     </div>
                   </div>

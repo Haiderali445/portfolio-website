@@ -83,40 +83,38 @@ const About = ({ personalData }) => {
 
   return (
     <section id="about" className="relative z-10 py-24">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.012] [background-image:linear-gradient(to_right,rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:32px_32px]"
-      />
       <div className="container relative z-10 mx-auto max-w-7xl px-4 sm:px-6">
-        <div className="mb-16 text-center">
-          <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.35em] text-cyan-400/80">
-            {personalData.aboutEyebrow || "Engineering Profile"}
-          </p>
-          <h2 className="font-sans text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-6xl">
-            About <span className="text-slate-400">Me</span>
+        <div className="mb-14 text-center">
+          <h2 className="font-sans text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl">
+            About <span className="text-white/40">Me</span>
           </h2>
         </div>
 
         <div className="grid grid-cols-1 items-stretch gap-8 lg:grid-cols-2">
           {/* PROFILE CARD */}
-          <div className="group relative flex h-full">
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-500/10 to-transparent opacity-15 blur-lg transition-opacity duration-500 group-hover:opacity-25" />
-            <div className="relative flex w-full flex-col items-center justify-between rounded-2xl border border-white/[0.08] bg-surface-2/80 p-6 text-center backdrop-blur-xl transition-colors duration-300 hover:border-cyan-400/30 md:p-8">
+          <div className="group relative flex h-full rounded-2xl transition-all duration-300">
+            {/* Subtle background ambient glow on hover */}
+            <div className="pointer-events-none absolute -inset-1 rounded-2xl bg-cyan-500/10 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
+            <div className="relative flex w-full flex-col items-center justify-between rounded-2xl border border-white/[0.08] bg-[#141414]/85 p-6 text-center backdrop-blur-xl transition-all duration-300 hover:border-white/20 hover:bg-[#1a1a1a]/90 hover:-translate-y-0.5 md:p-8">
+              {/* Specular Top Edge */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent"
+              />
               <div className="flex flex-col items-center w-full">
-                <div className="relative mb-4 flex justify-center">
-                  <div className="h-32 w-32 shrink-0 aspect-square overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-2xl transition-transform duration-500 group-hover:scale-[1.02] md:h-40 md:w-40 relative">
+                <div className="relative mb-5 flex justify-center">
+                  <div className="h-32 w-32 shrink-0 aspect-square overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-transform duration-300 group-hover:scale-[1.02] md:h-40 md:w-40 relative shadow-2xl">
                     <div className="absolute inset-0 animate-pulse bg-white/10" id="image-skeleton" />
-                    <div className="pointer-events-none absolute inset-0 z-10 rounded-2xl bg-gradient-to-tr from-cyan-400/10 to-transparent mix-blend-overlay" />
                     <img
                       src={personalData.profile || personalData.heroImage || personalData.heroimage || ""}
                       alt={personalData.name}
                       loading="lazy"
                       decoding="async"
                       onLoad={(e) => {
-                        const skeleton = e.currentTarget.previousElementSibling?.previousElementSibling;
+                        const skeleton = e.currentTarget.previousElementSibling;
                         if (skeleton) skeleton.style.display = 'none';
                       }}
-                      className="relative z-20 h-full w-full object-cover object-center grayscale transition-all duration-500 group-hover:grayscale-0"
+                      className="relative z-20 h-full w-full object-cover object-center transition-all duration-300"
                     />
                   </div>
                 </div>
@@ -195,10 +193,10 @@ const About = ({ personalData }) => {
 
           {/* RIGHT SIDE: Mini IDE / Code Playground */}
           <div className="flex h-full flex-col gap-6">
-            <div className="overflow-hidden rounded-2xl border border-[#2d2d2d] bg-surface-2 shadow-2xl shadow-black/40">
+            <div className="overflow-hidden rounded-2xl border border-white/[0.08] bg-surface-1 backdrop-blur-xl">
               
               {/* Responsive Header Bar */}
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#2d2d2d] bg-[#181818] px-3 sm:px-4 py-3">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.08] bg-surface-2/90 px-3 sm:px-4 py-3">
                 <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 scrollbar-none">
                   <div className="flex items-center gap-1.5 shrink-0">
                     <FaCircle className="text-[9px] text-[#ff5f56]" />

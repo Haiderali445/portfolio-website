@@ -8,8 +8,9 @@ export default {
     // Domain glow shadow helpers
     'shadow-glow-azure', 'shadow-glow-cyan', 'shadow-glow-emerald',
     'shadow-glow-violet', 'shadow-glow-amber', 'shadow-glow-rose',
-    // Surface elevations
-    'bg-surface-1', 'bg-surface-2',
+    // Surface elevations and glass cards
+    'bg-surface-0', 'bg-surface-1', 'bg-surface-2', 'bg-surface-3',
+    'glass-card', 'card-physical', 'card-featured', 'skeleton-shimmer',
     // Navigation classes
     'nav-dock-container', 'nav-btn', 'nav-btn-active', 
     'nav-btn-home', 'nav-btn-home-active', 'nav-tooltip',
@@ -20,11 +21,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        background:    "#050505",
-        "surface-1":   "#0d0d0d",
-        "surface-2":   "#111111",
-        glass:         "rgba(255, 255, 255, 0.03)",
-        "glass-border":"rgba(255, 255, 255, 0.08)",
+        background:    "#000000",
+        "surface-0":   "#000000",
+        "surface-1":   "#121212",
+        "surface-2":   "#181818",
+        "surface-3":   "#222222",
+        glass:         "rgba(255, 255, 255, 0.04)",
+        "glass-border":"rgba(255, 255, 255, 0.09)",
         primary:       "#06B6D4",
         "text-muted":  "#888888",
         border: "hsl(var(--border))",

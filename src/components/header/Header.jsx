@@ -1,6 +1,7 @@
 import React from "react";
 import { Typewriter } from "react-simple-typewriter";
 import { motion, useScroll, useTransform } from "framer-motion";
+import Tilt from "react-parallax-tilt";
 import SocialIcons from "../sidebar/socialcons";
 import MagneticButton from "../helper/MagneticButton";
 
@@ -121,15 +122,9 @@ const badgeTitle =
           overflow-hidden
         "
       >
-        {/* Architectural grid */}
+        {/* Subtle architectural grid */}
         <div
-          className="
-            absolute
-            inset-0
-            opacity-[0.035]
-            [background-image:linear-gradient(to_right,rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.8)_1px,transparent_1px)]
-            [background-size:32px_32px]
-          "
+          className="absolute inset-0 [background-image:linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:32px_32px]"
         />
 
         {/* Bottom depth fade */}
@@ -138,7 +133,7 @@ const badgeTitle =
             absolute
             inset-x-0
             bottom-0
-            h-32
+            h-40
             bg-gradient-to-t
             from-background
             to-transparent
@@ -569,71 +564,81 @@ const badgeTitle =
               "
             />
 
-            <div
-              className="
-                card-featured
-                group
-                relative
-                overflow-hidden
-                p-3
-              "
+            <Tilt
+              perspective={1200}
+              tiltMaxAngleX={6}
+              tiltMaxAngleY={6}
+              scale={1.015}
+              glareEnable={true}
+              glareMaxOpacity={0.08}
+              glareColor="#06b6d4"
+              glarePosition="all"
+              className="rounded-[1.75rem]"
             >
-              <motion.img
-                src={personalData.profile}
-                alt={
-                  personalData.name ? `${personalData.name} profile` : "Profile"
-                }
-                loading="eager"
-                decoding="async"
+              <div
                 className="
+                  card-featured
+                  group
                   relative
-                  block
-                  aspect-[4/5]
-                  h-auto
-                  w-full
-                  rounded-xl
-                  object-cover
-                  grayscale
-                  contrast-110
-                  transition-all
-                  duration-500
-                  group-hover:scale-[1.015]
-                  group-hover:grayscale-0
+                  overflow-hidden
+                  p-3
                 "
-              />
+              >
+                <motion.img
+                  src={personalData.profile}
+                  alt={
+                    personalData.name ? `${personalData.name} profile` : "Profile"
+                  }
+                  loading="eager"
+                  decoding="async"
+                  className="
+                    relative
+                    block
+                    aspect-[4/5]
+                    h-auto
+                    w-full
+                    rounded-xl
+                    object-cover
+                    grayscale
+                    contrast-110
+                    transition-all
+                    duration-500
+                    group-hover:scale-[1.015]
+                    group-hover:grayscale-0
+                  "
+                />
 
-              
+                {/* Image edge treatment */}
+                <div
+                  aria-hidden="true"
+                  className="
+                    pointer-events-none
+                    absolute
+                    inset-0
+                    rounded-[inherit]
+                    ring-1
+                    ring-inset
+                    ring-white/[0.06]
+                  "
+                />
 
-              {/* Image edge treatment */}
-              <div
-                aria-hidden="true"
-                className="
-                  pointer-events-none
-                  absolute
-                  inset-0
-                  rounded-[inherit]
-                  ring-1
-                  ring-inset
-                  ring-white/[0.06]
-                "
-              />
-
-              {/* Soft image gradient */}
-              <div
-                aria-hidden="true"
-                className="
-                  pointer-events-none
-                  absolute
-                  inset-3
-                  rounded-xl
-                  bg-gradient-to-t
-                  from-black/40
-                  via-transparent
-                  to-white/[0.03]
-                  opacity-70
-                "
-              />
-            </div>
+                {/* Soft image gradient */}
+                <div
+                  aria-hidden="true"
+                  className="
+                    pointer-events-none
+                    absolute
+                    inset-3
+                    rounded-xl
+                    bg-gradient-to-t
+                    from-black/40
+                    via-transparent
+                    to-white/[0.03]
+                    opacity-70
+                  "
+                />
+              </div>
+            </Tilt>
           </motion.div>
         </div>
       </div>

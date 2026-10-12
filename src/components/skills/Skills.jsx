@@ -54,12 +54,17 @@ const SkillCard = ({
 
   return (
     <div
-      className="group/card relative flex min-w-0 flex-col overflow-hidden rounded-2xl border border-white/[0.08] bg-surface-1/80 p-5 backdrop-blur-sm transition-[background-color,border-color,box-shadow] duration-200 hover:border-[rgba(var(--glow-rgb),0.42)] hover:bg-surface-2 hover:shadow-[0_0_22px_-14px_rgba(var(--glow-rgb),0.5)] sm:p-6"
+      className="group/card relative flex min-w-0 flex-col overflow-hidden rounded-2xl border border-white/[0.08] bg-surface-1/90 p-5 backdrop-blur-xl transition-[background-color,border-color,box-shadow] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-[rgba(var(--glow-rgb),0.42)] hover:bg-surface-2 hover:shadow-[0_0_22px_-14px_rgba(var(--glow-rgb),0.5)] sm:p-6"
       style={{ "--glow-rgb": glowRGB }}
     >
+      {/* Specular Top Edge */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-200 group-hover/card:opacity-100"
+        className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/card:opacity-100"
         style={{
           background: `radial-gradient(ellipse at top left, rgba(${glowRGB}, 0.12), transparent 70%)`,
         }}
@@ -126,7 +131,6 @@ const MarqueeFade = ({ fromColor = "from-black" }) => (
 
 const SkillsSkeleton = () => (
   <section id="skills" className="relative z-10 overflow-hidden bg-background py-20">
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.012] [background-image:linear-gradient(to_right,rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:32px_32px]" />
     <div className="container relative z-10 mx-auto max-w-7xl px-6">
       <div className="mb-10 text-center">
         <div className="mx-auto h-10 w-64 rounded-full skeleton-shimmer bg-white/[0.06]" />
@@ -188,10 +192,6 @@ function Skills({ skills = [], isLoading = false }) {
 
   return (
     <section id="skills" className="relative z-10 overflow-hidden bg-background py-20">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.012] [background-image:linear-gradient(to_right,rgba(255,255,255,0.8)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.8)_1px,transparent_1px)] [background-size:32px_32px]"
-      />
       <div className="container relative z-10 mx-auto max-w-7xl px-6">
         <header className="mb-8 text-center sm:mb-10">
           <h2 className="mb-3 text-3xl font-bold text-white sm:text-4xl md:text-5xl">
